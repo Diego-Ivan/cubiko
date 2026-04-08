@@ -5,18 +5,9 @@
 build/
 DerivedData/
 
-# Workspace settings
-*.xcworkspace
-!default.xcworkspace
-
 # User settings
 xcuserdata/
 *.xcuserstate
-
-# Swift Package Manager
-.build/
-Packages/
-Package.resolved
 
 # Archives
 *.xcarchive
