@@ -1,0 +1,19 @@
+# macOS
+.DS_Store
+
+# Xcode
+build/
+DerivedData/
+
+# User settings
+xcuserdata/
+*.xcuserstate
+
+# Archives
+*.xcarchive
+
+# Logs
+*.log
+
+# Environment / secrets
+.env
