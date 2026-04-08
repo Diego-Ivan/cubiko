@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct ContentView: View {
     var body: some View {
-        BuscadorView()
+        // Cambia PruebaNotificacionesView() por BuscadorView()
+        // cuando ya no necesites la prueba
+        PruebaNotificacionesView()
     }
 }
