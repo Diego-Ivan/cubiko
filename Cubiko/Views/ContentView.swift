@@ -9,8 +9,16 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        // Cambia PruebaNotificacionesView() por BuscadorView()
-        // cuando ya no necesites la prueba
-        PruebaNotificacionesView()
+        TabView {
+            PruebaNotificacionesView()
+                .tabItem {
+                    Label("Reserva", systemImage: "calendar")
+                }
+
+            ConfiguracionView()
+                .tabItem {
+                    Label("Configuración", systemImage: "gearshape")
+                }
+        }
     }
 }

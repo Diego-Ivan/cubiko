@@ -2,7 +2,7 @@
 //  ReservaViewModel.swift
 //  Cubiko
 //
-//  Created by Emiliano Ruíz Plancarte on 08/04/26.
+//  Va en: ViewModels/
 //
 
 import Foundation
@@ -11,49 +11,57 @@ import Foundation
 @Observable
 final class ReservaViewModel {
 
-    // La reserva activa (nil si no hay ninguna)
     private(set) var reservaActiva: Reserva? = nil
-
-    // Mensaje de estado para mostrarlo en la UI
     private(set) var mensajeEstado: String = "Sin reserva activa"
 
-    // MARK: - Reserva simulada (para pruebas)
+    // Guardamos los minutos que se usaron al programar,
+    // para poder cancelar con los identificadores correctos aunque el usuario
+    // cambie la configuración entre medias.
+    private var minutosInicioUsados: Int = 0
+    private var minutosFinUsados: Int = 0
 
-    /// Crea una reserva falsa que termina en `duracionMinutos` minutos
-    /// y programa los recordatorios automáticamente.
-    func crearReservaSimulada(duracionMinutos: Int = 20) {
+    // MARK: - Crear reserva
+
+    @discardableResult
+    func crearReserva(inicio: Date, fin: Date) -> String? {
+        guard fin > inicio else { return "La hora de fin debe ser después del inicio." }
+        guard inicio > Date() else { return "La hora de inicio debe ser en el futuro." }
+
         let cubiculoPrueba = Cubiculo(id: 1, nombre: "Cubículo A-01", tipo: "Individual")
-        let ahora = Date()
-        let fin = ahora.addingTimeInterval(Double(duracionMinutos * 60))
+        let reserva = Reserva(id: UUID(), cubiculo: cubiculoPrueba, inicio: inicio, fin: fin)
 
-        let reserva = Reserva(
-            id: UUID(),
-            cubiculo: cubiculoPrueba,
-            inicio: ahora,
-            fin: fin
-        )
+        // Guardar los minutos actuales antes de programar
+        minutosInicioUsados = UserDefaults.standard.integer(forKey: "minutosAvisoInicio").nonZero ?? 15
+        minutosFinUsados    = UserDefaults.standard.integer(forKey: "minutosAvisoFin").nonZero ?? 15
 
         reservaActiva = reserva
-        mensajeEstado = "Reserva activa — termina en \(duracionMinutos) min"
 
-        // Programar avisos de 15 y 5 minutos antes del fin
+        let f = DateFormatter()
+        f.timeStyle = .short
+        f.locale = Locale(identifier: "es_MX")
+        mensajeEstado = "\(f.string(from: inicio)) – \(f.string(from: fin))"
+
         NotificationService.shared.programarRecordatoriosDeReserva(reserva)
-
-        // También mandar una notificación de confirmación inmediata
         NotificationService.shared.enviarAhora(.reservaConfirmada(reserva: reserva))
 
-        print("Reserva simulada creada. Fin: \(fin)")
+        return nil
     }
 
-    // MARK: - Cancelar reserva
+    // MARK: - Cancelar
 
     func cancelarReserva() {
         guard let reserva = reservaActiva else { return }
-
-        NotificationService.shared.cancelarTodosLosRecordatorios(de: reserva)
+        NotificationService.shared.cancelarTodosLosRecordatorios(
+            de: reserva,
+            minutosInicio: minutosInicioUsados,
+            minutosFin: minutosFinUsados
+        )
         NotificationService.shared.enviarAhora(.reservaCancelada(reserva: reserva))
-
         reservaActiva = nil
         mensajeEstado = "Reserva cancelada"
     }
+}
+
+private extension Int {
+    var nonZero: Int? { self == 0 ? nil : self }
 }
