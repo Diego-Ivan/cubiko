@@ -10,22 +10,21 @@ import UserNotifications
 
 // MARK: - Tipos de notificación
 
-/// Cada case representa un evento distinto de la app.
-/// Para agregar un tipo nuevo, solo añades un case aquí
-/// y defines su contenido en `content` más abajo.
-
 enum CubikoNotificacion {
+    case reservaProximaAIniciar(reserva: Reserva, minutosRestantes: Int)  // ← nuevo, separado
     case reservaProximaATerminar(reserva: Reserva, minutosRestantes: Int)
     case reservaConfirmada(reserva: Reserva)
     case reservaCancelada(reserva: Reserva)
     case multaPendiente(descripcion: String)
     case materialVencido(nombreMaterial: String)
 
-    // Identificador único para poder cancelar notificaciones programadas
+    // Identificadores únicos — cada case tiene el suyo propio
     var identificador: String {
         switch self {
+        case .reservaProximaAIniciar(let reserva, let mins):
+            return "reserva-inicia-\(reserva.id)-\(mins)min"
         case .reservaProximaATerminar(let reserva, let mins):
-            return "reserva-expira-\(reserva.id)-\(mins)min"
+            return "reserva-termina-\(reserva.id)-\(mins)min"
         case .reservaConfirmada(let reserva):
             return "reserva-confirmada-\(reserva.id)"
         case .reservaCancelada(let reserva):
@@ -37,30 +36,33 @@ enum CubikoNotificacion {
         }
     }
 
-    // El contenido (título + cuerpo) que verá el usuario
     var content: UNMutableNotificationContent {
         let c = UNMutableNotificationContent()
         c.sound = .default
 
         switch self {
+        case .reservaProximaAIniciar(let reserva, let mins):
+            c.title = "🗓️ Tu reserva está por comenzar"
+            c.body = "\(reserva.cubiculo.nombre) inicia en \(mins) minuto\(mins == 1 ? "" : "s"). ¡Dirígete al cubículo!"
+
         case .reservaProximaATerminar(let reserva, let mins):
-            c.title = "Tu reserva está por terminar"
+            c.title = "⏰ Tu reserva está por terminar"
             c.body = "Te quedan \(mins) minuto\(mins == 1 ? "" : "s") en \(reserva.cubiculo.nombre). ¡Recuerda recoger tus cosas!"
 
         case .reservaConfirmada(let reserva):
-            c.title = "Reserva confirmada"
-            c.body = "\(reserva.cubiculo.nombre) reservado del \(reserva.inicio.horaFormato) al \(reserva.fin.horaFormato)."
+            c.title = "✅ Reserva confirmada"
+            c.body = "\(reserva.cubiculo.nombre) reservado de \(reserva.inicio.horaFormato) a \(reserva.fin.horaFormato)."
 
         case .reservaCancelada(let reserva):
-            c.title = "Reserva cancelada"
+            c.title = "❌ Reserva cancelada"
             c.body = "Tu reserva en \(reserva.cubiculo.nombre) fue cancelada."
 
         case .multaPendiente(let descripcion):
-            c.title = "Multa pendiente"
+            c.title = "💳 Multa pendiente"
             c.body = descripcion
 
         case .materialVencido(let nombre):
-            c.title = "Material por devolver"
+            c.title = "📚 Material por devolver"
             c.body = "El plazo de '\(nombre)' ha vencido. Por favor devuélvelo a la brevedad."
         }
 
@@ -76,34 +78,40 @@ final class NotificationService {
     static let shared = NotificationService()
     private init() {}
 
+    // MARK: Preferencias del usuario
+
+    private var minutosAvisoFin: Int {
+        UserDefaults.standard.integer(forKey: "minutosAvisoFin").nonZero ?? 15
+    }
+
+    private var minutosAvisoInicio: Int {
+        UserDefaults.standard.integer(forKey: "minutosAvisoInicio").nonZero ?? 15
+    }
+
     // MARK: Permisos
 
-    /// Llama esto al arrancar la app (en CubikoApp.swift)
     func solicitarPermiso() async {
         do {
             let granted = try await UNUserNotificationCenter.current()
                 .requestAuthorization(options: [.alert, .sound, .badge])
-            print(granted ? "Permisos de notificación concedidos" : "Permisos denegados")
+            print(granted ? "✅ Permisos concedidos" : "⚠️ Permisos denegados — ve a Ajustes → Cubiko → Notificaciones")
         } catch {
-            print("Error solicitando permisos: \(error)")
+            print("❌ Error solicitando permisos: \(error)")
         }
     }
 
     // MARK: Enviar inmediatamente
 
-    /// Muestra una notificación al instante (útil para confirmaciones, cancelaciones, multas, etc.)
     func enviarAhora(_ notificacion: CubikoNotificacion) {
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
         programar(notificacion, trigger: trigger)
     }
 
-    // MARK: Programar para más tarde
+    // MARK: Programar para una fecha
 
-    /// Programa una notificación para que se dispare en una fecha específica.
-    /// Funciona aunque la app esté cerrada.
     func programar(_ notificacion: CubikoNotificacion, en fecha: Date) {
         guard fecha > Date() else {
-            print("⚠️ La fecha ya pasó, notificación ignorada")
+            print("⚠️ Fecha ya pasada, ignorando: \(notificacion.identificador)")
             return
         }
         let componentes = Calendar.current.dateComponents(
@@ -114,41 +122,45 @@ final class NotificationService {
         programar(notificacion, trigger: trigger)
     }
 
-    // MARK: Notificaciones de reserva
+    // MARK: Recordatorios de reserva
 
-    /// Programa todos los recordatorios de una reserva de una vez.
-    /// Actualmente avisa a los 15 y 5 minutos antes de que termine.
     func programarRecordatoriosDeReserva(_ reserva: Reserva) {
-        let avisos = [15, 5] // minutos antes
-
-        for mins in avisos {
-            let fechaAviso = reserva.fin.addingTimeInterval(Double(-mins * 60))
-            guard fechaAviso > Date() else { continue }
-
-            let notificacion = CubikoNotificacion.reservaProximaATerminar(
+        // — Aviso antes de INICIAR —
+        let fechaAvisoInicio = reserva.inicio.addingTimeInterval(Double(-minutosAvisoInicio * 60))
+        if fechaAvisoInicio > Date() {
+            let notif = CubikoNotificacion.reservaProximaAIniciar(
                 reserva: reserva,
-                minutosRestantes: mins
+                minutosRestantes: minutosAvisoInicio
             )
-            programar(notificacion, en: fechaAviso)
-            print("🔔 Aviso programado: \(mins) min antes (\(fechaAviso.horaFormato))")
+            programar(notif, en: fechaAvisoInicio)
+            print("🔔 Aviso de INICIO programado: \(minutosAvisoInicio) min antes → \(fechaAvisoInicio.horaFormato)")
+        } else {
+            print("⚠️ Aviso de inicio omitido (fecha ya pasada)")
+        }
+
+        // — Aviso antes de TERMINAR —
+        let fechaAvisoFin = reserva.fin.addingTimeInterval(Double(-minutosAvisoFin * 60))
+        if fechaAvisoFin > Date() {
+            let notif = CubikoNotificacion.reservaProximaATerminar(
+                reserva: reserva,
+                minutosRestantes: minutosAvisoFin
+            )
+            programar(notif, en: fechaAvisoFin)
+            print("🔔 Aviso de FIN programado: \(minutosAvisoFin) min antes → \(fechaAvisoFin.horaFormato)")
+        } else {
+            print("⚠️ Aviso de fin omitido (fecha ya pasada)")
         }
     }
 
     // MARK: Cancelar
 
-    func cancelar(_ notificacion: CubikoNotificacion) {
-        UNUserNotificationCenter.current()
-            .removePendingNotificationRequests(withIdentifiers: [notificacion.identificador])
-    }
-
-    func cancelarTodosLosRecordatorios(de reserva: Reserva) {
-        let ids = [15, 5].map { mins in
-            CubikoNotificacion.reservaProximaATerminar(
-                reserva: reserva,
-                minutosRestantes: mins
-            ).identificador
-        }
+    func cancelarTodosLosRecordatorios(de reserva: Reserva, minutosInicio: Int, minutosFin: Int) {
+        let ids = [
+            CubikoNotificacion.reservaProximaAIniciar(reserva: reserva, minutosRestantes: minutosInicio).identificador,
+            CubikoNotificacion.reservaProximaATerminar(reserva: reserva, minutosRestantes: minutosFin).identificador
+        ]
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ids)
+        print("🗑️ Notificaciones canceladas: \(ids)")
     }
 
     // MARK: Privado
@@ -161,13 +173,15 @@ final class NotificationService {
         )
         UNUserNotificationCenter.current().add(request) { error in
             if let error {
-                print("Error al programar notificación: \(error)")
+                print("❌ Error al programar '\(notificacion.identificador)': \(error)")
+            } else {
+                print("✅ Programada: \(notificacion.identificador)")
             }
         }
     }
 }
 
-// MARK: - Helper de formato de fechas
+// MARK: - Helpers
 
 private extension Date {
     var horaFormato: String {
@@ -176,4 +190,8 @@ private extension Date {
         f.locale = Locale(identifier: "es_MX")
         return f.string(from: self)
     }
+}
+
+private extension Int {
+    var nonZero: Int? { self == 0 ? nil : self }
 }
