@@ -24,6 +24,11 @@ struct ContentView: View {
                 .tabItem {
                     Label("Configuración", systemImage: "gearshape")
                 }
+            
+            NuevaReservaView()
+                .tabItem {
+                    Label("Nueva Reserva", systemImage: "plus.square.fill")
+                }
         }
     }
 }
