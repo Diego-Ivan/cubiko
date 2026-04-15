@@ -11,7 +11,7 @@ import SwiftUI
 struct CubikoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
                 .task {
                     // Solicitar permisos de notificación al arrancar la app
                     await NotificationService.shared.solicitarPermiso()
