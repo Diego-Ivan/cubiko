@@ -17,13 +17,20 @@ struct TiempoRestanteView: View {
 
     var body: some View {
         VStack(spacing: 4) {
-            Text(tiempoFormateado)
-                .font(.system(size: 48, weight: .bold, design: .monospaced))
-                .foregroundColor(colorSegunTiempo)
-
-            Text("restantes")
+            
+            Text("Tiempo restante:")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
+            
+            HStack {
+                Image(systemName: iconoEstado)
+                    .foregroundColor(colorSegunTiempo)
+                    .font(.system(size: 35))
+                
+                Text(tiempoFormateado)
+                    .font(.system(size: 45, weight: .bold, design: .monospaced))
+                
+            }
         }
         .onAppear { actualizarTiempo() }
         .onReceive(timer) { _ in actualizarTiempo() }
@@ -33,6 +40,13 @@ struct TiempoRestanteView: View {
 
     private func actualizarTiempo() {
         tiempoRestante = max(fechaFin.timeIntervalSinceNow, 0)
+    }
+    
+    private var iconoEstado: String {
+        if tiempoRestante <= 0       { return "clock.badge.xmark.fill" }
+        if tiempoRestante <= 5*60    { return "exclamationmark.triangle.fill" }
+        if tiempoRestante <= 15*60   { return "clock.badge.exclamationmark.fill" }
+        return "clock.fill"
     }
 
     private var tiempoFormateado: String {
@@ -47,15 +61,16 @@ struct TiempoRestanteView: View {
         }
     }
 
+    // Changed for accesibility
     private var colorSegunTiempo: Color {
         if tiempoRestante <= 0        { return .gray   }
-        if tiempoRestante <= 5 * 60   { return .red    }  // menos de 5 min
-        if tiempoRestante <= 15 * 60  { return .orange }  // menos de 15 min
-        return .primary
+        else if tiempoRestante <= 5 * 60   { return .red    }  // menos de 5 min
+        else if tiempoRestante <= 15 * 60  { return .orange }  // menos de 15 min
+        return .green
     }
 }
 
 #Preview {
     // Simula una reserva que termina en 12 minutos
-    TiempoRestanteView(fechaFin: Date().addingTimeInterval(12 * 60))
+    TiempoRestanteView(fechaFin: Date().addingTimeInterval(10 * 60))
 }
