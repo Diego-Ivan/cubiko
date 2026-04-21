@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Cubiculo: Identifiable {
+struct Cubiculo: Identifiable, Codable {
     let id: Int
     let nombre: String
     let tipo: String
