@@ -23,14 +23,12 @@ final class ReservaViewModel {
     // MARK: - Crear reserva
 
     @discardableResult
-    func crearReserva(inicio: Date, fin: Date) -> String? {
+    func crearReserva(cubiculo: Cubiculo, inicio: Date, fin: Date) -> String? {
         guard fin > inicio else { return "La hora de fin debe ser después del inicio." }
         guard inicio > Date() else { return "La hora de inicio debe ser en el futuro." }
 
-        let cubiculoPrueba = Cubiculo(id: 1, nombre: "Cubículo A-01", tipo: "Individual")
-        let reserva = Reserva(id: UUID(), cubiculo: cubiculoPrueba, inicio: inicio, fin: fin)
+        let reserva = Reserva(id: UUID(), cubiculo: cubiculo, inicio: inicio, fin: fin)
 
-        // Guardar los minutos actuales antes de programar
         minutosInicioUsados = UserDefaults.standard.integer(forKey: "minutosAvisoInicio").nonZero ?? 15
         minutosFinUsados    = UserDefaults.standard.integer(forKey: "minutosAvisoFin").nonZero ?? 15
 

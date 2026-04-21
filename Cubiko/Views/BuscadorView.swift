@@ -9,41 +9,42 @@ import SwiftUI
 
 struct BuscadorView: View {
 
-    @StateObject private var vm = BuscadorViewModel.makeDefault()
+    // onReservar se pasa al crear el vm, no en onAppear
+    private let onReservar: ((Cubiculo, Date, Date) -> Void)?
+
+    @StateObject private var vm: BuscadorViewModel
 
     @State private var mostrarFecha   = false
     @State private var mostrarEntrada = false
     @State private var mostrarSalida  = false
 
+    init(onReservar: ((Cubiculo, Date, Date) -> Void)? = nil) {
+        self.onReservar = onReservar
+        _vm = StateObject(wrappedValue: BuscadorViewModel.make(onReservar: onReservar))
+    }
+
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    camposBusqueda
-                    botonBuscar
-                    resultados
-                    Spacer(minLength: 40)
-                }
-                .padding(.top, 16)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                camposBusqueda
+                botonBuscar
+                resultados
+                Spacer(minLength: 40)
             }
-            .background(Color(.systemGroupedBackground))
-            .navigationTitle("Buscar disponibilidad")
-            .navigationBarTitleDisplayMode(.large)
-            .animation(.easeInOut(duration: 0.25), value: mostrarFecha)
-            .animation(.easeInOut(duration: 0.25), value: mostrarEntrada)
-            .animation(.easeInOut(duration: 0.25), value: mostrarSalida)
+            .padding(.top, 16)
         }
+        .background(Color(.systemGroupedBackground))
+        .animation(.easeInOut(duration: 0.25), value: mostrarFecha)
+        .animation(.easeInOut(duration: 0.25), value: mostrarEntrada)
+        .animation(.easeInOut(duration: 0.25), value: mostrarSalida)
     }
 
     // MARK: - Campos
 
     private var camposBusqueda: some View {
         VStack(spacing: 0) {
-            // Fecha
             FilaCampo(label: "Fecha", valor: vm.fechaSeleccionada.formateadaFecha()) {
-                mostrarFecha.toggle()
-                mostrarEntrada = false
-                mostrarSalida  = false
+                mostrarFecha.toggle(); mostrarEntrada = false; mostrarSalida = false
             }
             if mostrarFecha {
                 DatePicker("", selection: $vm.fechaSeleccionada, displayedComponents: .date)
@@ -54,11 +55,8 @@ struct BuscadorView: View {
 
             Divider().padding(.leading)
 
-            // Hora entrada
             FilaCampo(label: "Hora de entrada", valor: vm.horaEntrada.formateadaHora()) {
-                mostrarEntrada.toggle()
-                mostrarFecha  = false
-                mostrarSalida = false
+                mostrarEntrada.toggle(); mostrarFecha = false; mostrarSalida = false
             }
             if mostrarEntrada {
                 DatePicker("", selection: $vm.horaEntrada, displayedComponents: .hourAndMinute)
@@ -70,11 +68,8 @@ struct BuscadorView: View {
 
             Divider().padding(.leading)
 
-            // Hora salida
             FilaCampo(label: "Hora de salida", valor: vm.horaSalida.formateadaHora()) {
-                mostrarSalida.toggle()
-                mostrarFecha   = false
-                mostrarEntrada = false
+                mostrarSalida.toggle(); mostrarFecha = false; mostrarEntrada = false
             }
             if mostrarSalida {
                 DatePicker("", selection: $vm.horaSalida, displayedComponents: .hourAndMinute)
@@ -90,7 +85,7 @@ struct BuscadorView: View {
         .padding(.horizontal)
     }
 
-    // MARK: - Botón
+    // MARK: - Botón buscar
 
     private var botonBuscar: some View {
         Button(action: vm.buscar) {
@@ -112,8 +107,25 @@ struct BuscadorView: View {
         switch vm.estado {
         case .inicial:
             EmptyView()
+
         case .disponible(let cubiculos):
-            SeccionDisponibleView(cubiculos: cubiculos)
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Image(systemName: "checkmark.circle.fill").foregroundColor(.green)
+                    Text("\(cubiculos.count) cubículo(s) disponibles").font(.headline)
+                }
+                .padding(.horizontal)
+
+                ForEach(cubiculos) { cubiculo in
+                    Button {
+                        vm.seleccionarCubiculo(cubiculo)
+                    } label: {
+                        TarjetaCubiculoView(cubiculo: cubiculo)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+
         case .sinDisponibilidad(let alternativas):
             SeccionSinDisponibilidadView(alternativas: alternativas) { bloque in
                 vm.seleccionarBloque(bloque)
@@ -148,24 +160,6 @@ struct FilaCampo: View {
     }
 }
 
-struct SeccionDisponibleView: View {
-    let cubiculos: [Cubiculo]
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Image(systemName: "checkmark.circle.fill").foregroundColor(.green)
-                Text("\(cubiculos.count) cubículo(s) disponibles").font(.headline)
-            }
-            .padding(.horizontal)
-
-            ForEach(cubiculos) { cubiculo in
-                TarjetaCubiculoView(cubiculo: cubiculo)
-            }
-        }
-    }
-}
-
 struct TarjetaCubiculoView: View {
     let cubiculo: Cubiculo
 
@@ -192,7 +186,6 @@ struct SeccionSinDisponibilidadView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // Banner sin disponibilidad
             HStack(spacing: 12) {
                 Image(systemName: "xmark.circle.fill")
                     .foregroundColor(.red)

@@ -10,16 +10,10 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         TabView {
-            BuscadorView()
-                .tabItem {
-                    Label("Buscar", systemImage: "magnifyingglass")
-                }
-
-            PruebaNotificacionesView()
+                ReservaView()
                 .tabItem {
                     Label("Reserva", systemImage: "calendar")
                 }
-
             ConfiguracionView()
                 .tabItem {
                     Label("Configuración", systemImage: "gearshape")
