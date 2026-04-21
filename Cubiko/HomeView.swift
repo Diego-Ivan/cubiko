@@ -32,5 +32,5 @@ enum UserState {
 }
 
 #Preview {
-    HomeView()
+    HomeView(currentState: .main)
 }

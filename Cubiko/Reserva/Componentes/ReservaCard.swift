@@ -51,6 +51,7 @@ struct ReservaCard: View {
                  .padding(.top, 20) // Padding from top of card
                  .padding(.bottom, 50)
                  
+                 Spacer()
                  
                  Button {
                      

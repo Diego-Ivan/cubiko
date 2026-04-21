@@ -6,8 +6,28 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		73001F712F97F22700F81856 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 507D18892F8495160079F3B3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 507D18902F8495160079F3B3;
+			remoteInfo = Cubiko;
+		};
+		73001F802F97F2C000F81856 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 507D18892F8495160079F3B3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 507D18902F8495160079F3B3;
+			remoteInfo = Cubiko;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		507D18912F8495160079F3B3 /* Cubiko.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cubiko.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		73001F652F97F19400F81856 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		73001F6D2F97F22700F81856 /* CubikoUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CubikoUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		73001F7A2F97F2C000F81856 /* CubikoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CubikoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -16,10 +36,34 @@
 			path = Cubiko;
 			sourceTree = "<group>";
 		};
+		73001F6E2F97F22700F81856 /* CubikoUnitTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CubikoUnitTests;
+			sourceTree = "<group>";
+		};
+		73001F7B2F97F2C000F81856 /* CubikoUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CubikoUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		507D188E2F8495160079F3B3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		73001F6A2F97F22700F81856 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		73001F772F97F2C000F81856 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,6 +77,9 @@
 			isa = PBXGroup;
 			children = (
 				507D18932F8495160079F3B3 /* Cubiko */,
+				73001F6E2F97F22700F81856 /* CubikoUnitTests */,
+				73001F7B2F97F2C000F81856 /* CubikoUITests */,
+				73001F642F97F19400F81856 /* Frameworks */,
 				507D18922F8495160079F3B3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,8 +88,18 @@
 			isa = PBXGroup;
 			children = (
 				507D18912F8495160079F3B3 /* Cubiko.app */,
+				73001F6D2F97F22700F81856 /* CubikoUnitTests.xctest */,
+				73001F7A2F97F2C000F81856 /* CubikoUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		73001F642F97F19400F81856 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				73001F652F97F19400F81856 /* XCTest.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -70,6 +127,52 @@
 			productReference = 507D18912F8495160079F3B3 /* Cubiko.app */;
 			productType = "com.apple.product-type.application";
 		};
+		73001F6C2F97F22700F81856 /* CubikoUnitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 73001F732F97F22700F81856 /* Build configuration list for PBXNativeTarget "CubikoUnitTests" */;
+			buildPhases = (
+				73001F692F97F22700F81856 /* Sources */,
+				73001F6A2F97F22700F81856 /* Frameworks */,
+				73001F6B2F97F22700F81856 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				73001F722F97F22700F81856 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				73001F6E2F97F22700F81856 /* CubikoUnitTests */,
+			);
+			name = CubikoUnitTests;
+			packageProductDependencies = (
+			);
+			productName = CubikoUnitTests;
+			productReference = 73001F6D2F97F22700F81856 /* CubikoUnitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		73001F792F97F2C000F81856 /* CubikoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 73001F822F97F2C000F81856 /* Build configuration list for PBXNativeTarget "CubikoUITests" */;
+			buildPhases = (
+				73001F762F97F2C000F81856 /* Sources */,
+				73001F772F97F2C000F81856 /* Frameworks */,
+				73001F782F97F2C000F81856 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				73001F812F97F2C000F81856 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				73001F7B2F97F2C000F81856 /* CubikoUITests */,
+			);
+			name = CubikoUITests;
+			packageProductDependencies = (
+			);
+			productName = CubikoUITests;
+			productReference = 73001F7A2F97F2C000F81856 /* CubikoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -77,11 +180,19 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2630;
+				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
 					507D18902F8495160079F3B3 = {
 						CreatedOnToolsVersion = 26.3;
+					};
+					73001F6C2F97F22700F81856 = {
+						CreatedOnToolsVersion = 26.0.1;
+						TestTargetID = 507D18902F8495160079F3B3;
+					};
+					73001F792F97F2C000F81856 = {
+						CreatedOnToolsVersion = 26.0.1;
+						TestTargetID = 507D18902F8495160079F3B3;
 					};
 				};
 			};
@@ -100,12 +211,28 @@
 			projectRoot = "";
 			targets = (
 				507D18902F8495160079F3B3 /* Cubiko */,
+				73001F6C2F97F22700F81856 /* CubikoUnitTests */,
+				73001F792F97F2C000F81856 /* CubikoUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		507D188F2F8495160079F3B3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		73001F6B2F97F22700F81856 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		73001F782F97F2C000F81856 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +249,34 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		73001F692F97F22700F81856 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		73001F762F97F2C000F81856 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		73001F722F97F22700F81856 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 507D18902F8495160079F3B3 /* Cubiko */;
+			targetProxy = 73001F712F97F22700F81856 /* PBXContainerItemProxy */;
+		};
+		73001F812F97F2C000F81856 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 507D18902F8495160079F3B3 /* Cubiko */;
+			targetProxy = 73001F802F97F2C000F81856 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		507D189A2F8495180079F3B3 /* Debug */ = {
@@ -320,6 +474,92 @@
 			};
 			name = Release;
 		};
+		73001F742F97F22700F81856 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SAM2A296M4;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Azu.CubikoUnitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Cubiko.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Cubiko";
+			};
+			name = Debug;
+		};
+		73001F752F97F22700F81856 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SAM2A296M4;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Azu.CubikoUnitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Cubiko.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Cubiko";
+			};
+			name = Release;
+		};
+		73001F832F97F2C000F81856 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SAM2A296M4;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Azu.CubikoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Cubiko;
+			};
+			name = Debug;
+		};
+		73001F842F97F2C000F81856 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SAM2A296M4;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Azu.CubikoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Cubiko;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -337,6 +577,24 @@
 			buildConfigurations = (
 				507D189D2F8495180079F3B3 /* Debug */,
 				507D189E2F8495180079F3B3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		73001F732F97F22700F81856 /* Build configuration list for PBXNativeTarget "CubikoUnitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				73001F742F97F22700F81856 /* Debug */,
+				73001F752F97F22700F81856 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		73001F822F97F2C000F81856 /* Build configuration list for PBXNativeTarget "CubikoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				73001F832F97F2C000F81856 /* Debug */,
+				73001F842F97F2C000F81856 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

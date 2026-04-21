@@ -126,7 +126,7 @@ struct LoginView: View {
                     return
                 }
                 if let decoded = try? JSONDecoder().decode(LoginResponse.self, from: data) {
-                    if httpResponse.statusCode == 201, decoded.success, let _ = decoded.data {
+                    if httpResponse.statusCode == 200, decoded.success, let _ = decoded.data {
                         successMessage = decoded.message ?? "¡Inicio de sesión exitoso!"
                         
                         currentState = .main
