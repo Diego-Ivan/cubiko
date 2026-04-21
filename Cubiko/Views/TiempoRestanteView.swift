@@ -31,8 +31,6 @@ struct TiempoRestanteView: View {
                     .font(.system(size: 45, weight: .bold, design: .monospaced))
                 
             }
-
-
         }
         .onAppear { actualizarTiempo() }
         .onReceive(timer) { _ in actualizarTiempo() }
@@ -74,5 +72,5 @@ struct TiempoRestanteView: View {
 
 #Preview {
     // Simula una reserva que termina en 12 minutos
-    TiempoRestanteView(fechaFin: Date().addingTimeInterval(1 * 60))
+    TiempoRestanteView(fechaFin: Date().addingTimeInterval(10 * 60))
 }
