@@ -26,6 +26,14 @@ struct ReservasView: View {
                     Text("No tienes reservas registradas.")
                         .foregroundColor(.secondary)
                         .padding()
+                    
+                    NavigationLink(destination: NuevaReservaView()) {
+                        Text("Agregar Reserva")
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .padding(.horizontal)
+                    
+                    
                 } else {
                     List {
                         Section("Próxima Reserva") {

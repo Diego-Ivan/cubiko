@@ -18,7 +18,7 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
     }
     
 
-    func obtenerDisponibles(inicio: Date, fin: Date, capacidad: Int?) async throws -> [SalaDisponible] {
+    func obtenerDisponibles(inicio: Date, fin: Date, capacidad: Int) async throws -> [SalaDisponible] {
         // Construir URL con query params
         var components = URLComponents(url: baseURL.appendingPathComponent("/api/rooms/available"), resolvingAgainstBaseURL: false)!
         let fechaFormatter = DateFormatter()
@@ -34,9 +34,9 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
         var queryItems: [URLQueryItem] = [
             URLQueryItem(name: "fecha", value: fechaFormatter.string(from: inicio)),
             URLQueryItem(name: "horaInicio", value: horaFormatter.string(from: inicio)),
-            URLQueryItem(name: "horaFin", value: horaFormatter.string(from: fin))
+            URLQueryItem(name: "horaFin", value: horaFormatter.string(from: fin)),
+            URLQueryItem(name: "capacidad", value: String(capacidad))
         ]
-        if let capacidad { queryItems.append(URLQueryItem(name: "capacidad", value: String(capacidad))) }
         components.queryItems = queryItems
 
         guard let url = components.url else { throw URLError(.badURL) }
@@ -50,6 +50,9 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
         }
 
         let (data, response) = try await URLSession.shared.data(for: request)
+        
+        // LOGS
+        print("ROOMS: \(String(data: data, encoding: .utf8) ?? "<no data>") \(response)")
 
         guard let http = response as? HTTPURLResponse else { throw URLError(.badServerResponse) }
 
@@ -212,7 +215,7 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
     
     func crearReserva(salaNumero: Int, salaUbicacion: String, inicio: Date, fin: Date, capacidad: Int?) async throws -> Int {
             // 1. URL de tu endpoint de creación
-            guard let url = URL(string: "http://localhost:3001/api/reservas") else {
+            guard let url = URL(string: "http://localhost:3001/api/reservas/create") else {
                 throw URLError(.badURL)
             }
             
@@ -248,17 +251,20 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
             
             // 4. Configurar la Petición POST
             var request = URLRequest(url: url)
-            request.httpMethod = "POST"
+            request.httpMethod = "PUT"
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             
-            if let token = UserDefaults.standard.string(forKey: "access_token") {
-                request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-            }
+//            if let token = User/*Defaults.standard.string(forKey: "access_token")*/ {
+            request.setValue("Bearer \(self.token)", forHTTPHeaderField: "Authorization")
+//            }
             
             request.httpBody = try JSONEncoder().encode(body)
             
             // 5. Ejecutar la llamada
             let (data, response) = try await URLSession.shared.data(for: request)
+        
+            // LOGS
+        print("NUEVA RESERVA: \(String(data: data, encoding: .utf8) ?? "<no data>") \(response)")
             
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw URLError(.badServerResponse)
