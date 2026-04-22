@@ -14,13 +14,15 @@ struct HomeView: View {
         
         NavigationView {
             ZStack {
+                ContentView()
+                /*
                 if currentState == .login {
                     LoginView(currentState: $currentState)
                 } else if currentState == .register {
                     RegisterView(currentState: $currentState)
                 } else if currentState == .main {
                     ContentView()
-                }
+                }*/
             }
         }
     }

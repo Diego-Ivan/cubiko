@@ -16,40 +16,42 @@ enum BuscadorEstado {
 
 @MainActor
 final class BuscadorViewModel: ObservableObject {
-
+    
     // MARK: - Inputs
     @Published var fechaSeleccionada: Date = Date()
     @Published var horaEntrada: Date = Calendar.current.date(bySettingHour: 8, minute: 0, second: 0, of: Date())!
-    @Published var horaSalida: Date = Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: Date())!
+    @Published var horaSalida: Date  = Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: Date())!
 
     // MARK: - Outputs
     @Published private(set) var estado: BuscadorEstado = .inicial
+
+    // MARK: - Callback
+    var onReservar: ((Cubiculo, Date, Date) -> Void)?
 
     // MARK: - Use Cases
     private let buscarDisponibles: BuscarCubiculosDisponiblesUseCase
     private let obtenerAlternativos: ObtenerBloquesAlternativosUseCase
 
-    // MARK: - Init
     init(
         buscarDisponibles: BuscarCubiculosDisponiblesUseCase,
-        obtenerAlternativos: ObtenerBloquesAlternativosUseCase
+        obtenerAlternativos: ObtenerBloquesAlternativosUseCase,
+        onReservar: ((Cubiculo, Date, Date) -> Void)? = nil
     ) {
-        self.buscarDisponibles = buscarDisponibles
+        self.buscarDisponibles   = buscarDisponibles
         self.obtenerAlternativos = obtenerAlternativos
+        self.onReservar          = onReservar
     }
 
     // MARK: - Actions
     func buscar() {
-        let inicio = combinando(fecha: fechaSeleccionada, con: horaEntrada)
-        let fin    = combinando(fecha: fechaSeleccionada, con: horaSalida)
-
+        let inicio      = combinando(fecha: fechaSeleccionada, con: horaEntrada)
+        let fin         = combinando(fecha: fechaSeleccionada, con: horaSalida)
         let disponibles = buscarDisponibles.execute(inicio: inicio, fin: fin)
 
         if !disponibles.isEmpty {
             estado = .disponible(disponibles)
         } else {
-            let alternativas = obtenerAlternativos.execute(inicio: inicio, fin: fin)
-            estado = .sinDisponibilidad(alternativas)
+            estado = .sinDisponibilidad(obtenerAlternativos.execute(inicio: inicio, fin: fin))
         }
     }
 
@@ -59,8 +61,14 @@ final class BuscadorViewModel: ObservableObject {
         buscar()
     }
 
-    // MARK: - Helpers
-    private func combinando(fecha: Date, con hora: Date) -> Date {
+    func seleccionarCubiculo(_ cubiculo: Cubiculo) {
+        let inicio = combinando(fecha: fechaSeleccionada, con: horaEntrada)
+        let fin    = combinando(fecha: fechaSeleccionada, con: horaSalida)
+        print("✅ seleccionarCubiculo llamado — onReservar es nil: \(onReservar == nil)")
+        onReservar?(cubiculo, inicio, fin)
+    }
+
+    func combinando(fecha: Date, con hora: Date) -> Date {
         let cal = Calendar.current
         let hc  = cal.dateComponents([.hour, .minute], from: hora)
         return cal.date(bySettingHour: hc.hour ?? 0,
@@ -68,14 +76,12 @@ final class BuscadorViewModel: ObservableObject {
                         second: 0,
                         of: fecha) ?? fecha
     }
-}
 
-// MARK: - Factory
-extension BuscadorViewModel {
-    static func makeDefault() -> BuscadorViewModel {
-        let repo       = CubiculoRepositoryImpl()
-        let buscar     = BuscarCubiculosDisponiblesUseCase(repository: repo)
+    // MARK: - Factory
+    static func make(onReservar: ((Cubiculo, Date, Date) -> Void)? = nil) -> BuscadorViewModel {
+        let repo         = CubiculoRepositoryImpl()
+        let buscar       = BuscarCubiculosDisponiblesUseCase(repository: repo)
         let alternativos = ObtenerBloquesAlternativosUseCase(buscarDisponibles: buscar)
-        return BuscadorViewModel(buscarDisponibles: buscar, obtenerAlternativos: alternativos)
+        return BuscadorViewModel(buscarDisponibles: buscar, obtenerAlternativos: alternativos, onReservar: onReservar)
     }
 }

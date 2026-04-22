@@ -135,7 +135,8 @@ struct PruebaNotificacionesView: View {
                     if viewModel.reservaActiva == nil {
                         Button {
                             filaExpandida = ""
-                            mensajeError = viewModel.crearReserva(inicio: fechaInicio, fin: fechaFin)
+                            let cubiculoPrueba = Cubiculo(id: 1, nombre: "Cubículo A-01", tipo: "Individual")
+                            mensajeError = viewModel.crearReserva(cubiculo: cubiculoPrueba, inicio: fechaInicio, fin: fechaFin)
                         } label: {
                             Label("Crear reserva", systemImage: "plus.circle.fill")
                                 .frame(maxWidth: .infinity)
