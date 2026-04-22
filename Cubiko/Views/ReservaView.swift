@@ -4,61 +4,98 @@ struct ReservaView: View {
 
     @State private var viewModel = ReservaViewModel()
     @State private var mensajeError: String? = nil
+    @State private var mostrarCambiarHora = false
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Group {
                 if let reserva = viewModel.reservaActiva {
                     reservaActivaView(reserva)
                 } else {
-                    // ← Pasamos la referencia a través de una función separada
                     BuscadorView(onReservar: reservar)
                 }
             }
-            .navigationTitle("Nueva Reserva")
+            .navigationTitle(viewModel.reservaActiva == nil ? "Nueva Reserva" : "Mi Reserva")
             .animation(.easeInOut, value: viewModel.reservaActiva == nil)
         }
     }
 
-    // ← Función separada en lugar de closure inline
-    private func reservar(cubiculo: Cubiculo, inicio: Date, fin: Date) {
-        mensajeError = viewModel.crearReserva(cubiculo: cubiculo, inicio: inicio, fin: fin)
-    }
+    // MARK: - Reserva activa
 
     private func reservaActivaView(_ reserva: Reserva) -> some View {
-        VStack(spacing: 32) {
-            Spacer()
+        ZStack {
+            VStack(alignment: .center, spacing: 20) {
 
-            VStack(spacing: 8) {
-                Image(systemName: "checkmark.circle.fill")
-                    .foregroundStyle(.green)
-                    .font(.system(size: 56))
+                ReservaCard(reserva: reserva)
+                    .padding(.horizontal)
 
-                Text(reserva.cubiculo.nombre)
-                    .font(.title2.bold())
+                TiempoRestanteView(fechaFin: reserva.fin)
 
-                Text(viewModel.mensajeEstado)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                // Ayuda y soporte
+                HStack {
+                    Text("Ayuda y soporte")
+                        .foregroundColor(.primary)
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.gray)
+                }
+                .padding()
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    print("Ayuda y soporte tapped")
+                }
+                .padding(.horizontal)
+
+                // Botones
+                VStack(spacing: 10) {
+                    Button {
+                        mostrarCambiarHora = true
+                    } label: {
+                        Text("Cambiar hora de reserva")
+                    }
+                    .padding(.horizontal)
+                    .buttonStyle(TertiaryButtonStyle())
+
+                    Button {
+                        viewModel.cancelarReserva()
+                    } label: {
+                        Text("Cancelar reserva")
+                            .font(.headline)
+                            .foregroundColor(.red)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .fill(Color.red.opacity(0.15))
+                            )
+                    }
+                    .padding(.horizontal)
+                }
+                .padding()
+
+                Spacer()
             }
-
-            TiempoRestanteView(fechaFin: reserva.fin)
-
-            Spacer()
-
-            Button(role: .destructive) {
-                viewModel.cancelarReserva()
-            } label: {
-                Label("Cancelar reserva", systemImage: "xmark.circle.fill")
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(Color(.systemBackground))
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
-            }
-            .padding(.horizontal)
-            .padding(.bottom, 32)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
-        .background(Color(.systemGroupedBackground))
+        .sheet(isPresented: $mostrarCambiarHora) {
+            CambiarHoraView(
+                reservaActiva: reserva,
+                onConfirmar: { inicio, fin in
+                    mostrarCambiarHora = false
+                    // TODO: conectar con viewModel.actualizarHora(inicio:fin:)
+                    print("Nueva hora: \(inicio) – \(fin)")
+                },
+                onCancelar: {
+                    mostrarCambiarHora = false
+                }
+            )
+        }
+    }
+
+    // MARK: - Crear reserva
+
+    private func reservar(cubiculo: Cubiculo, inicio: Date, fin: Date) {
+        mensajeError = viewModel.crearReserva(cubiculo: cubiculo, inicio: inicio, fin: fin)
     }
 }
 
