@@ -43,19 +43,19 @@ enum CubikoNotificacion {
         switch self {
         case .reservaProximaAIniciar(let reserva, let mins):
             c.title = "🗓️ Tu reserva está por comenzar"
-            c.body = "\(reserva.cubiculo.nombre) inicia en \(mins) minuto\(mins == 1 ? "" : "s"). ¡Dirígete al cubículo!"
+            c.body = "\(reserva.salaNumero) inicia en \(mins) minuto\(mins == 1 ? "" : "s"). ¡Dirígete al cubículo!"
 
         case .reservaProximaATerminar(let reserva, let mins):
             c.title = "⏰ Tu reserva está por terminar"
-            c.body = "Te quedan \(mins) minuto\(mins == 1 ? "" : "s") en \(reserva.cubiculo.nombre). ¡Recuerda recoger tus cosas!"
+            c.body = "Te quedan \(mins) minuto\(mins == 1 ? "" : "s") en \(reserva.salaNumero). ¡Recuerda recoger tus cosas!"
 
         case .reservaConfirmada(let reserva):
             c.title = "✅ Reserva confirmada"
-            c.body = "\(reserva.cubiculo.nombre) reservado de \(reserva.inicio.horaFormato) a \(reserva.fin.horaFormato)."
+            c.body = "\(reserva.salaNumero) reservado de \(reserva.fechaHoraInicio.horaFormato) a \(reserva.fechaHoraFin.horaFormato)."
 
         case .reservaCancelada(let reserva):
             c.title = "❌ Reserva cancelada"
-            c.body = "Tu reserva en \(reserva.cubiculo.nombre) fue cancelada."
+            c.body = "Tu reserva en \(reserva.salaNumero) fue cancelada."
 
         case .multaPendiente(let descripcion):
             c.title = "💳 Multa pendiente"
@@ -126,7 +126,7 @@ final class NotificationService {
 
     func programarRecordatoriosDeReserva(_ reserva: Reserva) {
         // — Aviso antes de INICIAR —
-        let fechaAvisoInicio = reserva.inicio.addingTimeInterval(Double(-minutosAvisoInicio * 60))
+        let fechaAvisoInicio = reserva.fechaHoraInicio.addingTimeInterval(Double(-minutosAvisoInicio * 60))
         if fechaAvisoInicio > Date() {
             let notif = CubikoNotificacion.reservaProximaAIniciar(
                 reserva: reserva,
@@ -139,7 +139,7 @@ final class NotificationService {
         }
 
         // — Aviso antes de TERMINAR —
-        let fechaAvisoFin = reserva.fin.addingTimeInterval(Double(-minutosAvisoFin * 60))
+        let fechaAvisoFin = reserva.fechaHoraFin.addingTimeInterval(Double(-minutosAvisoFin * 60))
         if fechaAvisoFin > Date() {
             let notif = CubikoNotificacion.reservaProximaATerminar(
                 reserva: reserva,

@@ -27,4 +27,12 @@ enum TipoCubiculo: String, CaseIterable {
         case .grupal:     return "Espacio amplio para grandes ideas."
         }
     }
+    
+    var capacidad: Int {
+        switch self {
+        case .individual: return 1
+        case .dual:       return 2
+        case .grupal:     return 3
+        }
+    }
 }

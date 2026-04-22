@@ -7,6 +7,8 @@
 
 import Foundation
 
+import Foundation
+
 final class BuscarCubiculosDisponiblesUseCase {
 
     private let repository: CubiculoRepositoryProtocol
@@ -15,14 +17,11 @@ final class BuscarCubiculosDisponiblesUseCase {
         self.repository = repository
     }
 
-    func execute(inicio: Date, fin: Date) -> [Cubiculo] {
-        let reservas = repository.obtenerReservas()
-        return repository.obtenerTodos().filter { cubiculo in
-            !reservas.contains { r in
-                r.cubiculo.id == cubiculo.id &&
-                r.inicio < fin &&
-                r.fin > inicio
-            }
-        }
+    // Ahora es async throws y acepta la capacidad como parámetro opcional
+    func execute(inicio: Date, fin: Date, capacidad: Int? = nil) async throws -> [SalaDisponible] {
+        // En Clean Architecture, el backend ahora se encarga de la lógica pesada
+        // de calcular qué se traslapa y qué no.
+        // El Use Case simplemente pide los datos al repositorio de forma asíncrona.
+        return try await repository.obtenerDisponibles(inicio: inicio, fin: fin, capacidad: capacidad)
     }
 }

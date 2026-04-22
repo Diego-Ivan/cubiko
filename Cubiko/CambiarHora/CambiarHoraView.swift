@@ -129,15 +129,11 @@ struct CambiarHoraView: View {
 // MARK: - Preview
 
 #Preview {
-    let cubiculo = Cubiculo(id: 1, nombre: "Sala #1", tipo: "Individual")
-    let ahora    = Date()
-    let reserva  = Reserva(
-        id: UUID(),
-        cubiculo: cubiculo,
-        inicio: ahora.addingTimeInterval(3600),
-        fin: ahora.addingTimeInterval(7200)
-    )
-    return CambiarHoraView(
+    let ahora = Date()
+    let reserva = Reserva(id: 1, estudianteId: 1, salaUbicacion: "Biblioteca", salaNumero: 1, fechaInicio: ahora.addingTimeInterval(3 * 60 * 60), fechaFin: ahora.addingTimeInterval(5 * 60 * 60), horaInicio: DateComponents(hour: 8, minute: 0, second: 0), horaFin: DateComponents(hour: 13, minute: 0, second: 0), numPersonas: 1)
+
+    
+    CambiarHoraView(
         reservaActiva: reserva,
         onConfirmar: { inicio, fin in print("Confirmado: \(inicio) – \(fin)") },
         onCancelar:  { print("Cancelado") }

@@ -11,5 +11,4 @@ struct BloqueHorario: Identifiable {
     let id = UUID()
     let horaInicio: Date
     let horaFin: Date
-    let cubiculosDisponibles: Int
 }

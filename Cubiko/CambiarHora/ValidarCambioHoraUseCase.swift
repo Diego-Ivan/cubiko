@@ -15,23 +15,44 @@ final class ValidarCambioHoraUseCase {
         self.repository = repository
     }
 
-    func execute(reservaActiva: Reserva, nuevaEntrada: Date, nuevaSalida: Date) -> DisponibilidadEstado {
+    func execute(reservaActiva: Reserva, nuevaEntrada: Date, nuevaSalida: Date) async -> DisponibilidadEstado {
+        // 1. Validaciones básicas de tiempo
         guard nuevaSalida > nuevaEntrada else {
-            return .invalido("La hora de salida debe ser después de la entrada")
+            return .invalido("La hora de salida debe ser después de la entrada.")
         }
         guard nuevaEntrada > Date() else {
-            return .invalido("La hora de entrada debe ser en el futuro")
+            return .invalido("La hora de entrada debe ser en el futuro.")
         }
 
-        let otrasReservas = repository.obtenerReservas().filter {
-            $0.id != reservaActiva.id &&
-            $0.cubiculo.id == reservaActiva.cubiculo.id
-        }
+        do {
+            // 2. Pedimos al backend las salas disponibles en el NUEVO horario propuesto
+            let salasDisponibles = try await repository.obtenerDisponibles(
+                inicio: nuevaEntrada,
+                fin: nuevaSalida,
+                capacidad: reservaActiva.numPersonas
+            )
 
-        let hayConflicto = otrasReservas.contains { r in
-            r.inicio < nuevaSalida && r.fin > nuevaEntrada
-        }
+            // 3. Verificamos que la reserva actual tenga una sala asignada
+            // (Usamos los nombres de propiedades basados en tu modelo Reserva actualizado)
+//            guard let numeroActual = reservaActiva.salaNumero,
+//                  let ubicacionActual = reservaActiva.salaUbicacion else {
+//                return .invalido("La reserva actual no tiene una sala asignada.")
+//            }
+            let numeroActual = reservaActiva.salaNumero
+            let ubicacionActual = reservaActiva.salaUbicacion
+            
+            // 4. ¿Nuestra sala actual sigue estando libre en este nuevo horario?
+            let salaSigueLibre = salasDisponibles.contains { sala in
+                sala.numero == numeroActual &&
+                sala.ubicacion == ubicacionActual
+            }
 
-        return hayConflicto ? .conflicto : .libre
+            // Si está en la lista de disponibles, no hay conflicto. Si no, alguien más ya la ocupó.
+            return salaSigueLibre ? .libre : .conflicto
+            
+        } catch {
+            // Si hay un error de red o de servidor, devolvemos un estado inválido
+            return .invalido("Error de conexión al verificar disponibilidad.")
+        }
     }
 }

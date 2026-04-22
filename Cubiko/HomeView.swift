@@ -8,21 +8,24 @@
 import SwiftUI
 
 struct HomeView: View {
+    @EnvironmentObject var sessionManager: SessionManager
     @State var currentState: UserState = .login
     
     var body: some View {
         
         NavigationView {
             ZStack {
-                ContentView()
-                /*
-                if currentState == .login {
-                    LoginView(currentState: $currentState)
-                } else if currentState == .register {
-                    RegisterView(currentState: $currentState)
-                } else if currentState == .main {
+                if sessionManager.profile != nil {
                     ContentView()
-                }*/
+                } else {
+                    if currentState == .login {
+                        LoginView(currentState: $currentState)
+
+                    } else if currentState == .register {
+                        RegisterView(currentState: $currentState)
+
+                    }
+                }
             }
         }
     }
@@ -34,5 +37,6 @@ enum UserState {
 }
 
 #Preview {
-    HomeView()
+    HomeView(currentState: .login)
+        .environmentObject(SessionManager())
 }
