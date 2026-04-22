@@ -11,4 +11,5 @@ enum DisponibilidadEstado: Equatable {
     case libre
     case conflicto
     case invalido(String)
+    case validando
 }

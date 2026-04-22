@@ -18,11 +18,30 @@ final class ReservaViewModel {
     private var minutosInicioUsados: Int = 0
     private var minutosFinUsados: Int = 0
     private var timer: Timer?
+    private var isProcessing: Bool = false
+    
+    // MARK: - Dependencias (Clean Architecture)
+    private let cancelarReservaUseCase: CancelarReservaUseCase
+    private let extenderReservaUseCase: ExtenderReservaUseCase
+    
+    // MARK: - Init
+    init(
+        reservaActiva: Reserva,
+        cancelarReservaUseCase: CancelarReservaUseCase,
+        extenderReservaUseCase: ExtenderReservaUseCase
+    ) {
+        self.reservaActiva = reservaActiva
+        self.cancelarReservaUseCase = cancelarReservaUseCase
+        self.extenderReservaUseCase = extenderReservaUseCase
+        
+        iniciarTimer()
+    }
+    
 
     // MARK: - Crear reserva
 
     @discardableResult
-    func crearReserva(cubiculo: Cubiculo, inicio: Date, fin: Date) -> String? {
+    func crearReserva(sala: SalaDisponible, inicio: Date, fin: Date) -> String? {
         guard fin > inicio else { return "La hora de fin debe ser después del inicio." }
         guard inicio > Date() else { return "La hora de inicio debe ser en el futuro." }
 
@@ -102,65 +121,55 @@ final class ReservaViewModel {
     }
 
     // MARK: - Extender reserva
-
-    func extenderReserva(minutos: Int = 30) {
-        guard let reservaActual = reservaActiva, puedeExtender else { return }
-
-        let nuevaFin = reservaActual.fechaFin.addingTimeInterval(Double(minutos) * 60)
-
-        NotificationService.shared.cancelarTodosLosRecordatorios(
-            de: reservaActual,
-            minutosInicio: minutosInicioUsados,
-            minutosFin: minutosFinUsados
-        )
-        
-        let cal = Calendar.current
-        let horaInicioComps = cal.dateComponents([.hour, .minute], from: reservaActual.fechaInicio)
-        let horaFinComps = cal.dateComponents([.hour, .minute], from: nuevaFin)
-        
-        let reservaExtendida = Reserva(
-            id: reservaActual.id,
-            estudianteId: 1, // Simulado
-            salaUbicacion: reservaActual.salaUbicacion,
-            salaNumero: reservaActual.salaNumero,
-            fechaInicio: reservaActual.fechaInicio,
-            fechaFin: nuevaFin,
-            horaInicio: horaInicioComps,
-            horaFin: horaFinComps,
-            numPersonas: 1,
-            status: .activa
-        )
-
-
-        reservaActiva = reservaExtendida
-
-        let f = DateFormatter()
-        f.timeStyle = .short
-        f.locale = Locale(identifier: "es_MX")
-        mensajeEstado = "\(f.string(from: reservaExtendida.fechaInicio)) – \(f.string(from: nuevaFin))"
-
-        NotificationService.shared.programarRecordatoriosDeReserva(reservaExtendida)
-
-        print("✅ Reserva extendida hasta: \(f.string(from: nuevaFin))")
-        iniciarTimer()
-    }
+    func extenderReserva(hasta nuevaFin: Date) {
+            guard let reserva = reservaActiva else { return }
+            isProcessing = true
+            
+            Task {
+                // Le pasamos la reserva completa al caso de uso
+                let resultado = await extenderReservaUseCase.execute(reservaActiva: reserva, nuevaFin: nuevaFin)
+                
+                isProcessing = false
+                
+                switch resultado {
+                case .exito:
+                    self.mensajeEstado = "Reserva extendida con éxito"
+                    // Aquí podrías actualizar tu objeto reservaActiva localmente si lo deseas
+                case .error(let mensaje):
+                    self.mensajeEstado = "Error al extender: \(mensaje)"
+                }
+            }
+        }
 
     // MARK: - Cancelar
-
     func cancelarReserva() {
-        timer?.invalidate()
-        timer = nil
-        puedeExtender = false
-
         guard let reserva = reservaActiva else { return }
-        NotificationService.shared.cancelarTodosLosRecordatorios(
-            de: reserva,
-            minutosInicio: minutosInicioUsados,
-            minutosFin: minutosFinUsados
-        )
-        NotificationService.shared.enviarAhora(.reservaCancelada(reserva: reserva))
-        reservaActiva = nil
-        mensajeEstado = "Reserva cancelada"
+        isProcessing = true
+        
+        Task {
+            // 1. Le pedimos al backend que cancele la reserva
+            let resultado = await cancelarReservaUseCase.execute(reservaId: reserva.id)
+            
+            isProcessing = false
+            
+            switch resultado {
+            case .exito:
+                // 2. Si el backend confirma, limpiamos la UI localmente
+                timer?.invalidate()
+                timer = nil
+                puedeExtender = false
+                
+                NotificationService.shared.cancelarTodosLosRecordatorios(de: reserva, minutosInicio: 0, minutosFin: 0)
+                NotificationService.shared.enviarAhora(.reservaCancelada(reserva: reserva))
+                
+                self.reservaActiva = nil
+                self.mensajeEstado = "Reserva cancelada con éxito"
+                
+            case .error(let mensaje):
+                // Mostrar alerta de que no se pudo cancelar por problemas de red o del servidor
+                self.mensajeEstado = "Error al cancelar: \(mensaje)"
+            }
+        }
     }
 
     // MARK: - Timer

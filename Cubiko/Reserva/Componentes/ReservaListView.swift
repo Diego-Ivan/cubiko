@@ -37,7 +37,7 @@ struct ReservaListView: View {
     var body: some View {
         
         NavigationLink {
-            ReservaView(reserva: reserva)
+            ReservaDetalleView(reserva: reserva)
         } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 8) {

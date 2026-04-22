@@ -36,8 +36,16 @@ struct NuevaReservaView: View {
             }
             .background(Color(.systemGroupedBackground))
             .navigationDestination(isPresented: $viewModel.navegarASiguiente) {
-                // Aquí pasarías al siguiente paso, usando tus modelos de Cubiculo
-                Text("Buscando cubículos tipo: \(viewModel.tipoSeleccionado?.rawValue ?? "")")
+                if let tipo = viewModel.tipoSeleccionado {
+                    // Le pasamos el tipo al Buscador para que filtre por capacidad
+                    BuscadorView(
+                        capacidadMinima: tipo.capacidad, // Asumiendo que tu enum tiene esta propiedad
+                        onReservar: { sala, inicio, fin in
+                            // Backend para crear la reserva real
+                            viewModel.crearReserva(sala: sala, inicio: inicio, fin: fin)
+                        }
+                    )
+                }
             }
         }
     }
@@ -64,6 +72,14 @@ struct NuevaReservaView: View {
         .disabled(!viewModel.puedeContinuar)
         .padding(24)
     }
+    
+//    func crearReserva(sala: SalaDisponible, inicio: Date, fin: Date) {
+//        // 1. Aquí irá la lógica para llamar a tu backend (POST)
+//        print("Buscando crear reserva en sala \(sala.numero) a las \(inicio)")
+//        
+//        self.navegarASiguiente = false
+//        self.tipoSeleccionado = nil
+//    }
 }
 
 #Preview {

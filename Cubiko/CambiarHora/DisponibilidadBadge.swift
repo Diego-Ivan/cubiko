@@ -30,6 +30,7 @@ struct DisponibilidadBadge: View {
         case .libre:    return "checkmark.circle"
         case .conflicto: return "xmark.circle"
         case .invalido: return "exclamationmark.triangle"
+        case .validando: return "arrow.2.circlepath.circle"
         }
     }
 
@@ -38,6 +39,7 @@ struct DisponibilidadBadge: View {
         case .libre:    return "Libre"
         case .conflicto: return "Conflicto"
         case .invalido: return "Inválido"
+        case .validando: return "Validando..."
         }
     }
 
@@ -46,6 +48,7 @@ struct DisponibilidadBadge: View {
         case .libre:    return .green
         case .conflicto: return .red
         case .invalido: return .orange
+        case .validando: return .gray
         }
     }
 }

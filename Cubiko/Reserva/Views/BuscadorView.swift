@@ -10,7 +10,8 @@ import SwiftUI
 struct BuscadorView: View {
 
     // onReservar se pasa al crear el vm, no en onAppear
-    private let onReservar: ((Cubiculo, Date, Date) -> Void)?
+    private let onReservar: ((SalaDisponible, Date, Date) -> Void)?
+    var capacidadMinimal: Int?
 
     @StateObject private var vm: BuscadorViewModel
 
@@ -18,10 +19,16 @@ struct BuscadorView: View {
     @State private var mostrarEntrada = false
     @State private var mostrarSalida  = false
 
-    init(onReservar: ((Cubiculo, Date, Date) -> Void)? = nil) {
-        self.onReservar = onReservar
-        _vm = StateObject(wrappedValue: BuscadorViewModel.make(onReservar: onReservar))
-    }
+    init(capacidadMinima: Int? = nil, onReservar: ((SalaDisponible, Date, Date) -> Void)? = nil) {
+            self.onReservar = onReservar
+            
+            // Creamos el ViewModel temporalmente
+            let nuevoVM = BuscadorViewModel.make(onReservar: onReservar)
+            // Le inyectamos la capacidad
+            nuevoVM.capacidadMinima = capacidadMinima
+            // Lo asignamos al StateObject
+            _vm = StateObject(wrappedValue: nuevoVM)
+        }
 
     var body: some View {
         ScrollView {
@@ -108,19 +115,19 @@ struct BuscadorView: View {
         case .inicial:
             EmptyView()
 
-        case .disponible(let cubiculos):
+        case .disponible(let salas):
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Image(systemName: "checkmark.circle.fill").foregroundColor(.green)
-                    Text("\(cubiculos.count) cubículo(s) disponibles").font(.headline)
+                    Text("\(salas.count) cubículo(s) disponibles").font(.headline)
                 }
                 .padding(.horizontal)
 
-                ForEach(cubiculos) { cubiculo in
+                ForEach(salas, id: \.numero) { sala in
                     Button {
-                        vm.seleccionarCubiculo(cubiculo)
+                        vm.seleccionarSala(sala)
                     } label: {
-                        TarjetaCubiculoView(cubiculo: cubiculo)
+                        TarjetaCubiculoView(sala: sala)
                     }
                     .buttonStyle(.plain)
                 }
@@ -160,27 +167,7 @@ struct FilaCampo: View {
     }
 }
 
-//<<<<<<< HEAD
-//struct SeccionDisponibleView: View {
-//    let salas: [SalaDisponible]
-//
-//    var body: some View {
-//        VStack(alignment: .leading, spacing: 12) {
-//            HStack {
-//                Image(systemName: "checkmark.circle.fill").foregroundColor(.green)
-//                Text("\(salas.count) cubículo(s) disponibles").font(.headline)
-//            }
-//            .padding(.horizontal)
-//
-//            ForEach(salas, id: \.numero) { sala in
-//                TarjetaCubiculoView(sala: sala)
-//            }
-//        }
-//    }
-//}
-//
-//=======
-//>>>>>>> origin/main
+
 struct TarjetaCubiculoView: View {
     let sala: SalaDisponible
 

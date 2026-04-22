@@ -48,6 +48,19 @@ struct TertiaryButtonStyle: ButtonStyle {
     }
 }
 
+struct CancelButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .bold()
+            .foregroundColor(Color.redText)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 16)
+            .background(Color.redBg)
+            .cornerRadius(25)
+
+    }
+}
+
 
 // Usage:
 #Preview {
@@ -60,6 +73,9 @@ struct TertiaryButtonStyle: ButtonStyle {
         
         Button("Click Me") { }
             .buttonStyle(TertiaryButtonStyle())
+        
+        Button("Click Me") { }
+            .buttonStyle(CancelButtonStyle())
     }
     .padding()
 }

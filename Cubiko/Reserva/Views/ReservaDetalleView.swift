@@ -1,43 +1,48 @@
 import SwiftUI
 
-struct ReservaView: View {
-
-    @State private var viewModel = ReservaViewModel()
-    let reserva: Reserva
-        
-    @State private var mensajeError: String? = nil
+struct ReservaDetalleView: View {
+    let reserva: Reserva // La recibe de la lista
+    @State private var viewModel: ReservaViewModel
     @State private var mostrarCambiarHora = false
+    @State private var mensajeError: String? = nil
 
+    init(reserva: Reserva) {
+            self.reserva = reserva
+        
+        // 1. Instanciamos el repositorio real que hace las peticiones
+        // (Usa el nombre de tu clase real, probablemente sea CubiculoRepositoryImpl)
+        let repository = RealRoomRepository(baseURL: URL(string: "http://localhost:3001/")!, token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidGlwbyI6ImVzdHVkaWFudGUiLCJlbWFpbCI6ImF6dWFueS5taWxhY25AdWRsYXAubXgiLCJpYXQiOjE3NzY4MjMyNDcsImV4cCI6MTc3NjkwOTY0N30.hF7frRzHMEPUdd8jkAp83NAuAIBCwtuv9hX4Q25w4Bo")
+        
+        // 2. Creamos los Casos de Uso inyectándoles el repositorio
+        let cancelarUseCase = CancelarReservaUseCase(repository: repository)
+        let extenderUseCase = ExtenderReservaUseCase(repository: repository)
+        
+        // 3. Inicializamos el ViewModel con TODAS sus dependencias
+        _viewModel = State(wrappedValue: ReservaViewModel(
+            reservaActiva: reserva,
+            cancelarReservaUseCase: cancelarUseCase,
+            extenderReservaUseCase: extenderUseCase
+        ))
+    }
+    
     var body: some View {
-        NavigationStack {
-            Group {
-                if let reserva = viewModel.reservaActiva {
-                    reservaActivaView(reserva)
-                } else {
-                    VStack(spacing: 0) {
-                        BuscadorView(onReservar: reservar)
-
-                        if let error = mensajeError {
-                            HStack(spacing: 8) {
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                    .foregroundStyle(.red)
-                                Text(error)
-                                    .font(.subheadline)
-                                    .foregroundStyle(.red)
-                            }
-                            .padding()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color.red.opacity(0.08))
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                            .padding(.horizontal)
-                            .transition(.move(edge: .bottom).combined(with: .opacity))
-                        }
-                    }
-                    .animation(.easeInOut(duration: 0.3), value: mensajeError)
-                }
+        ScrollView {
+            if let reservaActiva = viewModel.reservaActiva {
+                reservaActivaView(reservaActiva)
+            } else {
+                Text("No hay información de la reserva")
             }
-            .navigationTitle(viewModel.reservaActiva == nil ? "Nueva Reserva" : "Mi Reserva")
-            .animation(.easeInOut, value: viewModel.reservaActiva == nil)
+            // ... botones de cancelar, extender, etc.
+        }
+        .sheet(isPresented: $mostrarCambiarHora) {
+            CambiarHoraView(
+                reservaActiva: reserva,
+                onConfirmar: { inicio, fin in
+                    // Lógica para reprogramar
+                    mostrarCambiarHora = false
+                },
+                onCancelar: { mostrarCambiarHora = false }
+            )
         }
     }
 
@@ -73,7 +78,7 @@ struct ReservaView: View {
                     // Botón extender — aparece cuando faltan <= 20 min
                     if viewModel.puedeExtender {
                         Button {
-                            viewModel.extenderReserva(minutos: 30)
+                            viewModel.extenderReserva(hasta: reserva.fechaFin.addingTimeInterval(30 * 60))
                         } label: {
                             HStack {
                                 Image(systemName: "clock.badge.plus")
@@ -102,16 +107,9 @@ struct ReservaView: View {
                         viewModel.cancelarReserva()
                     } label: {
                         Text("Cancelar reserva")
-                            .font(.headline)
-                            .foregroundColor(.red)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(
-                                RoundedRectangle(cornerRadius: 15)
-                                    .fill(Color.red.opacity(0.15))
-                            )
                     }
                     .padding(.horizontal)
+                    .buttonStyle(CancelButtonStyle())
                 }
                 .padding()
                 .animation(.easeInOut(duration: 0.4), value: viewModel.puedeExtender)
@@ -125,7 +123,6 @@ struct ReservaView: View {
                 reservaActiva: reserva,
                 onConfirmar: { inicio, fin in
                     mostrarCambiarHora = false
-                    viewModel.actualizarHora(inicio: inicio, fin: fin)
                 },
                 onCancelar: {
                     mostrarCambiarHora = false
@@ -136,9 +133,9 @@ struct ReservaView: View {
 
     // MARK: - Crear reserva
 
-    private func reservar(cubiculo: Cubiculo, inicio: Date, fin: Date) {
+    private func reservar(sala: SalaDisponible, inicio: Date, fin: Date) {
         mensajeError = nil
-        mensajeError = viewModel.crearReserva(cubiculo: cubiculo, inicio: inicio, fin: fin)
+        mensajeError = viewModel.crearReserva(sala: sala, inicio: inicio, fin: fin)
     }
 }
 
@@ -149,7 +146,7 @@ struct ReservaView: View {
     let horaInicio = calendar.dateComponents([.hour, .minute], from: fechaInicio)
     let horaFin = calendar.dateComponents([.hour, .minute], from: fechaFin)
 
-    return ReservaView(reserva: Reserva(
+    return ReservaDetalleView(reserva: Reserva(
         id: 1,
         estudianteId: 2,
         salaUbicacion: "Piso 1",
