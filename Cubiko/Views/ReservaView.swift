@@ -12,7 +12,26 @@ struct ReservaView: View {
                 if let reserva = viewModel.reservaActiva {
                     reservaActivaView(reserva)
                 } else {
-                    BuscadorView(onReservar: reservar)
+                    VStack(spacing: 0) {
+                        BuscadorView(onReservar: reservar)
+
+                        if let error = mensajeError {
+                            HStack(spacing: 8) {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundStyle(.red)
+                                Text(error)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.red)
+                            }
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Color.red.opacity(0.08))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .padding(.horizontal)
+                            .transition(.move(edge: .bottom).combined(with: .opacity))
+                        }
+                    }
+                    .animation(.easeInOut(duration: 0.3), value: mensajeError)
                 }
             }
             .navigationTitle(viewModel.reservaActiva == nil ? "Nueva Reserva" : "Mi Reserva")
@@ -48,6 +67,27 @@ struct ReservaView: View {
 
                 // Botones
                 VStack(spacing: 10) {
+
+                    // Botón extender — aparece cuando faltan <= 20 min
+                    if viewModel.puedeExtender {
+                        Button {
+                            viewModel.extenderReserva(minutos: 30)
+                        } label: {
+                            HStack {
+                                Image(systemName: "clock.badge.plus")
+                                Text("Extender 30 minutos")
+                                    .font(.headline)
+                            }
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.cubikoAzulOscuro)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                        }
+                        .padding(.horizontal)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                    }
+
                     Button {
                         mostrarCambiarHora = true
                     } label: {
@@ -72,6 +112,7 @@ struct ReservaView: View {
                     .padding(.horizontal)
                 }
                 .padding()
+                .animation(.easeInOut(duration: 0.4), value: viewModel.puedeExtender)
 
                 Spacer()
             }
@@ -82,8 +123,7 @@ struct ReservaView: View {
                 reservaActiva: reserva,
                 onConfirmar: { inicio, fin in
                     mostrarCambiarHora = false
-                    // TODO: conectar con viewModel.actualizarHora(inicio:fin:)
-                    print("Nueva hora: \(inicio) – \(fin)")
+                    viewModel.actualizarHora(inicio: inicio, fin: fin)
                 },
                 onCancelar: {
                     mostrarCambiarHora = false
@@ -95,6 +135,7 @@ struct ReservaView: View {
     // MARK: - Crear reserva
 
     private func reservar(cubiculo: Cubiculo, inicio: Date, fin: Date) {
+        mensajeError = nil
         mensajeError = viewModel.crearReserva(cubiculo: cubiculo, inicio: inicio, fin: fin)
     }
 }
