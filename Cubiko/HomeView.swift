@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State var sessionManager = SessionManager()
+    @EnvironmentObject var sessionManager: SessionManager
     @State var currentState: UserState = .login
     
     var body: some View {
@@ -20,8 +20,10 @@ struct HomeView: View {
                 } else {
                     if currentState == .login {
                         LoginView(currentState: $currentState)
+
                     } else if currentState == .register {
                         RegisterView(currentState: $currentState)
+
                     }
                 }
             }
@@ -35,7 +37,6 @@ enum UserState {
 }
 
 #Preview {
-    
-    HomeView(currentState: .main)
-    
+    HomeView(currentState: .login)
+        .environmentObject(SessionManager())
 }

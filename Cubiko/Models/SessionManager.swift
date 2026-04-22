@@ -26,8 +26,13 @@ final class SessionManager: ObservableObject {
         self.profile = nil
         // Borrar de Keychain y UserDefaults
     }
+    
+    func updateProfile(_ profile: UserProfile) {
+        self.profile = profile
+        self.persistSession(profile)
+    }
 
-    func persistSession(_ profile: UserProfile) {
+   private func persistSession(_ profile: UserProfile) {
         // 1. Guardar info no sensible en UserDefaults
         if let encoded = try? JSONEncoder().encode(profile) {
             UserDefaults.standard.set(encoded, forKey: "current_user_profile")

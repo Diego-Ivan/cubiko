@@ -14,8 +14,10 @@ struct ReservaTabView: View {
         ZStack {
             if tieneReserva {
                 ReservasView()
+
             } else {
                 NuevaReservaView()
+
             }
         }
     }

@@ -9,6 +9,8 @@ import SwiftUI
 
 @main
 struct CubikoApp: App {
+    @StateObject private var sessionManager = SessionManager()
+    
     var body: some Scene {
         WindowGroup {
             HomeView()
@@ -16,6 +18,7 @@ struct CubikoApp: App {
                     // Solicitar permisos de notificación al arrancar la app
                     await NotificationService.shared.solicitarPermiso()
                 }
+                .environmentObject(sessionManager) // <--- Inyección masiva
         }
     }
 }
