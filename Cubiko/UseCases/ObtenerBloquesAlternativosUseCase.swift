@@ -16,7 +16,7 @@ final class ObtenerBloquesAlternativosUseCase {
     }
 
     // Cambiado a async
-    func execute(inicio: Date, fin: Date, capacidad: Int? = nil) async -> [BloqueHorario] {
+    func execute(inicio: Date, fin: Date, capacidad: Int) async -> [BloqueHorario] {
         let duracion = fin.timeIntervalSince(inicio)
         // Desplazamientos: -2h, -1h, +1h, +2h, +3h
         let offsets: [TimeInterval] = [-7200, -3600, 3600, 7200, 10800]

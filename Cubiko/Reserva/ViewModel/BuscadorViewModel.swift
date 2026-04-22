@@ -21,7 +21,7 @@ final class BuscadorViewModel: ObservableObject {
     @Published var fechaSeleccionada: Date = Date()
     @Published var horaEntrada: Date = Calendar.current.date(bySettingHour: 8, minute: 0, second: 0, of: Date())!
     @Published var horaSalida: Date = Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: Date())!
-    @Published var capacidadMinima: Int? = nil
+    @Published var capacidadMinima: Int = 1
 
     @Published private(set) var estado: BuscadorEstado = .inicial
 

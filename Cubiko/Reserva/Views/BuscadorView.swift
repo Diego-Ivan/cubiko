@@ -19,7 +19,7 @@ struct BuscadorView: View {
     @State private var mostrarEntrada = false
     @State private var mostrarSalida  = false
 
-    init(capacidadMinima: Int? = nil, onReservar: ((SalaDisponible, Date, Date) -> Void)? = nil) {
+    init(capacidadMinima: Int, onReservar: ((SalaDisponible, Date, Date) -> Void)? = nil) {
             self.onReservar = onReservar
             
             // Creamos el ViewModel temporalmente
@@ -283,5 +283,5 @@ extension Date {
 // MARK: - Preview
 
 #Preview {
-    BuscadorView()
+    BuscadorView(capacidadMinima: 1)
 }
