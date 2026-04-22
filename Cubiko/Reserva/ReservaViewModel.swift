@@ -27,8 +27,22 @@ final class ReservaViewModel {
         guard fin > inicio else { return "La hora de fin debe ser después del inicio." }
         guard inicio > Date() else { return "La hora de inicio debe ser en el futuro." }
 
-        let cubiculoPrueba = Cubiculo(id: 1, nombre: "Cubículo A-01", tipo: "Individual")
-        let reserva = Reserva(id: UUID(), cubiculo: cubiculoPrueba, inicio: inicio, fin: fin)
+        let cal = Calendar.current
+        let horaInicioComps = cal.dateComponents([.hour, .minute], from: inicio)
+        let horaFinComps = cal.dateComponents([.hour, .minute], from: fin)
+        
+        let reserva = Reserva(
+            id: Int.random(in: 1...10000), // Simulado
+            estudianteId: 1, // Simulado
+            salaUbicacion: "Biblioteca Central", // Simulado
+            salaNumero: 101, // Simulado
+            fechaInicio: inicio,
+            fechaFin: fin,
+            horaInicio: horaInicioComps,
+            horaFin: horaFinComps,
+            numPersonas: 1,
+            status: .activa
+        )
 
         // Guardar los minutos actuales antes de programar
         minutosInicioUsados = UserDefaults.standard.integer(forKey: "minutosAvisoInicio").nonZero ?? 15

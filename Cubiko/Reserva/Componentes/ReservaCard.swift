@@ -14,23 +14,23 @@ struct ReservaCard: View {
              VStack(alignment: .leading) {
                  HStack(alignment: .top) {
                      VStack(alignment: .leading, spacing: 8) {
-                         Text(reserva.cubiculo.nombre)
+                         Text(String(reserva.salaNumero))
                              .font(.largeTitle)
                              .fontWeight(.bold)
                              .foregroundColor(.white)
                          
-                         if Calendar.current.isDate(reserva.inicio, inSameDayAs: reserva.fin)  {
-                             Text(reserva.inicio.formatted(date: .abbreviated, time: .omitted))
+                         if Calendar.current.isDate(reserva.fechaInicio, inSameDayAs: reserva.fechaFin)  {
+                             Text(reserva.fechaInicio.formatted(date: .abbreviated, time: .omitted))
                                  .font(.title3)
                                  .foregroundColor(.white)
                          } else {
-                             Text("\(reserva.inicio.formatted(date: .abbreviated, time: .omitted)) - \(reserva.fin.formatted(date: .abbreviated, time: .omitted))")
+                             Text("\(reserva.fechaInicio.formatted(date: .abbreviated, time: .omitted)) - \(reserva.fechaFin.formatted(date: .abbreviated, time: .omitted))")
                                  .font(.title3)
                                  .foregroundColor(.white)
                          }
                          
                          
-                         Text("\(reserva.inicio.formatted(date: .omitted, time: .shortened)) - \(reserva.fin.formatted(date: .omitted, time: .shortened))")
+                         Text("\(reserva.fechaInicio.formatted(date: .omitted, time: .shortened)) - \(reserva.fechaFin.formatted(date: .omitted, time: .shortened))")
                              .font(.title3)
                              .foregroundColor(.white)
                      }
@@ -38,7 +38,7 @@ struct ReservaCard: View {
                      
                      Spacer()
                      
-                     if reserva.cubiculo.tipo == "Individual" {
+                     if reserva.numPersonas == 1 {
                          Image(systemName: "person.fill")
                              .resizable()
                              .aspectRatio(contentMode: .fit)
@@ -46,6 +46,20 @@ struct ReservaCard: View {
                              .foregroundColor(.white)
                              .padding(.trailing, 20) // Indent icon from right edge of card
                          
+                     } else if reserva.numPersonas == 2 {
+                         Image(systemName: "person.2.fill")
+                             .resizable()
+                             .aspectRatio(contentMode: .fit)
+                             .frame(width: 100, height: 100) // Adjust size as needed
+                             .foregroundColor(.white)
+                             .padding(.trailing, 20) // Indent icon from right edge of card
+                     } else {
+                         Image(systemName: "person.3.fill")
+                             .resizable()
+                             .aspectRatio(contentMode: .fit)
+                             .frame(width: 100, height: 100) // Adjust size as needed
+                             .foregroundColor(.white)
+                             .padding(.trailing, 20) // Indent icon from right edge of card
                      }
                  }
                  .padding(.top, 20) // Padding from top of card
@@ -73,5 +87,22 @@ struct ReservaCard: View {
 }
 
 #Preview {
-    ReservaCard(reserva: Reserva(id: UUID(), cubiculo: Cubiculo(id: 1, nombre: "Sala 1", tipo: "Individual"), inicio: Date(), fin: Date()))
+    let fechaInicio = Date().addingTimeInterval(10 * 60)
+    let fechaFin = Date().addingTimeInterval(20 * 60)
+    let calendar = Calendar.current
+    let horaInicio = calendar.dateComponents([.hour, .minute], from: fechaInicio)
+    let horaFin = calendar.dateComponents([.hour, .minute], from: fechaFin)
+
+    return ReservaCard(reserva: Reserva(
+        id: 1,
+        estudianteId: 2,
+        salaUbicacion: "Piso 1",
+        salaNumero: 21,
+        fechaInicio: fechaInicio,
+        fechaFin: fechaFin,
+        horaInicio: horaInicio,
+        horaFin: horaFin,
+        numPersonas: 2
+    ))
+
 }

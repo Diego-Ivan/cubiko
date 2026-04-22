@@ -74,6 +74,21 @@ struct ReservaView: View {
 }
 
 #Preview {
-    ReservaView(reserva: Reserva(id: UUID(), cubiculo: Cubiculo(id: 1, nombre: "Sala 1", tipo: "Individual"), inicio: Date(), fin: Date().addingTimeInterval(1 * 60 * 60)))
+    let fechaInicio = Date().addingTimeInterval(10 * 60)
+    let fechaFin = Date().addingTimeInterval(20 * 60)
+    let calendar = Calendar.current
+    let horaInicio = calendar.dateComponents([.hour, .minute], from: fechaInicio)
+    let horaFin = calendar.dateComponents([.hour, .minute], from: fechaFin)
 
+    return ReservaView(reserva: Reserva(
+        id: 1,
+        estudianteId: 2,
+        salaUbicacion: "Piso 1",
+        salaNumero: 21,
+        fechaInicio: fechaInicio,
+        fechaFin: fechaFin,
+        horaInicio: horaInicio,
+        horaFin: horaFin,
+        numPersonas: 2
+    ))
 }

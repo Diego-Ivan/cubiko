@@ -75,7 +75,7 @@ struct PruebaNotificacionesView: View {
                                 .foregroundStyle(.green)
                                 .font(.title2)
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(reserva.cubiculo.nombre)
+                                Text(String(reserva.salaNumero))
                                     .font(.subheadline).bold()
                                 Text(viewModel.mensajeEstado)
                                     .font(.caption)

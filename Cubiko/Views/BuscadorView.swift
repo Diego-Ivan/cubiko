@@ -112,8 +112,8 @@ struct BuscadorView: View {
         switch vm.estado {
         case .inicial:
             EmptyView()
-        case .disponible(let cubiculos):
-            SeccionDisponibleView(cubiculos: cubiculos)
+        case .disponible(let salas):
+            SeccionDisponibleView(salas: salas)
         case .sinDisponibilidad(let alternativas):
             SeccionSinDisponibilidadView(alternativas: alternativas) { bloque in
                 vm.seleccionarBloque(bloque)
@@ -149,31 +149,32 @@ struct FilaCampo: View {
 }
 
 struct SeccionDisponibleView: View {
-    let cubiculos: [Cubiculo]
+    let salas: [SalaDisponible]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "checkmark.circle.fill").foregroundColor(.green)
-                Text("\(cubiculos.count) cubículo(s) disponibles").font(.headline)
+                Text("\(salas.count) cubículo(s) disponibles").font(.headline)
             }
             .padding(.horizontal)
 
-            ForEach(cubiculos) { cubiculo in
-                TarjetaCubiculoView(cubiculo: cubiculo)
+            ForEach(salas, id: \.numero) { sala in
+                TarjetaCubiculoView(sala: sala)
             }
         }
     }
 }
 
 struct TarjetaCubiculoView: View {
-    let cubiculo: Cubiculo
+    let sala: SalaDisponible
 
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text(cubiculo.nombre).font(.headline)
-                Text(cubiculo.tipo).font(.subheadline).foregroundColor(.secondary)
+                Text(String(sala.numero))
+                    .font(.headline)
+                Text("\(sala.minPersonas) - \(sala.maxPersonas) personas").font(.subheadline).foregroundColor(.secondary)
             }
             Spacer()
             Image(systemName: "chevron.right").foregroundColor(.cubikoAzul)
@@ -233,8 +234,8 @@ struct TarjetaAlternativaView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("\(bloque.horaInicio.formateadaHora()) – \(bloque.horaFin.formateadaHora())")
                     .font(.subheadline.weight(.semibold))
-                Text("\(bloque.cubiculosDisponibles) cubículo(s) libre(s)")
-                    .font(.caption).foregroundColor(.secondary)
+//                Text("\(bloque.salas.count) cubículo(s) libre(s)")
+//                    .font(.caption).foregroundColor(.secondary)
             }
             Spacer()
             Button("Seleccionar") { onSeleccionar(bloque) }
