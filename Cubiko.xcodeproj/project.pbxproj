@@ -30,9 +30,38 @@
 		73001F7A2F97F2C000F81856 /* CubikoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CubikoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		ADE799A12F99A75D00DC37A0 /* Exceptions for "Cubiko" folder in "CubikoUnitTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Busqueda/Componentes/LibraryMapView.swift,
+				Busqueda/Componentes/RoomListView.swift,
+				Busqueda/Componentes/RoomRowView.swift,
+				Busqueda/ViewModels/RoomSelectionViewModel.swift,
+				Busqueda/Views/RoomSelectionView.swift,
+			);
+			target = 73001F6C2F97F22700F81856 /* CubikoUnitTests */;
+		};
+		ADE799A22F99A75D00DC37A0 /* Exceptions for "Cubiko" folder in "CubikoUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Busqueda/Componentes/LibraryMapView.swift,
+				Busqueda/Componentes/RoomListView.swift,
+				Busqueda/Componentes/RoomRowView.swift,
+				Busqueda/ViewModels/RoomSelectionViewModel.swift,
+				Busqueda/Views/RoomSelectionView.swift,
+			);
+			target = 73001F792F97F2C000F81856 /* CubikoUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		507D18932F8495160079F3B3 /* Cubiko */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				ADE799A12F99A75D00DC37A0 /* Exceptions for "Cubiko" folder in "CubikoUnitTests" target */,
+				ADE799A22F99A75D00DC37A0 /* Exceptions for "Cubiko" folder in "CubikoUITests" target */,
+			);
 			path = Cubiko;
 			sourceTree = "<group>";
 		};

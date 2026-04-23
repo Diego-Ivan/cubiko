@@ -62,14 +62,10 @@ struct NuevaReservaView: View {
     private var confirmButton: some View {
         Button { viewModel.navegarASiguiente = true } label: {
             Text("Continuar")
-                .font(.headline)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(viewModel.puedeContinuar ? Color.accentColor : Color.gray.opacity(0.3))
-                .clipShape(Capsule())
         }
+        .buttonStyle(PrimaryButtonStyle())
         .disabled(!viewModel.puedeContinuar)
+        .opacity(viewModel.puedeContinuar ? 1.0 : 0.4)
         .padding(24)
     }
     

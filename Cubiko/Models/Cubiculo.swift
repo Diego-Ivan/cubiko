@@ -11,4 +11,5 @@ struct Cubiculo: Identifiable {
     let id: Int
     let nombre: String
     let tipo: String
+    let piso: Int
 }
