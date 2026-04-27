@@ -14,6 +14,7 @@ struct RegisterResponse: Decodable {
     let message: String?
     struct RegisterData: Decodable {
         let access_token: String
+        let refresh_token: String?
         let expires_in: String
     }
 }

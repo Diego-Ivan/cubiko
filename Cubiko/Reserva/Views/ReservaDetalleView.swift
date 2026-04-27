@@ -3,15 +3,19 @@ import SwiftUI
 struct ReservaDetalleView: View {
     let reserva: Reserva // La recibe de la lista
     @State private var viewModel: ReservaViewModel
+    @State private var mostrarQR = false
     @State private var mostrarCambiarHora = false
+    @State private var mostrarAlertaCancelacion = false
     @State private var mensajeError: String? = nil
+    
+    @Environment(\.dismiss) private var dismiss
 
     init(reserva: Reserva) {
             self.reserva = reserva
         
         // 1. Instanciamos el repositorio real que hace las peticiones
         // (Usa el nombre de tu clase real, probablemente sea CubiculoRepositoryImpl)
-        let repository = RealRoomRepository(baseURL: URL(string: "http://localhost:3001/")!, token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidGlwbyI6ImVzdHVkaWFudGUiLCJlbWFpbCI6ImF6dWFueS5taWxhY25AdWRsYXAubXgiLCJpYXQiOjE3NzY4MjMyNDcsImV4cCI6MTc3NjkwOTY0N30.hF7frRzHMEPUdd8jkAp83NAuAIBCwtuv9hX4Q25w4Bo")
+        let repository = RealRoomRepository()
         
         // 2. Creamos los Casos de Uso inyectándoles el repositorio
         let cancelarUseCase = CancelarReservaUseCase(repository: repository)
@@ -26,14 +30,21 @@ struct ReservaDetalleView: View {
     }
     
     var body: some View {
-        ScrollView {
-            if let reservaActiva = viewModel.reservaActiva {
-                reservaActivaView(reservaActiva)
-            } else {
-                Text("No hay información de la reserva")
+        NavigationStack{
+            ScrollView {
+                if let reservaActiva = viewModel.reservaActiva {
+                    reservaActivaView(reservaActiva)
+                        .sheet(isPresented: $mostrarQR) {
+                            VistaQRView()
+                                .presentationSizing(.fitted)
+                        }
+                } else {
+                    Text("No hay información de la reserva")
+                }
+                // ... botones de cancelar, extender, etc.
             }
-            // ... botones de cancelar, extender, etc.
         }
+        .navigationTitle("Mi Reserva")
         .sheet(isPresented: $mostrarCambiarHora) {
             CambiarHoraView(
                 reservaActiva: reserva,
@@ -43,6 +54,12 @@ struct ReservaDetalleView: View {
                 },
                 onCancelar: { mostrarCambiarHora = false }
             )
+        }
+        .onChange(of: viewModel.reservaActiva) { oldValue, newValue in
+            // Si la reserva se vuelve nil (ej. se canceló con éxito), regresamos a la pantalla anterior
+            if newValue == nil {
+                dismiss()
+            }
         }
     }
 
@@ -54,11 +71,16 @@ struct ReservaDetalleView: View {
 
                 ReservaCard(reserva: reserva)
                     .padding(.horizontal)
+                    .onTapGesture {
+                        mostrarQR = true
+                    }
 
-                TiempoRestanteView(fechaFin: reserva.fechaFin)
+                if viewModel.comenzarTemporizador {
+                    TiempoRestanteView(fechaFin: reserva.fechaFin)
+                }
 
                 // Ayuda y soporte
-                HStack {
+                NavigationLink(destination: EmptyView()) {
                     Text("Ayuda y soporte")
                         .foregroundColor(.primary)
                     Spacer()
@@ -66,12 +88,11 @@ struct ReservaDetalleView: View {
                         .foregroundColor(.gray)
                 }
                 .padding()
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    print("Ayuda y soporte tapped")
-                }
+
                 .padding(.horizontal)
 
+                Spacer()
+                
                 // Botones
                 VStack(spacing: 10) {
 
@@ -88,23 +109,25 @@ struct ReservaDetalleView: View {
                             .foregroundColor(.white)
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(Color.cubikoAzulOscuro)
+                            .background(Color.primaryCubiko)
                             .clipShape(RoundedRectangle(cornerRadius: 15))
                         }
                         .padding(.horizontal)
                         .transition(.move(edge: .top).combined(with: .opacity))
                     }
 
-                    Button {
-                        mostrarCambiarHora = true
-                    } label: {
-                        Text("Cambiar hora de reserva")
+                    if (viewModel.puedeAjustarHora) {
+                        Button {
+                            mostrarCambiarHora = true
+                        } label: {
+                            Text("Cambiar hora de reserva")
+                        }
+                        .padding(.horizontal)
+                        .buttonStyle(TertiaryButtonStyle())
                     }
-                    .padding(.horizontal)
-                    .buttonStyle(TertiaryButtonStyle())
-
+                    
                     Button {
-                        viewModel.cancelarReserva()
+                        mostrarAlertaCancelacion = true
                     } label: {
                         Text("Cancelar reserva")
                     }
@@ -114,7 +137,6 @@ struct ReservaDetalleView: View {
                 .padding()
                 .animation(.easeInOut(duration: 0.4), value: viewModel.puedeExtender)
 
-                Spacer()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
@@ -128,6 +150,15 @@ struct ReservaDetalleView: View {
                     mostrarCambiarHora = false
                 }
             )
+//            .presentationDetents([.fraction(0.5)])
+        }
+        .alert("¿Cancelar reserva?", isPresented: $mostrarAlertaCancelacion) {
+            Button("Sí, cancelar", role: .destructive) {
+                viewModel.cancelarReserva()
+            }
+            Button("No", role: .cancel) {}
+        } message: {
+            Text("Esta acción liberará la sala y no se podrá deshacer.")
         }
     }
 
@@ -140,8 +171,8 @@ struct ReservaDetalleView: View {
 }
 
 #Preview {
-    let fechaInicio = Date().addingTimeInterval(10 * 60)
-    let fechaFin = Date().addingTimeInterval(20 * 60)
+    let fechaInicio = Date().addingTimeInterval(60 * 60)
+    let fechaFin = Date().addingTimeInterval(120 * 60)
     let calendar = Calendar.current
     let horaInicio = calendar.dateComponents([.hour, .minute], from: fechaInicio)
     let horaFin = calendar.dateComponents([.hour, .minute], from: fechaFin)

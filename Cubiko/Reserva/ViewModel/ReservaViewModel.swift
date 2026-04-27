@@ -14,6 +14,8 @@ final class ReservaViewModel {
     private(set) var reservaActiva: Reserva? = nil
     private(set) var mensajeEstado: String = "Sin reserva activa"
     private(set) var puedeExtender: Bool = false
+    private(set) var puedeAjustarHora: Bool = false
+    private(set) var comenzarTemporizador: Bool = false
 
     private var minutosInicioUsados: Int = 0
     private var minutosFinUsados: Int = 0
@@ -179,8 +181,11 @@ final class ReservaViewModel {
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             guard let self, let reserva = self.reservaActiva else { return }
             let minutosRestantes = reserva.fechaFin.timeIntervalSinceNow / 60
+            let minutosParaInicio = reserva.fechaInicio.timeIntervalSinceNow / 60
             Task { @MainActor in
                 self.puedeExtender = minutosRestantes <= 20 && minutosRestantes > 0
+                self.puedeAjustarHora = minutosParaInicio > 2
+                self.comenzarTemporizador = minutosParaInicio <= 0 
             }
         }
     }

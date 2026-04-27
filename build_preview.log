@@ -1,0 +1,395 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko.xcodeproj -scheme Cubiko -destination "generic/platform=iOS Simulator" build
+
+2026-04-25 22:59:31.329 xcodebuild[91339:64537056] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (1 target)
+    Target 'Cubiko' in project 'Cubiko' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.0.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --print-asset-tag-combinations --output-format xml1 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Assets.xcassets
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: e65efe2ae21b764aa22a5a86b3543a38
+Build description path: /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/XCBuildData/e65efe2ae21b764aa22a5a86b3543a38.xcbuilddata
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.0.sdk /Users/Azu/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator26.0-23A339-26257891a6c027eb51374368541b8346.sdkstatcache
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.0.sdk -o /Users/Azu/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator26.0-23A339-26257891a6c027eb51374368541b8346.sdkstatcache
+
+WriteAuxiliaryFile /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/Cubiko-OutputFileMap.json (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    write-file /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/Cubiko-OutputFileMap.json
+
+WriteAuxiliaryFile /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/arm64/Cubiko.SwiftFileList (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    write-file /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/arm64/Cubiko.SwiftFileList
+
+WriteAuxiliaryFile /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/Cubiko.LinkFileList (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    write-file /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/Cubiko.LinkFileList
+
+WriteAuxiliaryFile /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/Cubiko.SwiftConstValuesFileList (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    write-file /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/Cubiko.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/Cubiko.SwiftFileList (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    write-file /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/Cubiko.SwiftFileList
+
+WriteAuxiliaryFile /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/arm64/Cubiko.LinkFileList (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    write-file /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/arm64/Cubiko.LinkFileList
+
+WriteAuxiliaryFile /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/arm64/Cubiko.SwiftConstValuesFileList (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    write-file /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/arm64/Cubiko.SwiftConstValuesFileList
+
+ProcessProductPackaging "" /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Cubiko.app-Simulated.xcent (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+    Entitlements:
+    
+    {
+    "application-identifier" = "SAM2A296M4.co.Software.Cubiko.az";
+}
+    
+    builtin-productPackagingUtility -entitlements -format xml -o /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Cubiko.app-Simulated.xcent
+
+ProcessProductPackagingDER /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Cubiko.app-Simulated.xcent /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Cubiko.app-Simulated.xcent.der (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    /usr/bin/derq query -f xml -i /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Cubiko.app-Simulated.xcent -o /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Cubiko.app-Simulated.xcent.der --raw
+
+CpResource /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Products/Debug-iphonesimulator/Cubiko.app/.gitignore /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/.gitignore (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/.gitignore /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Products/Debug-iphonesimulator/Cubiko.app
+
+CompileAssetCatalogVariant thinned /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Products/Debug-iphonesimulator/Cubiko.app /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Assets.xcassets (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    /Applications/Xcode.app/Contents/Developer/usr/bin/actool /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Assets.xcassets --compile /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/assetcatalog_output/thinned --output-format human-readable-text --notices --warnings --export-dependency-info /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/assetcatalog_dependencies_thinned --output-partial-info-plist /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/assetcatalog_generated_info.plist_thinned --app-icon AppIcon --accent-color AccentColor --compress-pngs --enable-on-demand-resources YES --development-region en --target-device iphone --target-device ipad --minimum-deployment-target 26.0 --platform iphonesimulator
+
+SwiftDriver Cubiko normal arm64 com.apple.xcode.tools.swift.compiler (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Cubiko -Onone -enforce-exclusivity\=checked @/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/arm64/Cubiko.SwiftFileList -DDEBUG -default-isolation\=MainActor -enable-bare-slash-regex -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.0.sdk -target arm64-apple-ios26.0-simulator -g -module-cache-path /Users/Azu/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -enable-testing -index-store-path /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Products/Debug-iphonesimulator -F /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Products/Debug-iphonesimulator -emit-localized-strings -emit-localized-strings-path /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/arm64 -c -j12 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/Azu/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator26.0-23A339-26257891a6c027eb51374368541b8346.sdkstatcache -output-file-map /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/arm64/Cubiko-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/Azu/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/Azu/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/arm64/Cubiko.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/Azu/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/arm64/Cubiko_const_extract_protocols.json -Xcc -iquote -Xcc /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Cubiko-generated-files.hmap -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Cubiko-own-target-headers.hmap -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Cubiko-all-target-headers.hmap -Xcc -iquote -Xcc /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Cubiko-project-headers.hmap -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/DerivedSources-normal/arm64 -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/DerivedSources/arm64 -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/arm64/Cubiko-Swift.h -working-directory /Users/Azu/Desktop/School/IngSoftware/Cubiko -experimental-emit-module-separately -disable-cmo
+
+SwiftDriver Cubiko normal x86_64 com.apple.xcode.tools.swift.compiler (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name Cubiko -Onone -enforce-exclusivity\=checked @/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/Cubiko.SwiftFileList -DDEBUG -default-isolation\=MainActor -enable-bare-slash-regex -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.0.sdk -target x86_64-apple-ios26.0-simulator -g -module-cache-path /Users/Azu/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -Xfrontend -serialize-debugging-options -profile-coverage-mapping -profile-generate -enable-testing -index-store-path /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Products/Debug-iphonesimulator -F /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Products/Debug-iphonesimulator -emit-localized-strings -emit-localized-strings-path /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64 -c -j12 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/Azu/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator26.0-23A339-26257891a6c027eb51374368541b8346.sdkstatcache -output-file-map /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/Cubiko-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/Azu/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -sdk-module-cache-path /Users/Azu/Library/Developer/Xcode/DerivedData/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/Cubiko.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/Azu/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/Cubiko_const_extract_protocols.json -Xcc -iquote -Xcc /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Cubiko-generated-files.hmap -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Cubiko-own-target-headers.hmap -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Cubiko-all-target-headers.hmap -Xcc -iquote -Xcc /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Cubiko-project-headers.hmap -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/DerivedSources-normal/x86_64 -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/DerivedSources/x86_64 -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/Cubiko-Swift.h -working-directory /Users/Azu/Desktop/School/IngSoftware/Cubiko -experimental-emit-module-separately -disable-cmo
+
+SwiftCompile normal x86_64 Compiling\ TimelineDisponibilidadView.swift,\ ValidarCambioHoraUseCase.swift,\ AuthManager.swift,\ LoginResponse.swift,\ LoginView.swift,\ RegisterResponse.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CambiarHora/TimelineDisponibilidadView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CambiarHora/ValidarCambioHoraUseCase.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Login/AuthManager.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Login/LoginResponse.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Login/LoginView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Login/RegisterResponse.swift (in target 'Cubiko' from project 'Cubiko')
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CambiarHora/TimelineDisponibilidadView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CambiarHora/ValidarCambioHoraUseCase.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Login/AuthManager.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Login/LoginResponse.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Login/LoginView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Login/RegisterResponse.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 Compiling\ LibraryMapView.swift,\ RoomListView.swift,\ RoomRowView.swift,\ BuscadorViewModel.swift,\ RoomSelectionViewModel.swift,\ BuscadorView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/Componentes/LibraryMapView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/Componentes/RoomListView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/Componentes/RoomRowView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/ViewModels/BuscadorViewModel.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/ViewModels/RoomSelectionViewModel.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/Views/BuscadorView.swift (in target 'Cubiko' from project 'Cubiko')
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/Componentes/LibraryMapView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/Componentes/RoomListView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/Componentes/RoomRowView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/ViewModels/BuscadorViewModel.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/ViewModels/RoomSelectionViewModel.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/Views/BuscadorView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 Compiling\ TipoCubiculo.swift,\ UserProfile.swift,\ MultasView.swift,\ APIConfig.swift,\ CubiculoRepositoryImpl.swift,\ CubiculoRepositoryProtocol.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/TipoCubiculo.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/UserProfile.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Multas/MultasView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Network/APIConfig.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Repositories/CubiculoRepositoryImpl.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Repositories/CubiculoRepositoryProtocol.swift (in target 'Cubiko' from project 'Cubiko')
+Failed frontend command:
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend -frontend -c /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/Componentes/LibraryMapView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/Componentes/RoomListView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/Componentes/RoomRowView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/ViewModels/BuscadorViewModel.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/ViewModels/RoomSelectionViewModel.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/Views/BuscadorView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/Views/ConfirmacionReservaView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/Views/RoomSelectionView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CambiarHora/CambiarHoraView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CambiarHora/CambiarHoraViewModel.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CambiarHora/DisponibilidadBadge.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CambiarHora/DisponibilidadEstado.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CambiarHora/TimelineDisponibilidadView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CambiarHora/ValidarCambioHoraUseCase.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Login/AuthManager.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Login/LoginResponse.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Login/LoginView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Login/RegisterResponse.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Login/RegisterView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Materiales/MaterialesView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/BloqueHorario.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/Cubiculo.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/Estudiante.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/SessionManager.swift -primary-file /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/TipoCubiculo.swift -primary-file /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/UserProfile.swift -primary-file /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Multas/MultasView.swift -primary-file /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Network/APIConfig.swift -primary-file /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Repositories/CubiculoRepositoryImpl.swift -primary-file /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Repositories/CubiculoRepositoryProtocol.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Repositories/MockRoomRepository.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Repositories/RealRoomRepository.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Componentes/ReservaCard.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Componentes/ReservaListView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Componentes/TarjetaCubiculoView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Componentes/TiempoRestanteView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Models/AvailableRoomsResponse.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Models/Reserva.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Models/ReservasResponse.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Models/SalaDisponible.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/QR/QRResponse.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/QR/QRViewModel.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/QR/VistaQRView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/ViewModel/NuevaReservaViewModel.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/ViewModel/ReservasViewModel.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/ViewModel/ReservaViewModel.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Views/NuevaReservaView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Views/ReservaDetalleView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Views/ReservasHistorialView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Views/ReservasView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Views/ReservaTabView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Security/KeychainManager.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Services/NotificationService.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Settings/ConfigurationView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Styles/ButtonStyles.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Styles/TextFieldStyles.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/UseCases/BuscarCubiculosDisponiblesUseCase.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/UseCases/CancelarReservaUseCase.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/UseCases/CrearReservaUseCase.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/UseCases/ExtenderReservaUseCase.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/UseCases/ObtenerBloquesAlternativosUseCase.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/UseCases/ReprogramarReservaUseCase.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Views/Components/TipoCubiculoCard.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Views/ContentView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Views/PruebaNotificacionesView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CubikoApp.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/HomeView.swift /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/DerivedSources/GeneratedAssetSymbols.swift -supplementary-output-file-map /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/supplementaryOutputs-5 -emit-localized-strings -emit-localized-strings-path /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64 -target x86_64-apple-ios26.0-simulator -module-can-import-version DeveloperToolsSupport 23.0.4 23.0.4 -module-can-import-version SwiftUI 7.0.84.1 7.0.84 -module-can-import-version UIKit 9088.1.113 9088.1.113 -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libFoundationMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#FoundationMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libObservationMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#ObservationMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libPreviewsMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#PreviewsMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libSwiftMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#SwiftMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libSwiftUIMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#SwiftUIMacros -disable-implicit-swift-modules -Xcc -fno-implicit-modules -Xcc -fno-implicit-module-maps -explicit-swift-module-map-file /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/Cubiko-dependencies-1.json -enable-objc-interop -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.0.sdk -I /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Products/Debug-iphonesimulator -F /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Products/Debug-iphonesimulator -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=5 -module-cache-path /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -profile-generate -profile-coverage-mapping -swift-version 5 -enforce-exclusivity\=checked -Onone -D DEBUG -serialize-debugging-options -const-gather-protocols-file /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/Cubiko_const_extract_protocols.json -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -default-isolation\=MainActor -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /Users/Azu/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /Users/Azu/Desktop/School/IngSoftware/Cubiko -enable-anonymous-context-mangled-names -file-compilation-dir /Users/Azu/Desktop/School/IngSoftware/Cubiko -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -ivfsstatcache -Xcc /Users/Azu/Library/Developer/Xcode/DerivedData/SDKStatCaches.noindex/iphonesimulator26.0-23A339-26257891a6c027eb51374368541b8346.sdkstatcache -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/swift-overrides.hmap -Xcc -iquote -Xcc /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Cubiko-generated-files.hmap -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Cubiko-own-target-headers.hmap -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Cubiko-all-target-headers.hmap -Xcc -iquote -Xcc /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Cubiko-project-headers.hmap -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/DerivedSources-normal/x86_64 -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/DerivedSources/x86_64 -Xcc -I/Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/DerivedSources -Xcc -DDEBUG\=1 -no-auto-bridging-header-chaining -module-name Cubiko -frontend-parseable-output -disable-clang-spi -target-sdk-version 26.0 -target-sdk-name iphonesimulator26.0 -clang-target x86_64-apple-ios26.0-simulator -in-process-plugin-server-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/libSwiftInProcPluginServer.dylib -o /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/TipoCubiculo.o -o /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/UserProfile.o -o /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/MultasView.o -o /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/APIConfig.o -o /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/CubiculoRepositoryImpl.o -o /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/CubiculoRepositoryProtocol.o -index-unit-output-path /Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/TipoCubiculo.o -index-unit-output-path /Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/UserProfile.o -index-unit-output-path /Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/MultasView.o -index-unit-output-path /Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/APIConfig.o -index-unit-output-path /Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/CubiculoRepositoryImpl.o -index-unit-output-path /Cubiko.build/Debug-iphonesimulator/Cubiko.build/Objects-normal/x86_64/CubiculoRepositoryProtocol.o -index-store-path /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Index.noindex/DataStore -index-system-modules
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/TipoCubiculo.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/UserProfile.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Multas/MultasView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+/Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Views/ReservasView.swift:87:5: error: type '()' cannot conform to 'View'
+    mockSessionManager.updateProfile(perfilPrueba)
+    ^
+/Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Views/ReservasView.swift:87:5: note: only concrete types such as structs, enums and classes can conform to protocols
+    mockSessionManager.updateProfile(perfilPrueba)
+    ^
+/Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Views/ReservasView.swift:87:5: note: required by static method 'buildExpression' where 'Content' = '()'
+    mockSessionManager.updateProfile(perfilPrueba)
+    ^
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Network/APIConfig.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Repositories/CubiculoRepositoryImpl.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Repositories/CubiculoRepositoryProtocol.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 Compiling\ ReservasHistorialView.swift,\ ReservasView.swift,\ ReservaTabView.swift,\ KeychainManager.swift,\ NotificationService.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Views/ReservasHistorialView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Views/ReservasView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Views/ReservaTabView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Security/KeychainManager.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Services/NotificationService.swift (in target 'Cubiko' from project 'Cubiko')
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Views/ReservasHistorialView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Views/ReservasView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Views/ReservaTabView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Security/KeychainManager.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Services/NotificationService.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 Compiling\ MockRoomRepository.swift,\ RealRoomRepository.swift,\ ReservaCard.swift,\ ReservaListView.swift,\ TarjetaCubiculoView.swift,\ TiempoRestanteView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Repositories/MockRoomRepository.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Repositories/RealRoomRepository.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Componentes/ReservaCard.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Componentes/ReservaListView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Componentes/TarjetaCubiculoView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Componentes/TiempoRestanteView.swift (in target 'Cubiko' from project 'Cubiko')
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Repositories/MockRoomRepository.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Repositories/RealRoomRepository.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Componentes/ReservaCard.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Componentes/ReservaListView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Componentes/TarjetaCubiculoView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Componentes/TiempoRestanteView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 Compiling\ AvailableRoomsResponse.swift,\ Reserva.swift,\ ReservasResponse.swift,\ SalaDisponible.swift,\ QRResponse.swift,\ QRViewModel.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Models/AvailableRoomsResponse.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Models/Reserva.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Models/ReservasResponse.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Models/SalaDisponible.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/QR/QRResponse.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/QR/QRViewModel.swift (in target 'Cubiko' from project 'Cubiko')
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Models/AvailableRoomsResponse.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Models/Reserva.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Models/ReservasResponse.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Models/SalaDisponible.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/QR/QRResponse.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/QR/QRViewModel.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 Compiling\ VistaQRView.swift,\ NuevaReservaViewModel.swift,\ ReservasViewModel.swift,\ ReservaViewModel.swift,\ NuevaReservaView.swift,\ ReservaDetalleView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/QR/VistaQRView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/ViewModel/NuevaReservaViewModel.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/ViewModel/ReservasViewModel.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/ViewModel/ReservaViewModel.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Views/NuevaReservaView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Views/ReservaDetalleView.swift (in target 'Cubiko' from project 'Cubiko')
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/QR/VistaQRView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/ViewModel/NuevaReservaViewModel.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/ViewModel/ReservasViewModel.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/ViewModel/ReservaViewModel.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Views/NuevaReservaView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Reserva/Views/ReservaDetalleView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 Compiling\ RegisterView.swift,\ MaterialesView.swift,\ BloqueHorario.swift,\ Cubiculo.swift,\ Estudiante.swift,\ SessionManager.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Login/RegisterView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Materiales/MaterialesView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/BloqueHorario.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/Cubiculo.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/Estudiante.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/SessionManager.swift (in target 'Cubiko' from project 'Cubiko')
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Login/RegisterView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Materiales/MaterialesView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/BloqueHorario.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/Cubiculo.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/Estudiante.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/SessionManager.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 Compiling\ ConfirmacionReservaView.swift,\ RoomSelectionView.swift,\ CambiarHoraView.swift,\ CambiarHoraViewModel.swift,\ DisponibilidadBadge.swift,\ DisponibilidadEstado.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/Views/ConfirmacionReservaView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/Views/RoomSelectionView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CambiarHora/CambiarHoraView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CambiarHora/CambiarHoraViewModel.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CambiarHora/DisponibilidadBadge.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CambiarHora/DisponibilidadEstado.swift (in target 'Cubiko' from project 'Cubiko')
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/Views/ConfirmacionReservaView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Busqueda/Views/RoomSelectionView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CambiarHora/CambiarHoraView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CambiarHora/CambiarHoraViewModel.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CambiarHora/DisponibilidadBadge.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CambiarHora/DisponibilidadEstado.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 Compiling\ CrearReservaUseCase.swift,\ ExtenderReservaUseCase.swift,\ ObtenerBloquesAlternativosUseCase.swift,\ ReprogramarReservaUseCase.swift,\ TipoCubiculoCard.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/UseCases/CrearReservaUseCase.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/UseCases/ExtenderReservaUseCase.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/UseCases/ObtenerBloquesAlternativosUseCase.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/UseCases/ReprogramarReservaUseCase.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Views/Components/TipoCubiculoCard.swift (in target 'Cubiko' from project 'Cubiko')
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/UseCases/CrearReservaUseCase.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/UseCases/ExtenderReservaUseCase.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/UseCases/ObtenerBloquesAlternativosUseCase.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/UseCases/ReprogramarReservaUseCase.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Views/Components/TipoCubiculoCard.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 Compiling\ ContentView.swift,\ PruebaNotificacionesView.swift,\ CubikoApp.swift,\ HomeView.swift,\ GeneratedAssetSymbols.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Views/ContentView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Views/PruebaNotificacionesView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CubikoApp.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/HomeView.swift /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'Cubiko' from project 'Cubiko')
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Views/ContentView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Views/PruebaNotificacionesView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/CubikoApp.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/HomeView.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftCompile normal x86_64 /Users/Azu/Library/Developer/Xcode/DerivedData/Cubiko-cemjdvemlqvjdpgasmvqorqcsfiz/Build/Intermediates.noindex/Cubiko.build/Debug-iphonesimulator/Cubiko.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'Cubiko' from project 'Cubiko')
+    cd /Users/Azu/Desktop/School/IngSoftware/Cubiko
+    
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ Cubiko (in target 'Cubiko' from project 'Cubiko')
+
+SwiftDriverJobDiscovery normal x86_64 Compiling CrearReservaUseCase.swift, ExtenderReservaUseCase.swift, ObtenerBloquesAlternativosUseCase.swift, ReprogramarReservaUseCase.swift, TipoCubiculoCard.swift (in target 'Cubiko' from project 'Cubiko')
+
+SwiftEmitModule normal x86_64 Emitting\ module\ for\ Cubiko (in target 'Cubiko' from project 'Cubiko')
+
+** BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal x86_64 Compiling\ TipoCubiculo.swift,\ UserProfile.swift,\ MultasView.swift,\ APIConfig.swift,\ CubiculoRepositoryImpl.swift,\ CubiculoRepositoryProtocol.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/TipoCubiculo.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Models/UserProfile.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Multas/MultasView.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Network/APIConfig.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Repositories/CubiculoRepositoryImpl.swift /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Repositories/CubiculoRepositoryProtocol.swift (in target 'Cubiko' from project 'Cubiko')
+	SwiftCompile normal x86_64 /Users/Azu/Desktop/School/IngSoftware/Cubiko/Cubiko/Multas/MultasView.swift (in target 'Cubiko' from project 'Cubiko')
+	Building project Cubiko with scheme Cubiko
+(3 failures)

@@ -13,8 +13,7 @@ class NuevaReservaViewModel {
     var tipoSeleccionado: TipoCubiculo? = nil
     var navegarASiguiente = false
     
-    private let crearReservaUseCase = CrearReservaUseCase(repository: RealRoomRepository(baseURL: URL(string: "http://localhost:3001/")!, token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidGlwbyI6ImVzdHVkaWFudGUiLCJlbWFpbCI6ImF6dWFueS5taWxhY25AdWRsYXAubXgiLCJpYXQiOjE3NzY4MjMyNDcsImV4cCI6MTc3NjkwOTY0N30.hF7frRzHMEPUdd8jkAp83NAuAIBCwtuv9hX4Q25w4Bo")
-    )
+    private let crearReservaUseCase = CrearReservaUseCase(repository: RealRoomRepository())
 
     
     // Esto después lo podrías obtener de tu Repositorio

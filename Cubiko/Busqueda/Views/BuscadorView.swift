@@ -18,7 +18,11 @@ struct BuscadorView: View {
     @State private var mostrarFecha   = false
     @State private var mostrarEntrada = false
     @State private var mostrarSalida  = false
-
+    
+    @State private var terminaSiguienteDia = false
+    @State private var mostrarAlerta = false
+    @State private var mensajeAlerta = ""
+    
     init(capacidadMinima: Int, onReservar: ((SalaDisponible, Date, Date) -> Void)? = nil) {
             self.onReservar = onReservar
             
@@ -38,23 +42,41 @@ struct BuscadorView: View {
                 resultados
                 Spacer(minLength: 40)
             }
-            .padding(.top, 16)
+            .padding(16)
+
         }
         .background(Color(.systemGroupedBackground))
+        .navigationTitle("Nueva Reserva")
         .animation(.easeInOut(duration: 0.25), value: mostrarFecha)
         .animation(.easeInOut(duration: 0.25), value: mostrarEntrada)
         .animation(.easeInOut(duration: 0.25), value: mostrarSalida)
+        .overlay(alignment: .bottom) {
+            Button(action: {
+                vm.confirmarReserva()
+            }) {
+                Text("Crear reserva")
+            }
+            .padding(.horizontal)
+            .buttonStyle(PrimaryButtonStyle())
+            .disabled(vm.salaSeleccionada == nil)
+            .padding(16)
+            .shadow(radius: 15)
+        }
     }
 
     // MARK: - Campos
 
     private var camposBusqueda: some View {
         VStack(spacing: 0) {
+            
             FilaCampo(label: "Fecha", valor: vm.fechaSeleccionada.formateadaFecha()) {
                 mostrarFecha.toggle(); mostrarEntrada = false; mostrarSalida = false
             }
             if mostrarFecha {
-                DatePicker("", selection: $vm.fechaSeleccionada, displayedComponents: .date)
+                DatePicker("",
+                           selection: $vm.fechaSeleccionada,
+                           in: Date()...,
+                           displayedComponents: .date)
                     .datePickerStyle(.graphical)
                     .padding(.horizontal)
                     .transition(.opacity)
@@ -66,7 +88,9 @@ struct BuscadorView: View {
                 mostrarEntrada.toggle(); mostrarFecha = false; mostrarSalida = false
             }
             if mostrarEntrada {
-                DatePicker("", selection: $vm.horaEntrada, displayedComponents: .hourAndMinute)
+                DatePicker("",
+                           selection: $vm.horaEntrada,
+                           displayedComponents: .hourAndMinute)
                     .datePickerStyle(.wheel)
                     .labelsHidden()
                     .frame(maxWidth: .infinity)
@@ -74,12 +98,19 @@ struct BuscadorView: View {
             }
 
             Divider().padding(.leading)
+            
+            Toggle("Salida el día siguiente", isOn: $terminaSiguienteDia)
+                .padding(.horizontal)
+                .padding(.vertical, 8)
+                .tint(.primaryCubiko)
 
             FilaCampo(label: "Hora de salida", valor: vm.horaSalida.formateadaHora()) {
                 mostrarSalida.toggle(); mostrarFecha = false; mostrarEntrada = false
             }
             if mostrarSalida {
-                DatePicker("", selection: $vm.horaSalida, displayedComponents: .hourAndMinute)
+                DatePicker("",
+                           selection: $vm.horaSalida,
+                           displayedComponents: .hourAndMinute)
                     .datePickerStyle(.wheel)
                     .labelsHidden()
                     .frame(maxWidth: .infinity)
@@ -95,16 +126,17 @@ struct BuscadorView: View {
     // MARK: - Botón buscar
 
     private var botonBuscar: some View {
-        Button(action: vm.buscar) {
+        Button(action: validarYBuscar) {
             Text("Buscar disponibilidad")
-                .font(.headline)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                .background(Color.cubikoAzulOscuro)
-                .clipShape(RoundedRectangle(cornerRadius: 14))
         }
         .padding(.horizontal)
+        .buttonStyle(SecondaryButtonStyle())
+
+        .alert("Horario inválido", isPresented: $mostrarAlerta) {
+                Button("Entendido", role: .cancel) { }
+            } message: {
+                Text(mensajeAlerta)
+            }
     }
 
     // MARK: - Resultados
@@ -123,13 +155,29 @@ struct BuscadorView: View {
                 }
                 .padding(.horizontal)
 
-                ForEach(salas, id: \.numero) { sala in
-                    Button {
-                        vm.seleccionarSala(sala)
-                    } label: {
-                        TarjetaCubiculoView(sala: sala)
+                if let sala = vm.salaSeleccionada {
+                    LibraryMapView(selectedCubiculo: $vm.salaSeleccionada)
+                        .frame(height: 180)
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                        .padding(.horizontal)
+                    
+                    TarjetaCubiculoView(sala: sala)
+                }
+
+                NavigationLink {
+                    RoomSelectionView(salas: salas, selectedSala: $vm.salaSeleccionada)
+                } label: {
+                    HStack {
+                        Text("Elegir otra sala")
+                        Spacer()
+                        Image(systemName: "chevron.right")
                     }
-                    .buttonStyle(.plain)
+                    .font(.headline)
+                    .padding()
+                    .background(Color.primaryCubiko.opacity(0.15))
+                    .foregroundColor(.primaryCubiko)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .padding(.horizontal)
                 }
             }
 
@@ -137,6 +185,36 @@ struct BuscadorView: View {
             SeccionSinDisponibilidadView(alternativas: alternativas) { bloque in
                 vm.seleccionarBloque(bloque)
             }
+        }
+    }
+    
+    private func validarYBuscar() {
+        let calendar = Calendar.current
+        
+        // 1. Construct Full Dates
+        let inicio = vm.combinar(fecha: vm.fechaSeleccionada, hora: vm.horaEntrada)
+        var fin = vm.combinar(fecha: vm.fechaSeleccionada, hora: vm.horaSalida)
+        
+        if terminaSiguienteDia {
+            fin = calendar.date(byAdding: .day, value: 1, to: fin)!
+            vm.fechaFin = fin
+        }
+
+        // 2. Logic Validations
+        let duracionMinima: TimeInterval = 30 * 60 // 2 hours 30 mins in seconds
+        
+        if fin <= inicio {
+            mensajeAlerta = "La hora de salida debe ser posterior a la de entrada."
+            mostrarAlerta = true
+        } else if fin.timeIntervalSince(inicio) < duracionMinima {
+            mensajeAlerta = "La reserva mínima es de \(duracionMinima / 60) minutos."
+            mostrarAlerta = true
+        } else if calendar.isDateInToday(vm.fechaSeleccionada) && inicio < Date() {
+            mensajeAlerta = "No puedes reservar una hora que ya pasó."
+            mostrarAlerta = true
+        } else {
+            // All good! Pass the corrected dates to the VM
+            vm.buscar()
         }
     }
 }
@@ -155,7 +233,7 @@ struct FilaCampo: View {
                     .foregroundColor(.primary)
                 Spacer()
                 Text(valor)
-                    .foregroundColor(.cubikoAzulOscuro)
+                    .foregroundColor(Color.primaryCubiko)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)
                     .background(Color(.systemGray6))
@@ -168,26 +246,6 @@ struct FilaCampo: View {
 }
 
 
-struct TarjetaCubiculoView: View {
-    let sala: SalaDisponible
-
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(String(sala.numero))
-                    .font(.headline)
-                Text("\(sala.minPersonas) - \(sala.maxPersonas) personas").font(.subheadline).foregroundColor(.secondary)
-            }
-            Spacer()
-            Image(systemName: "chevron.right").foregroundColor(.cubikoAzul)
-        }
-        .padding()
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
-        .padding(.horizontal)
-    }
-}
 
 struct SeccionSinDisponibilidadView: View {
     let alternativas: [BloqueHorario]
@@ -223,43 +281,6 @@ struct SeccionSinDisponibilidadView: View {
             }
         }
     }
-}
-
-struct TarjetaAlternativaView: View {
-    let bloque: BloqueHorario
-    let onSeleccionar: (BloqueHorario) -> Void
-
-    var body: some View {
-        HStack {
-            Image(systemName: "clock").foregroundColor(.cubikoAzul).frame(width: 32)
-            VStack(alignment: .leading, spacing: 2) {
-                Text("\(bloque.horaInicio.formateadaHora()) – \(bloque.horaFin.formateadaHora())")
-                    .font(.subheadline.weight(.semibold))
-//                Text("\(bloque.salas.count) cubículo(s) libre(s)")
-//                    .font(.caption).foregroundColor(.secondary)
-            }
-            Spacer()
-            Button("Seleccionar") { onSeleccionar(bloque) }
-                .font(.subheadline.weight(.medium))
-                .foregroundColor(.white)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(Color.cubikoAzul)
-                .clipShape(Capsule())
-        }
-        .padding()
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
-        .padding(.horizontal)
-    }
-}
-
-// MARK: - Color Palette
-
-extension Color {
-    static let cubikoAzul       = Color(red: 0.42, green: 0.65, blue: 0.75)
-    static let cubikoAzulOscuro = Color(red: 0.18, green: 0.42, blue: 0.55)
 }
 
 // MARK: - Date Formatters

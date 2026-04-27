@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct RegisterView: View {
+    @EnvironmentObject var sessionManager: SessionManager
+
     @Binding var currentState: UserState
 
     @State private var name: String = ""
@@ -69,7 +71,7 @@ struct RegisterView: View {
             }
             
             Button(action: register) {
-                Text("Registrarse")
+                Text("Crear cuenta")
             }
             .padding(.horizontal, 36)
             .padding(.bottom, 12)
@@ -119,12 +121,7 @@ struct RegisterView: View {
         errorMessage = nil
         successMessage = nil
         isLoading = true
-        guard let url = URL(string: "http://localhost:3001/api/auth/register") else {
-            errorMessage = "URL de registro inválida."
-            showAlert = true
-            isLoading = false
-            return
-        }
+        let url = APIConfig.baseURL.appendingPathComponent("api/auth/register")
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -149,10 +146,29 @@ struct RegisterView: View {
                     return
                 }
                 if httpResponse.statusCode == 201 {
-                    if let decoded = try? JSONDecoder().decode(RegisterResponse.self, from: data),
-                       decoded.success, let token = decoded.data?.access_token {
-                        successMessage = "¡Registro exitoso! Token: \(token.prefix(12))..."
-                        showAlert = true
+                    if let decoded = try? JSONDecoder().decode(RegisterResponse.self, from: data){
+                        
+                        if let loginData = decoded.data {
+                            // Creamos el perfil con el estudiante y sus tokens
+                            
+                            let nuevoPerfil = UserProfile(
+                                accessToken: loginData.access_token,
+                                refreshToken: loginData.refresh_token,
+                                expiresAt: Date().addingTimeInterval(3 * 30 * 24 * 60) // Ajustar según backend
+                            )
+                            
+                            AuthManager.shared.login(accessToken: loginData.access_token, refreshToken: loginData.refresh_token ?? "")
+                            
+                            print("ACCESS TOKEN for debug: \(loginData.access_token)")
+                            
+                            sessionManager.updateProfile(nuevoPerfil)
+                            
+                            // Cambiamos el estado de la app
+                            withAnimation {
+                                currentState = .main
+                            }
+                        }
+
                     } else {
                         errorMessage = "No se pudo procesar la respuesta del servidor."
                         showAlert = true

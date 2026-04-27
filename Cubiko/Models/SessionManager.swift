@@ -12,9 +12,9 @@ import Combine
 final class SessionManager: ObservableObject {
     @Published private(set) var profile: UserProfile?
     
-    // Al inicializar, podrías intentar cargar la sesión guardada
+    // Al inicializar, intentamos cargar la sesión guardada
     init() {
-        // loadSessionFromPersistence()
+        loadSessionFromPersistence()
     }
 
     func login(with profile: UserProfile) {
@@ -24,7 +24,9 @@ final class SessionManager: ObservableObject {
 
     func logout() {
         self.profile = nil
-        // Borrar de Keychain y UserDefaults
+        UserDefaults.standard.removeObject(forKey: "current_user_profile")
+        KeychainManager.shared.deleteAllTokens()
+        AuthManager.shared.logout()
     }
     
     func updateProfile(_ profile: UserProfile) {
@@ -38,9 +40,23 @@ final class SessionManager: ObservableObject {
             UserDefaults.standard.set(encoded, forKey: "current_user_profile")
         }
         
-        // 2. IMPORTANTE: Los tokens deberían ir al Keychain
-        // saveToKeychain(profile.accessToken)
+        // 2. IMPORTANTE: Los tokens van al Keychain
+        _ = KeychainManager.shared.saveAccessToken(profile.accessToken)
+        if let refreshToken = profile.refreshToken {
+            _ = KeychainManager.shared.saveRefreshToken(refreshToken)
+        }
     }
     
-    
+    private func loadSessionFromPersistence() {
+        if let savedData = UserDefaults.standard.data(forKey: "current_user_profile"),
+           let savedProfile = try? JSONDecoder().decode(UserProfile.self, from: savedData) {
+            
+            // Verificamos que el token exista en el Keychain por seguridad
+            if KeychainManager.shared.getAccessToken() != nil {
+                self.profile = savedProfile
+            } else {
+                logout()
+            }
+        }
+    }
 }
