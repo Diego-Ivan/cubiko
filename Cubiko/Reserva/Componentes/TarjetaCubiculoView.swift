@@ -12,12 +12,11 @@ struct TarjetaCubiculoView: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text(String(sala.numero))
+                Text("Sala \(sala.numero)")
                     .font(.headline)
                 Text("\(sala.minPersonas) - \(sala.maxPersonas) personas").font(.subheadline).foregroundColor(.secondary)
             }
             Spacer()
-            Image(systemName: "chevron.right").foregroundColor(.primaryCubiko)
         }
         .padding()
         .background(Color(.systemBackground))

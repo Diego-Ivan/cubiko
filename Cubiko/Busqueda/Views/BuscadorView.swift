@@ -61,6 +61,7 @@ struct BuscadorView: View {
             .disabled(vm.salaSeleccionada == nil)
             .padding(16)
             .shadow(radius: 15)
+            .opacity(vm.salaSeleccionada == nil ? 0.5 : 1.0)
         }
     }
 
@@ -131,7 +132,6 @@ struct BuscadorView: View {
         }
         .padding(.horizontal)
         .buttonStyle(SecondaryButtonStyle())
-
         .alert("Horario inválido", isPresented: $mostrarAlerta) {
                 Button("Entendido", role: .cancel) { }
             } message: {
@@ -148,37 +148,42 @@ struct BuscadorView: View {
             EmptyView()
 
         case .disponible(let salas):
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 0) {
                 HStack {
                     Image(systemName: "checkmark.circle.fill").foregroundColor(.green)
                     Text("\(salas.count) cubículo(s) disponibles").font(.headline)
                 }
                 .padding(.horizontal)
+                .padding(.vertical, 6)
 
                 if let sala = vm.salaSeleccionada {
                     LibraryMapView(selectedCubiculo: $vm.salaSeleccionada)
-                        .frame(height: 180)
+                        .frame(height: 120)
                         .clipShape(RoundedRectangle(cornerRadius: 14))
                         .padding(.horizontal)
                     
                     TarjetaCubiculoView(sala: sala)
-                }
-
-                NavigationLink {
-                    RoomSelectionView(salas: salas, selectedSala: $vm.salaSeleccionada)
-                } label: {
-                    HStack {
-                        Text("Elegir otra sala")
-                        Spacer()
-                        Image(systemName: "chevron.right")
+                    
+                    
+                    NavigationLink {
+                        RoomSelectionView(salas: salas, selectedSala: $vm.salaSeleccionada)
+                    } label: {
+                        HStack {
+                            Text("Elegir otra sala")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                        }
+                        .font(.headline)
+                        .padding()
+                        .background(Color.primaryCubiko.opacity(0.15))
+                        .foregroundColor(.primaryCubiko)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .padding(.horizontal)
                     }
-                    .font(.headline)
-                    .padding()
-                    .background(Color.primaryCubiko.opacity(0.15))
-                    .foregroundColor(.primaryCubiko)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .padding(.horizontal)
+                } else {
+                    Text("Elige otro horario")
                 }
+                
             }
 
         case .sinDisponibilidad(let alternativas):

@@ -10,28 +10,37 @@ import SwiftUI
 @Observable
 class QRViewModel {
     var qrImage: UIImage?
-    var isLoading = false
-    var error: Error?
+    var isLoading: Bool = false
+    var error: String?
 
-    func fetchQR() {
-        guard let apiURL = URL(string: "https://your.api/qr") else { return }
+    private let obtenerQrAccesoUseCase: ObtenerQrAccesoUseCase
+
+    init(repository: CubiculoRepositoryProtocol = RealRoomRepository()) {
+        self.obtenerQrAccesoUseCase = ObtenerQrAccesoUseCase(repository: repository)
+    }
+
+    func fetchQR(reservaId: Int) {
         isLoading = true
         error = nil
         
         Task {
             do {
-                let (data, _) = try await URLSession.shared.data(from: apiURL)
-                let response = try JSONDecoder().decode(QRResponse.self, from: data)
-                let (imgData, _) = try await URLSession.shared.data(from: response.qrURL)
-                if let image = UIImage(data: imgData) {
-                    await MainActor.run { self.qrImage = image }
+                let data = try await obtenerQrAccesoUseCase.execute(reservaId: reservaId)
+                
+                await MainActor.run {
+                    if let image = UIImage(data: data) {
+                        self.qrImage = image
+                    } else {
+                        self.error = "No se pudo generar la imagen del QR"
+                    }
+                    self.isLoading = false
                 }
             } catch {
                 await MainActor.run {
-                    self.error = error
+                    self.error = error.localizedDescription
+                    self.isLoading = false
                 }
             }
-            await MainActor.run { self.isLoading = false }
         }
     }
 }

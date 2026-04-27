@@ -7,10 +7,8 @@
 
 import Foundation
 
-import Foundation
-
 protocol CubiculoRepositoryProtocol {
-    func obtenerDisponibles(inicio: Date, fin: Date, capacidad: Int) async throws -> [SalaDisponible]
+    func obtenerDisponibles(inicio: Date, fin: Date, capacidad: Int?) async throws -> [SalaDisponible]
     
     func reprogramarReserva(
         reservaId: Int,
@@ -22,6 +20,8 @@ protocol CubiculoRepositoryProtocol {
     ) async throws
     
     func cancelarReserva(reservaId: Int) async throws
+
+    func obtenerQrAcceso(reservaId: Int) async throws -> String
     
     func extenderReserva(reserva: Reserva, nuevaFin: Date) async throws
     

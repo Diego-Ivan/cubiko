@@ -8,15 +8,29 @@
 import SwiftUI
 
 struct VistaQRView: View {
+    let reservaId: Int
+    @State private var viewModel = QRViewModel()
 
     var body: some View {
         ZStack {
             Color.gray.opacity(0.1)
             
             VStack(spacing: 20) {
-                Image("QR-Prueba")
-                    .resizable()
-                    .scaledToFit()
+                if viewModel.isLoading {
+                    ProgressView("Generando QR...")
+                } else if let error = viewModel.error {
+                    Text("Error: \(error)")
+                        .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
+                } else if let image = viewModel.qrImage {
+                    Image(uiImage: image)
+                        .resizable()
+                        .interpolation(.none) // Para que el QR se vea nítido
+                        .scaledToFit()
+                        .frame(width: 250, height: 250)
+                } else {
+                    Text("No se pudo cargar el QR")
+                }
                 
                 Text("Escanee este código QR en el escáner para abrir la puerta")
                     .font(.headline)
@@ -28,48 +42,13 @@ struct VistaQRView: View {
 
         }
         .ignoresSafeArea()
+        .task {
+            viewModel.fetchQR(reservaId: reservaId)
+        }
     }
 }
 
 #Preview {
-    VistaQRView()
+    VistaQRView(reservaId: 1)
 }
 
-
-
-/*
- 
- VIEW
- 
- @StateObject private var viewModel = QRViewModel()
- @State private var showQR = false
-
- var body: some View {
-     VStack {
-         if showQR {
-             if viewModel.isLoading {
-                 ProgressView()
-             } else if let image = viewModel.qrImage {
-                 Image(uiImage: image)
-                     .resizable()
-                     .scaledToFit()
-                     .frame(width: 220, height: 220)
-             } else if let error = viewModel.error {
-                 Text(\"Error: \\(error.localizedDescription)\")
-             }
-
-             Button(\"Cerrar\") {
-                 withAnimation { showQR = false }
-             }
-             .buttonStyle(.bordered)
-         } else {
-             Button(\"Mostrar QR\") {
-                 withAnimation { showQR = true }
-                 viewModel.fetchQR()
-             }
-             .buttonStyle(.borderedProminent)
-         }
-     }
-     .padding()
- }
- */

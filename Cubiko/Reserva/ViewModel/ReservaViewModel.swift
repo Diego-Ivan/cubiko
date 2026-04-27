@@ -180,8 +180,8 @@ final class ReservaViewModel {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             guard let self, let reserva = self.reservaActiva else { return }
-            let minutosRestantes = reserva.fechaFin.timeIntervalSinceNow / 60
-            let minutosParaInicio = reserva.fechaInicio.timeIntervalSinceNow / 60
+            let minutosRestantes = reserva.fechaHoraFin.timeIntervalSinceNow / 60
+            let minutosParaInicio = reserva.fechaHoraInicio.timeIntervalSinceNow / 60
             Task { @MainActor in
                 self.puedeExtender = minutosRestantes <= 20 && minutosRestantes > 0
                 self.puedeAjustarHora = minutosParaInicio > 2

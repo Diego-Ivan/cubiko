@@ -35,7 +35,7 @@ struct ReservaDetalleView: View {
                 if let reservaActiva = viewModel.reservaActiva {
                     reservaActivaView(reservaActiva)
                         .sheet(isPresented: $mostrarQR) {
-                            VistaQRView()
+                            VistaQRView(reservaId: reservaActiva.id)
                                 .presentationSizing(.fitted)
                         }
                 } else {
@@ -76,7 +76,7 @@ struct ReservaDetalleView: View {
                     }
 
                 if viewModel.comenzarTemporizador {
-                    TiempoRestanteView(fechaFin: reserva.fechaFin)
+                    TiempoRestanteView(fechaFin: reserva.fechaHoraFin)
                 }
 
                 // Ayuda y soporte
@@ -106,11 +106,8 @@ struct ReservaDetalleView: View {
                                 Text("Extender 30 minutos")
                                     .font(.headline)
                             }
-                            .foregroundColor(.white)
                             .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color.primaryCubiko)
-                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                            .buttonStyle(PrimaryButtonStyle())
                         }
                         .padding(.horizontal)
                         .transition(.move(edge: .top).combined(with: .opacity))
@@ -155,6 +152,7 @@ struct ReservaDetalleView: View {
         .alert("¿Cancelar reserva?", isPresented: $mostrarAlertaCancelacion) {
             Button("Sí, cancelar", role: .destructive) {
                 viewModel.cancelarReserva()
+                dismiss()
             }
             Button("No", role: .cancel) {}
         } message: {
