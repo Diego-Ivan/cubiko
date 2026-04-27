@@ -11,7 +11,6 @@ struct NuevaReservaView: View {
     @State private var viewModel = NuevaReservaViewModel()
 
     var body: some View {
-        NavigationStack {
             ZStack(alignment: .bottom) {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 32) {
@@ -39,14 +38,12 @@ struct NuevaReservaView: View {
                 if let tipo = viewModel.tipoSeleccionado {
                     // Le pasamos el tipo al Buscador para que filtre por capacidad
                     BuscadorView(
-                        capacidadMinima: tipo.capacidad, // Asumiendo que tu enum tiene esta propiedad
+                        capacidadMinima: tipo.capacidad,
                         onReservar: { sala, inicio, fin in
-                            // Backend para crear la reserva real
                             viewModel.crearReserva(sala: sala, inicio: inicio, fin: fin)
                         }
                     )
                 }
-            }
         }
     }
 

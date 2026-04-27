@@ -9,11 +9,15 @@ import SwiftUI
 
 struct ReservasView: View {
     @EnvironmentObject var sessionManager: SessionManager
-    @State private var viewModel = ReservasViewModel()
+    @State var viewModel: ReservasViewModel
+    
+    init(viewModel: ReservasViewModel = ReservasViewModel()) {
+        self.viewModel = viewModel
+    }
     
     var body: some View {
         NavigationStack {
-            Group {
+            VStack {
                 if viewModel.isLoading {
                     ProgressView("Cargando reservas...")
                 } else if let error = viewModel.error {
@@ -23,12 +27,13 @@ struct ReservasView: View {
                     }
                     .padding()
                 } else if viewModel.reservasFiltradas.isEmpty {
+                    
                     Text("No tienes reservas registradas.")
                         .foregroundColor(.secondary)
                         .padding()
                     
                     NavigationLink(destination: NuevaReservaView()) {
-                        Text("Agregar Reserva")
+                        Text("Nueva reserva")
                     }
                     .buttonStyle(PrimaryButtonStyle())
                     .padding(.horizontal)
@@ -57,13 +62,22 @@ struct ReservasView: View {
                 }
             }
             .navigationTitle("Mis Reservas")
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    NavigationLink(destination: ReservasHistorialView()) {
+                        Image(systemName: "clock")
+                    }
+                }
+                
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink(destination: NuevaReservaView()) {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
             .onAppear {
                 viewModel.fetchReservasActuales(token: sessionManager.profile?.accessToken)
-            }
-            .toolbar {
-                NavigationLink(destination: ReservasHistorialView()) {
-                    Image(systemName: "clock")
-                }
             }
         }
     }
@@ -78,10 +92,32 @@ private let fechaHoraFormatter: DateFormatter = {
 }()
 
 #Preview {
-    let mockSessionManager = SessionManager()
-    let perfilPrueba = UserProfile(accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidGlwbyI6ImVzdHVkaWFudGUiLCJlbWFpbCI6ImF6dWFueS5taWxhY25AdWRsYXAubXgiLCJpYXQiOjE3NzY4MjMyNDcsImV4cCI6MTc3NjkwOTY0N30.hF7frRzHMEPUdd8jkAp83NAuAIBCwtuv9hX4Q25w4Bo")
-        mockSessionManager.updateProfile(perfilPrueba)
-
-    return ReservasView()
-            .environmentObject(mockSessionManager)
+    let mockSessionManager: SessionManager = {
+        let manager = SessionManager()
+        let perfilPrueba = UserProfile(accessToken: "fake_token", refreshToken: nil, expiresAt: Date().addingTimeInterval(3600))
+        manager.updateProfile(perfilPrueba)
+        return manager
+    }()
+    
+    let mockViewModel: ReservasViewModel = {
+        let vm = ReservasViewModel()
+        vm.reservasFiltradas = [
+            Reserva(
+                id: 1,
+                estudianteId: 123,
+                salaUbicacion: "Planta Alta" ,
+                salaNumero: 2,
+                fechaInicio: Date(),
+                fechaFin: Date().addingTimeInterval(3600),
+                horaInicio: DateComponents(hour: 7, minute: 0),
+                horaFin: DateComponents(hour: 8, minute: 0),
+                numPersonas: 4,
+                status: .activa
+            )
+        ]
+        return vm
+    }()
+    
+    ReservasView(viewModel: mockViewModel)
+        .environmentObject(mockSessionManager)
 }

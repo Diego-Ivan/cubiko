@@ -59,7 +59,7 @@ struct ReservaListView: View {
                     }
                     
                     
-                    Text("\(reserva.fechaInicio.formatted(date: .omitted, time: .shortened)) - \(reserva.fechaFin.formatted(date: .omitted, time: .shortened))")
+                    Text("\(reserva.fechaHoraInicio.formatted(date: .omitted, time: .shortened)) - \(reserva.fechaHoraFin.formatted(date: .omitted, time: .shortened))")
                         .font(.headline)
                         .foregroundColor(textColor)
                 }

@@ -19,9 +19,11 @@ enum BuscadorEstado {
 @MainActor
 final class BuscadorViewModel: ObservableObject {
     @Published var fechaSeleccionada: Date = Date()
-    @Published var horaEntrada: Date = Calendar.current.date(bySettingHour: 8, minute: 0, second: 0, of: Date())!
-    @Published var horaSalida: Date = Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: Date())!
+    @Published var fechaFin: Date = Date()
+    @Published var horaEntrada: Date = Date().addingTimeInterval(60)
+    @Published var horaSalida: Date = Date().addingTimeInterval(1860)
     @Published var capacidadMinima: Int = 1
+    @Published var salaSeleccionada: SalaDisponible?
 
     @Published private(set) var estado: BuscadorEstado = .inicial
 
@@ -52,14 +54,13 @@ final class BuscadorViewModel: ObservableObject {
                 let disponibles = try await buscarDisponibles.execute(inicio: inicio, fin: fin, capacidad: capacidadMinima)
                 
                 if !disponibles.isEmpty {
+                    self.salaSeleccionada = disponibles.first
                     self.estado = .disponible(disponibles)
                 } else {
-                    let alternativas = generarAlternativas(baseInicio: inicio, baseFin: fin)
-                    self.estado = .sinDisponibilidad(alternativas)
+                    self.estado = .sinDisponibilidad([])
                 }
             } catch {
-                let alternativas = generarAlternativas(baseInicio: inicio, baseFin: fin)
-                self.estado = .sinDisponibilidad(alternativas)
+                self.estado = .sinDisponibilidad([])
             }
         }
     }
@@ -70,10 +71,16 @@ final class BuscadorViewModel: ObservableObject {
         buscar()
     }
     
-    // Keep Main's selection method
+    // Guardar selección
     func seleccionarSala(_ sala: SalaDisponible) {
+        self.salaSeleccionada = sala
+    }
+    
+    // Confirmar reserva enviando a la API
+    func confirmarReserva() {
+        guard let sala = salaSeleccionada else { return }
         let inicio = combinando(fecha: fechaSeleccionada, con: horaEntrada)
-        let fin    = combinando(fecha: fechaSeleccionada, con: horaSalida)
+        let fin    = combinando(fecha: fechaFin, con: horaSalida)
         onReservar?(sala, inicio, fin)
     }
     
@@ -100,10 +107,37 @@ final class BuscadorViewModel: ObservableObject {
         }
     }
     
-    static func make(onReservar: ((SalaDisponible, Date, Date) -> Void)? = nil) -> BuscadorViewModel {
-        let repo         = RealRoomRepository(baseURL: URL(string: "http://localhost:3001/")!, token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidGlwbyI6ImVzdHVkaWFudGUiLCJlbWFpbCI6ImF6dWFueS5taWxhY25AdWRsYXAubXgiLCJpYXQiOjE3NzY4MjMyNDcsImV4cCI6MTc3NjkwOTY0N30.hF7frRzHMEPUdd8jkAp83NAuAIBCwtuv9hX4Q25w4Bo")
-        let buscar       = BuscarCubiculosDisponiblesUseCase(repository: repo)
+//    static func make(onReservar: ((SalaDisponible, Date, Date) -> Void)? = nil) -> BuscadorViewModel {
+//        let repo         = RealRoomRepository()
+//        let buscar       = BuscarCubiculosDisponiblesUseCase(repository: repo)
+//        let alternativos = ObtenerBloquesAlternativosUseCase(buscarDisponibles: buscar)
+//        return BuscadorViewModel(buscarDisponibles: buscar, onReservar: onReservar)
+//    }
+    
+    // Modify the `make` function to accept a repository, defaulting to the Real one
+    static func make(
+        repo: CubiculoRepositoryProtocol = RealRoomRepository(),
+        onReservar: ((SalaDisponible, Date, Date) -> Void)? = nil
+    ) -> BuscadorViewModel {
+        let buscar = BuscarCubiculosDisponiblesUseCase(repository: repo)
         let alternativos = ObtenerBloquesAlternativosUseCase(buscarDisponibles: buscar)
         return BuscadorViewModel(buscarDisponibles: buscar, onReservar: onReservar)
+    }
+
+    
+    
+    func combinar(fecha: Date, hora: Date) -> Date {
+        let calendar = Calendar.current
+        let componentesFecha = calendar.dateComponents([.year, .month, .day], from: fecha)
+        let componentesHora = calendar.dateComponents([.hour, .minute], from: hora)
+        
+        var final = DateComponents()
+        final.year = componentesFecha.year
+        final.month = componentesFecha.month
+        final.day = componentesFecha.day
+        final.hour = componentesHora.hour
+        final.minute = componentesHora.minute
+        
+        return calendar.date(from: final) ?? Date()
     }
 }

@@ -49,7 +49,7 @@ struct TimelineDisponibilidadView: View {
                     ) {
                         let conflicto = vm.disponibilidad == .conflicto
                         RoundedRectangle(cornerRadius: 4)
-                            .fill(conflicto ? Color.red.opacity(0.35) : Color.cubikoAzulOscuro)
+                            .fill(conflicto ? Color.red.opacity(0.35) : Color.primaryCubiko)
                             .frame(width: rect.width, height: 28)
                             .offset(x: rect.minX)
                     }
@@ -60,7 +60,7 @@ struct TimelineDisponibilidadView: View {
             // Leyenda
             HStack(spacing: 16) {
                 LeyendaItem(color: Color(.systemBackground), borde: true, texto: "Disponible")
-                LeyendaItem(color: Color.cubikoAzulOscuro,               texto: "Tu reserva")
+                LeyendaItem(color: Color.primaryCubiko,               texto: "Tu reserva")
                 LeyendaItem(color: Color.red.opacity(0.35),               texto: "Conflicto")
             }
         }

@@ -36,7 +36,7 @@ struct CambiarHoraView: View {
                 .padding(.horizontal)
             Spacer()
         }
-        .background(Color(.systemGroupedBackground))
+//        .background(Color(.systemGroupedBackground))
         .onChange(of: vm.horaEntrada) { _, _ in vm.validar() }
         .onChange(of: vm.horaSalida)  { _, _ in vm.validar() }
     }
@@ -65,7 +65,7 @@ struct CambiarHoraView: View {
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.white)
                         .frame(width: 36, height: 36)
-                        .background(Color.cubikoAzulOscuro)
+                        .background(Color.primaryCubiko)
                         .clipShape(Circle())
                 }
             }

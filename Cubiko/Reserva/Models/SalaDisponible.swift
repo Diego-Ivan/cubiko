@@ -13,3 +13,12 @@ struct SalaDisponible {
     let maxPersonas: Int
     let minPersonas: Int
 }
+
+
+struct Sala {
+    let numero: Int
+    let ubicacion: String
+    let maxPersonas: Int
+    let minPersonas: Int
+}
+

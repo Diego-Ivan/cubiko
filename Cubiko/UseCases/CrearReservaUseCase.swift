@@ -16,6 +16,7 @@ final class CrearReservaUseCase {
     }
 
     func execute(sala: SalaDisponible, inicio: Date, fin: Date, capacidad: Int?) async -> CrearReservaEstado {
+        
         // 1. Validación local (Replicando la lógica de Zod: end > start)
         guard fin > inicio else {
             return .error("La hora de fin debe ser posterior a la de inicio.")
@@ -42,5 +43,20 @@ final class CrearReservaUseCase {
         } catch {
             return .error(error.localizedDescription)
         }
+    }
+    
+    private func combinar(fecha: Date, hora: Date) -> Date {
+        let calendar = Calendar.current
+        let componentesFecha = calendar.dateComponents([.year, .month, .day], from: fecha)
+        let componentesHora = calendar.dateComponents([.hour, .minute], from: hora)
+        
+        var final = DateComponents()
+        final.year = componentesFecha.year
+        final.month = componentesFecha.month
+        final.day = componentesFecha.day
+        final.hour = componentesHora.hour
+        final.minute = componentesHora.minute
+        
+        return calendar.date(from: final) ?? Date()
     }
 }

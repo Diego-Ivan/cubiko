@@ -14,7 +14,7 @@ struct ContentView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             
-            ReservaTabView()
+            ReservasView()
                 .tabItem {
                     Label("Reserva", systemImage: "calendar")
                 }

@@ -71,7 +71,7 @@ struct LoginView: View {
                 Button {
                     currentState = .register
                 } label: {
-                    Text("Registrarme")
+                    Text("Crear cuenta")
                 }
                 .buttonStyle(TertiaryButtonStyle())
                 .padding(.horizontal, 36)
@@ -100,7 +100,7 @@ struct LoginView: View {
         isLoading = true
         
         // 2. Configurar petición
-        guard let url = URL(string: "http://localhost:3001/api/auth/login") else { return }
+        let url = APIConfig.baseURL.appendingPathComponent("api/auth/login")
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -138,9 +138,11 @@ struct LoginView: View {
 //                        let estudiante: Estudiante? = nil
                         let nuevoPerfil = UserProfile(
                             accessToken: loginData.access_token,
-                            refreshToken: nil, // O el que venga del server
+                            refreshToken: loginData.refresh_token,
                             expiresAt: Date().addingTimeInterval(3 * 30 * 24 * 60) // Ajustar según backend
                         )
+                        
+                        AuthManager.shared.login(accessToken: loginData.access_token, refreshToken: loginData.refresh_token ?? "")
                         
                         print("ACCESS TOKEN for debug: \(loginData.access_token)")
                         

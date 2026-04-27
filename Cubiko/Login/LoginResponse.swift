@@ -16,6 +16,7 @@ struct LoginResponse: Decodable {
     
     struct LoginData: Decodable {
         let access_token: String
+        let refresh_token: String?
         let expires_in: String
     }
 }

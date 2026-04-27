@@ -13,17 +13,15 @@ struct HomeView: View {
     
     var body: some View {
         
-        NavigationView {
-            ZStack {
-                if sessionManager.profile != nil {
-                    ContentView()
-                } else {
+        ZStack {
+            if sessionManager.profile != nil {
+                ContentView()
+            } else {
+                NavigationView {
                     if currentState == .login {
                         LoginView(currentState: $currentState)
-
                     } else if currentState == .register {
                         RegisterView(currentState: $currentState)
-
                     }
                 }
             }
