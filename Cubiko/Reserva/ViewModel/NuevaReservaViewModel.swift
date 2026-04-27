@@ -13,14 +13,18 @@ class NuevaReservaViewModel {
     var tipoSeleccionado: TipoCubiculo? = nil
     var navegarASiguiente = false
     
-    private let crearReservaUseCase = CrearReservaUseCase(repository: RealRoomRepository())
-
+    private let crearReservaUseCase: CrearReservaUseCase
+    private let buscarDisponiblesUseCase: BuscarCubiculosDisponiblesUseCase
     
-    // Esto después lo podrías obtener de tu Repositorio
+    init(repository: CubiculoRepositoryProtocol = RealRoomRepository()) {
+        self.crearReservaUseCase = CrearReservaUseCase(repository: repository)
+        self.buscarDisponiblesUseCase = BuscarCubiculosDisponiblesUseCase(repository: repository)
+    }
+
     private(set) var disponibilidad: [TipoCubiculo: Int] = [
-        .individual: 10,
-        .dual: 4,
-        .grupal: 6
+        .individual: 0,
+        .dual: 0,
+        .grupal: 0
     ]
     
     var puedeContinuar: Bool {
@@ -29,6 +33,34 @@ class NuevaReservaViewModel {
     
     func seleccionar(_ tipo: TipoCubiculo) {
         tipoSeleccionado = tipo
+    }
+    
+    func fetchDisponibilidadActual() {
+        Task {
+            do {
+                let inicio = Date()
+                let fin = inicio.addingTimeInterval(3600) // 1 hora
+                let salas = try await buscarDisponiblesUseCase.execute(inicio: inicio, fin: fin, capacidad: nil)
+                
+                var nuevaDisponibilidad: [TipoCubiculo: Int] = [.individual: 0, .dual: 0, .grupal: 0]
+                
+                for sala in salas {
+                    if sala.maxPersonas == 1 {
+                        nuevaDisponibilidad[.individual, default: 0] += 1
+                    } else if sala.maxPersonas == 2 {
+                        nuevaDisponibilidad[.dual, default: 0] += 1
+                    } else {
+                        nuevaDisponibilidad[.grupal, default: 0] += 1
+                    }
+                }
+                
+                await MainActor.run {
+                    self.disponibilidad = nuevaDisponibilidad
+                }
+            } catch {
+                print("Error fetching disponibilidad: \(error)")
+            }
+        }
     }
     
 

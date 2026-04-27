@@ -70,7 +70,7 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
         }
     }
 
-    func obtenerDisponibles(inicio: Date, fin: Date, capacidad: Int) async throws -> [SalaDisponible] {
+    func obtenerDisponibles(inicio: Date, fin: Date, capacidad: Int?) async throws -> [SalaDisponible] {
         var components = URLComponents(url: APIConfig.baseURL.appendingPathComponent("api/rooms/available"), resolvingAgainstBaseURL: false)!
         let fechaFormatter = DateFormatter()
         fechaFormatter.calendar = Calendar(identifier: .gregorian)
@@ -85,9 +85,12 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
         var queryItems: [URLQueryItem] = [
             URLQueryItem(name: "fecha", value: fechaFormatter.string(from: inicio)),
             URLQueryItem(name: "horaInicio", value: horaFormatter.string(from: inicio)),
-            URLQueryItem(name: "horaFin", value: horaFormatter.string(from: fin)),
-            URLQueryItem(name: "capacidad", value: String(capacidad))
+            URLQueryItem(name: "horaFin", value: horaFormatter.string(from: fin))
         ]
+        
+        if let capacidad = capacidad {
+            queryItems.append(URLQueryItem(name: "capacidad", value: String(capacidad)))
+        }
         components.queryItems = queryItems
 
         guard let url = components.url else { throw URLError(.badURL) }
@@ -284,5 +287,33 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
                 throw NSError(domain: "CrearReserva", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: backendMessage ?? "Error desconocido"])
             }
         }
+        
+    func obtenerQrAcceso(reservaId: Int) async throws -> String {
+        let url = APIConfig.baseURL.appendingPathComponent("api/reservas/\(reservaId)/qrCode/acceso")
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        let (data, response) = try await performAuthenticatedRequest(request)
+        
+//        print("NUEVA RESERVA: \(String(data: data, encoding: .utf8) ?? "<no data>") \(response)")
+        print("RESERVA QR: \(String(data: data, encoding: .utf8) ?? "<no data>") \(response)")
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw URLError(.badServerResponse)
+        }
+        
+        if httpResponse.statusCode == 200 {
+            struct BackendSuccessResponse: Decodable {
+                let data: String
+            }
+            let successData = try JSONDecoder().decode(BackendSuccessResponse.self, from: data)
+            return successData.data
+        } else {
+            struct BackendErrorResponse: Decodable { let message: String? }
+            let backendMessage = (try? JSONDecoder().decode(BackendErrorResponse.self, from: data))?.message
+            throw NSError(domain: "ObtenerQR", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: backendMessage ?? "Error al obtener QR"])
+        }
+    }
     
 }

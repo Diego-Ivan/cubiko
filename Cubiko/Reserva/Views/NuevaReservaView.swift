@@ -44,7 +44,10 @@ struct NuevaReservaView: View {
                         }
                     )
                 }
-        }
+            }
+            .task {
+                viewModel.fetchDisponibilidadActual()
+            }
     }
 
     private var headerSection: some View {
