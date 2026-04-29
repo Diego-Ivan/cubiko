@@ -200,19 +200,36 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
     func cancelarReserva(reservaId: Int) async throws {
         let url = APIConfig.baseURL.appendingPathComponent("api/reservas/\(reservaId)/cancel")
         
+        struct CancelarBody: Encodable {
+            let reservaId: Int
+        }
+        
+        let body = CancelarBody(reservaId: reservaId)
+        
         var request = URLRequest(url: url)
         request.httpMethod = "PATCH"
+//        request.httpBody = try JSONEncoder().encode(body)
+
         
         let (data, response) = try await performAuthenticatedRequest(request)
+        
+        print("CANCELAR RESERVA\n\(data)\n\(response)")
         
         guard let httpResponse = response as? HTTPURLResponse else {
             throw URLError(.badServerResponse)
         }
         
         if httpResponse.statusCode != 200 {
-            struct BackendErrorResponse: Decodable { let message: String? }
+            struct BackendErrorResponse: Decodable {
+                let success: String?
+                let message: String?
+            }
             let backendMessage = (try? JSONDecoder().decode(BackendErrorResponse.self, from: data))?.message
+            
+            print("ERROR \(String(describing: backendMessage))")
+
             throw NSError(domain: "CancelarReserva", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: backendMessage ?? "Error al cancelar"])
+            
         }
     }
 
@@ -296,7 +313,6 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
         
         let (data, response) = try await performAuthenticatedRequest(request)
         
-//        print("NUEVA RESERVA: \(String(data: data, encoding: .utf8) ?? "<no data>") \(response)")
         print("RESERVA QR: \(String(data: data, encoding: .utf8) ?? "<no data>") \(response)")
         
         guard let httpResponse = response as? HTTPURLResponse else {
@@ -305,15 +321,57 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
         
         if httpResponse.statusCode == 200 {
             struct BackendSuccessResponse: Decodable {
-                let data: String
+                let obj: String
             }
             let successData = try JSONDecoder().decode(BackendSuccessResponse.self, from: data)
-            return successData.data
+            print("RESERVA QR DATA: \(successData.obj)")
+            return successData.obj
         } else {
             struct BackendErrorResponse: Decodable { let message: String? }
             let backendMessage = (try? JSONDecoder().decode(BackendErrorResponse.self, from: data))?.message
             throw NSError(domain: "ObtenerQR", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: backendMessage ?? "Error al obtener QR"])
         }
     }
+
+    func aceptarInvitacionConQr(reservaId: Int) async throws {
+        let url = APIConfig.baseURL.appendingPathComponent("api/invitations/\(reservaId)/aceptarConQr")
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        
+        let (data, response) = try await performAuthenticatedRequest(request)
+        
+        print("ACEPTAR INVITACION QR:\n\(data)\n\(response)")
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw URLError(.badServerResponse)
+        }
+        
+        if httpResponse.statusCode != 200 {
+            struct BackendErrorResponse: Decodable { let message: String? }
+            let backendMessage = (try? JSONDecoder().decode(BackendErrorResponse.self, from: data))?.message
+            throw NSError(domain: "AceptarInvitacion", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: backendMessage ?? "Error al aceptar invitación"])
+        }
+    }
+
     
+    func activarReserva(reservaId: Int) async throws {
+        let url = APIConfig.baseURL.appendingPathComponent("api/qrInvitaciones/\(reservaId)/activarReserva")
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        
+        let (data, response) = try await performAuthenticatedRequest(request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw URLError(.badServerResponse)
+        }
+        
+        if httpResponse.statusCode != 200 {
+            struct BackendErrorResponse: Decodable { let message: String? }
+            let backendMessage = (try? JSONDecoder().decode(BackendErrorResponse.self, from: data))?.message
+            throw NSError(domain: "ActivarReserva", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: backendMessage ?? "Error al activar reserva"])
+        }
+    }
 }
+

@@ -3,10 +3,11 @@ import SwiftUI
 struct ReservaDetalleView: View {
     let reserva: Reserva // La recibe de la lista
     @State private var viewModel: ReservaViewModel
-    @State private var mostrarQR = false
     @State private var mostrarCambiarHora = false
     @State private var mostrarAlertaCancelacion = false
     @State private var mensajeError: String? = nil
+    
+    @State private var cancelando = false
     
     @Environment(\.dismiss) private var dismiss
 
@@ -31,20 +32,24 @@ struct ReservaDetalleView: View {
     
     var body: some View {
         NavigationStack{
-            ScrollView {
-                if let reservaActiva = viewModel.reservaActiva {
-                    reservaActivaView(reservaActiva)
-                        .sheet(isPresented: $mostrarQR) {
-                            VistaQRView(reservaId: reservaActiva.id)
-                                .presentationSizing(.fitted)
-                        }
-                } else {
-                    Text("No hay información de la reserva")
+            if cancelando {
+                VStack {
+                    ProgressView()
+                    Text("Cancelando reserva")
                 }
-                // ... botones de cancelar, extender, etc.
+            } else {
+                
+                ScrollView {
+                    if let reservaActiva = viewModel.reservaActiva {
+                        reservaActivaView(reservaActiva)
+                    } else {
+                        Text("No hay información de la reserva")
+                    }
+                    // ... botones de cancelar, extender, etc.
+                }
+                .navigationTitle("Mi Reserva")
             }
         }
-        .navigationTitle("Mi Reserva")
         .sheet(isPresented: $mostrarCambiarHora) {
             CambiarHoraView(
                 reservaActiva: reserva,
@@ -58,6 +63,7 @@ struct ReservaDetalleView: View {
         .onChange(of: viewModel.reservaActiva) { oldValue, newValue in
             // Si la reserva se vuelve nil (ej. se canceló con éxito), regresamos a la pantalla anterior
             if newValue == nil {
+                cancelando = false
                 dismiss()
             }
         }
@@ -65,20 +71,28 @@ struct ReservaDetalleView: View {
 
     // MARK: - Reserva activa
 
-    private func reservaActivaView(_ reserva: Reserva) -> some View {
+    private func reservaActivaView(_ reserva:   Reserva) -> some View {
         ZStack {
             VStack(alignment: .center, spacing: 20) {
 
                 ReservaCard(reserva: reserva)
                     .padding(.horizontal)
-                    .onTapGesture {
-                        mostrarQR = true
-                    }
-
+                
                 if viewModel.comenzarTemporizador {
                     TiempoRestanteView(fechaFin: reserva.fechaHoraFin)
                 }
 
+                if reserva.numPersonas >= 1 {
+                    NavigationLink(destination: CompartirReservaView(reserva: reserva)) {
+                        Text("Añadir personas")
+                            .foregroundColor(.primary)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.gray)
+                    }
+                    .padding(.horizontal)
+                    
+                }
                 // Ayuda y soporte
                 NavigationLink(destination: EmptyView()) {
                     Text("Ayuda y soporte")
@@ -87,8 +101,6 @@ struct ReservaDetalleView: View {
                     Image(systemName: "chevron.right")
                         .foregroundColor(.gray)
                 }
-                .padding()
-
                 .padding(.horizontal)
 
                 Spacer()
@@ -106,10 +118,10 @@ struct ReservaDetalleView: View {
                                 Text("Extender 30 minutos")
                                     .font(.headline)
                             }
-                            .padding()
-                            .buttonStyle(PrimaryButtonStyle())
                         }
                         .padding(.horizontal)
+                        .buttonStyle(PrimaryButtonStyle())
+
                         .transition(.move(edge: .top).combined(with: .opacity))
                     }
 
@@ -131,11 +143,12 @@ struct ReservaDetalleView: View {
                     .padding(.horizontal)
                     .buttonStyle(CancelButtonStyle())
                 }
-                .padding()
                 .animation(.easeInOut(duration: 0.4), value: viewModel.puedeExtender)
+                .animation(.easeInOut(duration: 0.4), value: viewModel.puedeAjustarHora)
 
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .padding()
+//            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
         .sheet(isPresented: $mostrarCambiarHora) {
             CambiarHoraView(
@@ -152,7 +165,7 @@ struct ReservaDetalleView: View {
         .alert("¿Cancelar reserva?", isPresented: $mostrarAlertaCancelacion) {
             Button("Sí, cancelar", role: .destructive) {
                 viewModel.cancelarReserva()
-                dismiss()
+                self.cancelando = true
             }
             Button("No", role: .cancel) {}
         } message: {

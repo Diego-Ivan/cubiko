@@ -117,9 +117,7 @@ class ReservasViewModel {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
-        if let token = KeychainManager.shared.getAccessToken() {
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         print("\n[ReservasViewModel] Iniciando petición a: \(url.absoluteString) para reservas ACTUALES")
         
         Task {
@@ -145,7 +143,7 @@ class ReservasViewModel {
                         let reservasFiltradas = decoded.data.filter { reserva in
                             // 1. Verificamos si el status es explícitamente "Activa"
                             // Usamos lowercased() por si en la base de datos dice "Activa" o "activa"
-                            let esEstadoActiva = reserva.status == .activa
+                            let esEstadoActiva = reserva.status == .activa || reserva.status == .reservada
                             
                             // 2. Verificamos si la fechaFin aún no ha pasado.
                             // Si por algún motivo fechaFin es null, usamos la fechaInicio para comparar.

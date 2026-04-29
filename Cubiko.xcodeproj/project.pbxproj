@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		732B9E4E2FA152F200276B1F /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 732B9E4D2FA152F200276B1F /* CodeScanner */; };
+		73B057502FA092A300BFBA79 /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = 73B0574F2FA092A300BFBA79 /* SVGKit */; };
+		73B057522FA092A300BFBA79 /* SVGKitSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 73B057512FA092A300BFBA79 /* SVGKitSwift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		73001F712F97F22700F81856 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -53,6 +59,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73B057522FA092A300BFBA79 /* SVGKitSwift in Frameworks */,
+				73B057502FA092A300BFBA79 /* SVGKit in Frameworks */,
+				732B9E4E2FA152F200276B1F /* CodeScanner in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,6 +131,9 @@
 			);
 			name = Cubiko;
 			packageProductDependencies = (
+				73B0574F2FA092A300BFBA79 /* SVGKit */,
+				73B057512FA092A300BFBA79 /* SVGKitSwift */,
+				732B9E4D2FA152F200276B1F /* CodeScanner */,
 			);
 			productName = Cubiko;
 			productReference = 507D18912F8495160079F3B3 /* Cubiko.app */;
@@ -205,6 +217,10 @@
 			);
 			mainGroup = 507D18882F8495160079F3B3;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				73B0574E2FA092A300BFBA79 /* XCRemoteSwiftPackageReference "SVGKit" */,
+				732B9E4C2FA152DF00276B1F /* XCRemoteSwiftPackageReference "CodeScanner" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 507D18922F8495160079F3B3 /* Products */;
 			projectDirPath = "";
@@ -409,6 +425,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Cubiko;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Necesitamos la cámara para scanear QR";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -447,6 +464,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Cubiko;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Necesitamos la cámara para scanear QR";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -600,6 +618,43 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		732B9E4C2FA152DF00276B1F /* XCRemoteSwiftPackageReference "CodeScanner" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/twostraws/CodeScanner";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.2;
+			};
+		};
+		73B0574E2FA092A300BFBA79 /* XCRemoteSwiftPackageReference "SVGKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SVGKit/SVGKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		732B9E4D2FA152F200276B1F /* CodeScanner */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 732B9E4C2FA152DF00276B1F /* XCRemoteSwiftPackageReference "CodeScanner" */;
+			productName = CodeScanner;
+		};
+		73B0574F2FA092A300BFBA79 /* SVGKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 73B0574E2FA092A300BFBA79 /* XCRemoteSwiftPackageReference "SVGKit" */;
+			productName = SVGKit;
+		};
+		73B057512FA092A300BFBA79 /* SVGKitSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 73B0574E2FA092A300BFBA79 /* XCRemoteSwiftPackageReference "SVGKit" */;
+			productName = SVGKitSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 507D18892F8495160079F3B3 /* Project object */;
 }

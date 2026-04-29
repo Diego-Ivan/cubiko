@@ -61,7 +61,7 @@ final class ReservaViewModel {
             horaInicio: horaInicioComps,
             horaFin: horaFinComps,
             numPersonas: 1,
-            status: .activa
+            status: .reservada
         )
 
         minutosInicioUsados = UserDefaults.standard.integer(forKey: "minutosAvisoInicio").nonZero ?? 15
@@ -106,7 +106,7 @@ final class ReservaViewModel {
             horaInicio: horaInicioComps,
             horaFin: horaFinComps,
             numPersonas: 1,
-            status: .activa
+            status: .reservada
         )
 
         reservaActiva = reservaActualizada

@@ -10,6 +10,7 @@ import SwiftUI
 struct ReservasView: View {
     @EnvironmentObject var sessionManager: SessionManager
     @State var viewModel: ReservasViewModel
+    @State var showCamera: Bool = false
     
     init(viewModel: ReservasViewModel = ReservasViewModel()) {
         self.viewModel = viewModel
@@ -69,16 +70,23 @@ struct ReservasView: View {
                     }
                 }
                 
-                
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink(destination: NuevaReservaView()) {
                         Image(systemName: "plus")
+                    }
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button (action: { showCamera = true } ) {
+                        Image(systemName: "qrcode.viewfinder")
                     }
                 }
             }
             .onAppear {
                 viewModel.fetchReservasActuales(token: sessionManager.profile?.accessToken)
             }
+            .sheet(isPresented: $showCamera) { CameraView(reservas: viewModel.reservasFiltradas) }
+
         }
     }
 }
@@ -112,7 +120,7 @@ private let fechaHoraFormatter: DateFormatter = {
                 horaInicio: DateComponents(hour: 7, minute: 0),
                 horaFin: DateComponents(hour: 8, minute: 0),
                 numPersonas: 4,
-                status: .activa
+                status: .reservada
             )
         ]
         return vm
