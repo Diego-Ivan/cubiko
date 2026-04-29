@@ -33,7 +33,11 @@ protocol CubiculoRepositoryProtocol {
             capacidad: Int?
         ) async throws -> Int // Devuelve el ID de la nueva reserva
 
+    func aceptarInvitacionConQr(reservaId: Int) async throws
+    
+    func activarReserva(reservaId: Int) async throws
 }
+
 
 enum ReprogramacionEstado {
     case exito

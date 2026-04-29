@@ -19,12 +19,12 @@ struct ReservaCard: View {
                              .fontWeight(.bold)
                              .foregroundColor(.white)
                          
-                         if Calendar.current.isDate(reserva.fechaHoraInicio, inSameDayAs: reserva.fechaHoraFin)  {
+                         if Calendar.current.isDate(reserva.fechaInicio, inSameDayAs: reserva.fechaFin)  {
                              Text(reserva.fechaInicio.formatted(date: .abbreviated, time: .omitted))
                                  .font(.title3)
                                  .foregroundColor(.white)
                          } else {
-                             Text("\(reserva.fechaHoraInicio.formatted(date: .omitted, time: .shortened)) - \(reserva.fechaHoraFin.formatted(date: .omitted, time: .shortened))")
+                             Text("\(reserva.fechaInicio.formatted(date: .omitted, time: .shortened)) - \(reserva.fechaFin.formatted(date: .omitted, time: .shortened))")
                                  .font(.title3)
                                  .foregroundColor(.white)
                          }
@@ -64,18 +64,9 @@ struct ReservaCard: View {
                  }
                  .padding(.top, 20) // Padding from top of card
                  .padding(.bottom, 50)
-                 
-                 Spacer()
-                 
-                 Text ("Tap para QR de reserva")
-                         .font(.caption)
-                         .foregroundColor(.white)
-                         .frame(maxWidth: .infinity, alignment: .center) 
-                         .padding(.bottom, 20)
-                                  
+            
              }
-             .frame(maxWidth: .infinity, minHeight: 100, idealHeight: 295, maxHeight: 500) // Maintain height, allow width to adapt with padding
-             .background(Color(red: 0.16, green: 0.44, blue: 0.59))
+             .background(Color.primaryCubiko)
              .cornerRadius(20)
          }
     }

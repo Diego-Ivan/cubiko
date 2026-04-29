@@ -18,10 +18,10 @@ struct HomeView: View {
                 ContentView()
             } else {
                 NavigationView {
-                    if currentState == .login {
-                        LoginView(currentState: $currentState)
-                    } else if currentState == .register {
+                    if currentState == .register {
                         RegisterView(currentState: $currentState)
+                    } else {
+                        LoginView(currentState: $currentState)
                     }
                 }
             }

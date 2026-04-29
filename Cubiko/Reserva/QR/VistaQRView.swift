@@ -7,12 +7,14 @@
 
 import SwiftUI
 
+
 struct VistaQRView: View {
     let reservaId: Int
+    let bitmapSize = CGSize(width: 500, height: 500)
     @State private var viewModel = QRViewModel()
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .center) {
             Color.gray.opacity(0.1)
             
             VStack(spacing: 20) {
@@ -23,16 +25,17 @@ struct VistaQRView: View {
                         .foregroundColor(.red)
                         .multilineTextAlignment(.center)
                 } else if let image = viewModel.qrImage {
-                    Image(uiImage: image)
-                        .resizable()
-                        .interpolation(.none) // Para que el QR se vea nítido
-                        .scaledToFit()
-                        .frame(width: 250, height: 250)
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: 400, maxHeight: 400)
+                            .padding()
+
                 } else {
                     Text("No se pudo cargar el QR")
                 }
                 
-                Text("Escanee este código QR en el escáner para abrir la puerta")
+                Text("Comparta este código QR para añadir personas a tu reserva")
                     .font(.headline)
                     .multilineTextAlignment(.center)
                 
@@ -43,7 +46,7 @@ struct VistaQRView: View {
         }
         .ignoresSafeArea()
         .task {
-            viewModel.fetchQR(reservaId: reservaId)
+            viewModel.createQR(reservaId: reservaId)
         }
     }
 }
@@ -51,4 +54,3 @@ struct VistaQRView: View {
 #Preview {
     VistaQRView(reservaId: 1)
 }
-

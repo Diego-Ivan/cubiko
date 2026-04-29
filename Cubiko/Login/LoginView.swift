@@ -133,9 +133,8 @@ struct LoginView: View {
                     let decoded = try JSONDecoder().decode(LoginResponse.self, from: data)
                     
                     if let loginData = decoded.data {
-                        // Creamos el perfil con el estudiante y sus tokens
+                        // Creamos el perfil con sus tokens
                         
-//                        let estudiante: Estudiante? = nil
                         let nuevoPerfil = UserProfile(
                             accessToken: loginData.access_token,
                             refreshToken: loginData.refresh_token,

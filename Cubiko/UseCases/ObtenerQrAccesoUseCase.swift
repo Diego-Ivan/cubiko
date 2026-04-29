@@ -10,9 +10,11 @@ final class ObtenerQrAccesoUseCase {
     func execute(reservaId: Int) async throws -> Data {
         let base64String = try await repository.obtenerQrAcceso(reservaId: reservaId)
         
-        // El string viene como Data URL: "data:image/png;base64,iVBORw..."
+        // El string viene como Data URL: "data:image/svg+xml;base64,iVBORw..."
         // Necesitamos extraer solo la parte de base64
-        let components = base64String.components(separatedBy: "base64,")
+        let components = base64String.components(separatedBy: ";base64,")
+        
+        print("COMPONENTS \(components)")
         
         guard components.count == 2,
               let data = Data(base64Encoded: components[1], options: .ignoreUnknownCharacters) else {

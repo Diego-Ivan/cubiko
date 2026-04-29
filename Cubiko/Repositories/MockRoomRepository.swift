@@ -1,6 +1,15 @@
 import Foundation
 
 final class MockRoomRepository: CubiculoRepositoryProtocol {
+    func activarReserva(reservaId: Int) async throws {
+        return
+    }
+    
+    
+    func aceptarInvitacionConQr(reservaId: Int) async throws {
+        return 
+    }
+
     
     var shouldFail = false
     var mockSalas: [SalaDisponible] = [
@@ -59,4 +68,6 @@ final class MockRoomRepository: CubiculoRepositoryProtocol {
         try await Task.sleep(nanoseconds: 500_000_000)
         return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
     }
+    
+    
 }
