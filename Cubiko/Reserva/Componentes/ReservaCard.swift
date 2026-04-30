@@ -26,11 +26,11 @@ struct ReservaCard: View {
                              .foregroundColor(.white)
                          
                          if Calendar.current.isDate(reserva.fechaInicio, inSameDayAs: reserva.fechaFin)  {
-                             Text(reserva.fechaInicio.formatted(date: .abbreviated, time: .omitted))
+                             Text(reserva.fechaHoraInicio.formatted(date: .abbreviated, time: .omitted))
                                  .font(.title3)
                                  .foregroundColor(.white)
                          } else {
-                             Text("\(reserva.fechaInicio.formatted(date: .omitted, time: .shortened)) - \(reserva.fechaFin.formatted(date: .omitted, time: .shortened))")
+                             Text("\(reserva.fechaHoraInicio.formatted(date: .abbreviated, time: .omitted)) - \(reserva.fechaHoraFin.formatted(date: .abbreviated, time: .omitted))")
                                  .font(.title3)
                                  .foregroundColor(.white)
                          }

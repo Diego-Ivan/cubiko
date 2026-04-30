@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ReservaDetalleView: View {
-    let reserva: Reserva // La recibe de la lista
+    @Binding var reserva: Reserva
     @Binding var vmReservas: ReservasViewModel
     var onCancelacion: (() -> Void)? = nil
     @State private var viewModel: ReservaViewModel
@@ -10,78 +10,88 @@ struct ReservaDetalleView: View {
     @State private var mostrarCamara = false
     
     @State private var cancelando = false
-    
     @Environment(\.dismiss) private var dismiss
 
-    init(reserva: Reserva, vmReservas: Binding<ReservasViewModel>, onCancelacion: (() -> Void)? = nil) {
-        self.reserva = reserva
+
+    init(reserva: Binding<Reserva>, vmReservas: Binding<ReservasViewModel>, onCancelacion: (() -> Void)? = nil) {
+        _reserva = reserva
         _vmReservas = vmReservas
         
-        // 1. Instanciamos el repositorio real que hace las peticiones
-        // (Usa el nombre de tu clase real, probablemente sea CubiculoRepositoryImpl)
         let repository = RealRoomRepository()
-        
-        // 2. Creamos los Casos de Uso inyectándoles el repositorio
         let cancelarUseCase = CancelarReservaUseCase(repository: repository)
         let extenderUseCase = ExtenderReservaUseCase(repository: repository)
         
-        // 3. Inicializamos el ViewModel con TODAS sus dependencias
         _viewModel = State(wrappedValue: ReservaViewModel(
-            reservaActiva: reserva,
+            reservaActiva: reserva.wrappedValue,
             cancelarReservaUseCase: cancelarUseCase,
             extenderReservaUseCase: extenderUseCase
         ))
     }
     
     var body: some View {
-        NavigationStack{
+        NavigationStack {
             if cancelando {
                 VStack {
                     ProgressView()
                     Text("Cancelando reserva")
                 }
             } else {
-                
                 ScrollView {
-                    if let reservaActiva = viewModel.reservaActiva {
-                        reservaActivaView(reservaActiva)
-                    } else {
-                        Text("No hay información de la reserva")
-                    }
-                    // ... botones de cancelar, extender, etc.
+                    reservaActivaView(reserva)
                 }
                 .navigationTitle("Mi Reserva")
             }
+        }
+        .onChange(of: reserva) {
+            viewModel.actualizarReservaActiva(reserva)
         }
         .sheet(isPresented: $mostrarCambiarHora) {
             CambiarHoraView(
                 reservaActiva: reserva,
                 onConfirmar: { inicio, fin in
-                    // Lógica para reprogramar
                     mostrarCambiarHora = false
                 },
                 onCancelar: { mostrarCambiarHora = false }
             )
         }
-        .onChange(of: viewModel.reservaActiva) { oldValue, newValue in
-            // Si la reserva se vuelve nil (ej. se canceló con éxito), regresamos a la pantalla anterior
-            if newValue == nil {
+        .onChange(of: viewModel.reservaActiva) {
+            if viewModel.reservaActiva == nil {
                 cancelando = false
                 onCancelacion?()
                 dismiss()
             }
         }
+        .sheet(isPresented: $mostrarCamara, onDismiss: {
+            Task {
+                guard let actualizada = await vmReservas.refreshReserva(id: reserva.id) else {
+                    return // error de red, no hacer nada
+                }
+                if actualizada.status == .completada || actualizada.status == .cancelada {
+                    // Reserva finalizada → cerrar primero, refrescar lista después
+                    onCancelacion?()
+                    dismiss()
+                    // Refrescar la lista DESPUÉS del dismiss para evitar crash
+                    // de Index out of range en ReservasView
+                    vmReservas.fetchReservasActuales()
+                } else {
+                    // Status cambió (ej. .reservada → .activa) → actualizar UI
+                    reserva = actualizada
+                    viewModel.actualizarReservaActiva(actualizada)
+                    vmReservas.fetchReservasActuales()
+                }
+            }
+        }) {
+            CameraView(viewModel: vmReservas)
+        }
     }
 
     // MARK: - Reserva activa
 
-    private func reservaActivaView(_ reserva:   Reserva) -> some View {
-        let _ = print("STATUS: \(reserva.status)")
-        return ZStack {
+    private func reservaActivaView(_ reserva: Reserva) -> some View {
+        ZStack {
             VStack(alignment: .center, spacing: 20) {
 
                 ReservaCard(reserva: reserva)
-                    .padding(.horizontal)
                 
                 if viewModel.comenzarTemporizador {
                     TiempoRestanteView(fechaFin: reserva.fechaHoraFin)
@@ -96,9 +106,8 @@ struct ReservaDetalleView: View {
                             .foregroundColor(.gray)
                     }
                     .padding(.horizontal)
-                    
                 }
-                // Ayuda y soporte
+
                 NavigationLink(destination: EmptyView()) {
                     Text("Ayuda y soporte")
                         .foregroundColor(.primary)
@@ -110,10 +119,10 @@ struct ReservaDetalleView: View {
 
                 Spacer()
                 
-                // Botones
                 VStack(spacing: 10) {
                     
                     if viewModel.puedeActivar {
+                        
                         Button {
                             mostrarCamara.toggle()
                         } label: {
@@ -125,10 +134,8 @@ struct ReservaDetalleView: View {
                         .padding(.horizontal)
                         .buttonStyle(PrimaryButtonStyle())
 
-                        .transition(.move(edge: .top).combined(with: .opacity))
                     }
 
-                    // Botón extender — aparece cuando faltan <= 20 min
                     if viewModel.puedeExtender {
                         Button {
                             viewModel.extenderReserva(hasta: reserva.fechaFin.addingTimeInterval(30 * 60))
@@ -140,8 +147,6 @@ struct ReservaDetalleView: View {
                         }
                         .padding(.horizontal)
                         .buttonStyle(PrimaryButtonStyle())
-
-                        .transition(.move(edge: .top).combined(with: .opacity))
                     }
 
                     if (viewModel.puedeAjustarHora) {
@@ -154,7 +159,7 @@ struct ReservaDetalleView: View {
                         .buttonStyle(TertiaryButtonStyle())
                     }
                     
-                    if reserva.status == .reservada || reserva.status == .activa {
+                    if viewModel.reservaActiva?.status == .reservada {
                         Button {
                             mostrarAlertaCancelacion = true
                         } label: {
@@ -164,7 +169,7 @@ struct ReservaDetalleView: View {
                         .buttonStyle(CancelButtonStyle())
                     }
 
-                    if reserva.status == .activa {
+                    if viewModel.reservaActiva?.status == .activa {
                         Button {
                             mostrarCamara.toggle()
                         } label: {
@@ -178,25 +183,9 @@ struct ReservaDetalleView: View {
                         .transition(.move(edge: .top).combined(with: .opacity))
                     }
                 }
-                .animation(.easeInOut(duration: 0.4), value: viewModel.puedeExtender)
-                .animation(.easeInOut(duration: 0.4), value: viewModel.puedeAjustarHora)
-
             }
             .padding()
         }
-        .sheet(isPresented: $mostrarCambiarHora) {
-            CambiarHoraView(
-                reservaActiva: reserva,
-                onConfirmar: { inicio, fin in
-                    mostrarCambiarHora = false
-                },
-                onCancelar: {
-                    mostrarCambiarHora = false
-                }
-            )
-//            .presentationDetents([.fraction(0.5)])
-        }
-        .sheet(isPresented: $mostrarCamara) { CameraView(viewModel: vmReservas) }
         .alert("¿Cancelar reserva?", isPresented: $mostrarAlertaCancelacion) {
             Button("Sí, cancelar", role: .destructive) {
                 viewModel.cancelarReserva()
@@ -207,26 +196,4 @@ struct ReservaDetalleView: View {
             Text("Esta acción liberará la sala y no se podrá deshacer.")
         }
     }
-
 }
-
-//#Preview {
-//    let fechaInicio = Date().addingTimeInterval(60 * 60)
-//    let fechaFin = Date().addingTimeInterval(120 * 60)
-//    let calendar = Calendar.current
-//    let horaInicio = calendar.dateComponents([.hour, .minute], from: fechaInicio)
-//    let horaFin = calendar.dateComponents([.hour, .minute], from: fechaFin)
-//
-//    return ReservaDetalleView(reserva: Reserva(
-//        id: 1,
-//        estudianteId: 2,
-//        salaUbicacion: "Piso 1",
-//        salaNumero: 21,
-//        fechaInicio: fechaInicio,
-//        fechaFin: fechaFin,
-//        horaInicio: horaInicio,
-//        horaFin: horaFin,
-//        numPersonas: 2
-//    ))
-//
-//}

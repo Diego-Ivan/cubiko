@@ -104,6 +104,7 @@ struct CameraView: View {
                 switch result {
                 case .exito:
                     alertMessage = "¡Invitación aceptada con éxito!"
+                    viewModel.fetchReservasActuales() // Actualizar lista
                 case .error(let message):
                     alertMessage = "Error: \(message)"
                 }
@@ -153,11 +154,9 @@ struct CameraView: View {
             await MainActor.run {
                 switch result {
                 case .exito:
-                    // Actualizar localmente el estado de la reserva
-                    if let index = viewModel.reservasFiltradas.firstIndex(where: { $0.id == id }) {
-                        viewModel.reservasFiltradas[index].status = .activa
-                    }
                     alertMessage = "¡Reserva activada con éxito! Disfruta tu estancia."
+                    // Forzar actualización total desde el servidor
+                    viewModel.fetchReservasActuales()
                 case .error(let message):
                     alertMessage = "Error al activar: \(message)"
                 }
@@ -172,11 +171,8 @@ struct CameraView: View {
             await MainActor.run {
                 switch result {
                 case .exito:
-                    // Actualizar localmente el estado de la reserva
-                    if let index = viewModel.reservasFiltradas.firstIndex(where: { $0.id == id }) {
-                        viewModel.reservasFiltradas[index].status = .completada
-                    }
                     alertMessage = "¡Reserva finalizada con éxito! Gracias por usar Cubiko."
+                    // La lista se refresca en ReservaDetalleView.onDismiss, después del dismiss()
                 case .error(let message):
                     alertMessage = "Error al finalizar: \(message)"
                 }

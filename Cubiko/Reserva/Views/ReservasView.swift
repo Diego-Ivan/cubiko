@@ -9,57 +9,86 @@ import SwiftUI
 
 struct ReservasView: View {
     @EnvironmentObject var sessionManager: SessionManager
-    @State var viewModel: ReservasViewModel
-    @State var showCamera: Bool = false
+    @State private var viewModel: ReservasViewModel
+    @State private var showingQRScanner = false
+    var selectedTab: Binding<Int>
     
-    init(viewModel: ReservasViewModel = ReservasViewModel()) {
+    init(viewModel: ReservasViewModel = ReservasViewModel(), selectedTab: Binding<Int> = .constant(0)) {
         self.viewModel = viewModel
+        self.selectedTab = selectedTab
     }
-    
+      
+
     var body: some View {
         NavigationStack {
             VStack {
                 if viewModel.isLoading {
                     ProgressView("Cargando reservas...")
                 } else if let error = viewModel.error {
-                    VStack(spacing: 12) {
-                        Image(systemName: "exclamationmark.triangle.fill").foregroundColor(.red)
-                        Text(error).multilineTextAlignment(.center)
+                    VStack(spacing: 16) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .font(.largeTitle)
+                            .foregroundColor(.orange)
+                        Text(error)
+                            .multilineTextAlignment(.center)
+                        Button("Reintentar") {
+                            viewModel.fetchReservasActuales()
+                        }
+                        .buttonStyle(.borderedProminent)
+                        
+                        NavigationLink(destination: NuevaReservaView(selectedTab: selectedTab)) {
+                            HStack {
+                                Image(systemName: "plus")
+                                Text("Nueva reserva")
+                            }
+                        }
+                        .buttonStyle(PrimaryButtonStyle())
                     }
-                    .padding()
-                } else if viewModel.reservasFiltradas.isEmpty {
-                    
-                    Text("No tienes reservas registradas.")
-                        .foregroundColor(.secondary)
-                        .padding()
-                    
-                    NavigationLink(destination: NuevaReservaView()) {
-                        Text("Nueva reserva")
-                    }
-                    .buttonStyle(PrimaryButtonStyle())
                     .padding(.horizontal)
                     
+                } else if viewModel.reservasFiltradas.isEmpty {
+                    VStack(spacing: 16) {
+                        Image(systemName: "calendar.badge.exclamationmark")
+                            .font(.system(size: 60))
+                            .foregroundColor(.gray)
+                        Text("No tienes reservas registradas.")
+                            .font(.headline)
+                        Text("Tus próximas reservaciones aparecerán aquí.")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                    }
+                    .padding(.horizontal)
                     
                 } else {
                     List {
+                        // Sección para la primera reserva (Próxima)
                         Section("Próxima Reserva") {
-                            
-                            ReservaListView(vm: $viewModel, reserva: viewModel.reservasFiltradas.first!, esPrimera: true)
+                            // Usamos el primer elemento con binding
+                            ReservaListView(
+                                vm: $viewModel,
+                                reserva: $viewModel.reservasFiltradas[0],
+                                esPrimera: true
+                            )
                         }
                         
-                        if !viewModel.reservasFiltradas[1...].isEmpty {
+                        // Sección para las siguientes reservas
+                        if viewModel.reservasFiltradas.count > 1 {
                             Section("Siguientes Reservas") {
-                                
-                                
-                                ForEach(viewModel.reservasFiltradas[1...], id: \.id) { reserva in
-                                    
-                                    ReservaListView(vm: $viewModel, reserva: reserva, esPrimera: false)
-                                    
+                                // Usamos índices para poder pasar el Binding correctamente
+                                ForEach(1..<viewModel.reservasFiltradas.count, id: \.self) { index in
+                                    ReservaListView(
+                                        vm: $viewModel,
+                                        reserva: $viewModel.reservasFiltradas[index],
+                                        esPrimera: false
+                                    )
                                 }
                             }
                         }
                     }
                     .listRowSpacing(10)
+                    .refreshable {
+                        viewModel.fetchReservasActuales()
+                    }
                 }
             }
             .navigationTitle("Mis Reservas")
@@ -71,16 +100,19 @@ struct ReservasView: View {
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink(destination: NuevaReservaView()) {
+                    NavigationLink(destination: NuevaReservaView(selectedTab: selectedTab)) {
                         Image(systemName: "plus")
                     }
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button (action: { showCamera = true } ) {
+                    Button (action: { showingQRScanner = true } ) {
                         Image(systemName: "qrcode.viewfinder")
                     }
                 }
+            }
+            .sheet(isPresented: $showingQRScanner) {
+                CameraView(viewModel: viewModel)
             }
             .onAppear {
                 viewModel.fetchReservasActuales()
@@ -90,10 +122,6 @@ struct ReservasView: View {
                     viewModel.fetchReservasActuales()
                 }
             }
-
-            .sheet(isPresented: $showCamera) { CameraView(viewModel: viewModel) }
-
-
         }
     }
 }

@@ -69,19 +69,19 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
             throw URLError(.userAuthenticationRequired)
         }
     }
-
+    
     func obtenerDisponibles(inicio: Date, fin: Date, capacidad: Int?) async throws -> [SalaDisponible] {
         var components = URLComponents(url: APIConfig.baseURL.appendingPathComponent("api/rooms/available"), resolvingAgainstBaseURL: false)!
         let fechaFormatter = DateFormatter()
         fechaFormatter.calendar = Calendar(identifier: .gregorian)
         fechaFormatter.locale = Locale(identifier: "es_MX_POSIX")
         fechaFormatter.dateFormat = "yyyy-MM-dd"
-
+        
         let horaFormatter = DateFormatter()
         horaFormatter.calendar = Calendar(identifier: .gregorian)
         horaFormatter.locale = Locale(identifier: "es_MX_POSIX")
         horaFormatter.dateFormat = "HH:mm"
-
+        
         var queryItems: [URLQueryItem] = [
             URLQueryItem(name: "fecha", value: fechaFormatter.string(from: inicio)),
             URLQueryItem(name: "horaInicio", value: horaFormatter.string(from: inicio)),
@@ -92,18 +92,18 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
             queryItems.append(URLQueryItem(name: "capacidad", value: String(capacidad)))
         }
         components.queryItems = queryItems
-
+        
         guard let url = components.url else { throw URLError(.badURL) }
-
+        
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-
+        
         let (data, response) = try await performAuthenticatedRequest(request)
         
         print("ROOMS: \(String(data: data, encoding: .utf8) ?? "<no data>") \(response)")
-
+        
         guard let http = response as? HTTPURLResponse else { throw URLError(.badServerResponse) }
-
+        
         switch http.statusCode {
         case 200:
             let decoder = JSONDecoder()
@@ -127,13 +127,13 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
     
     
     func reprogramarReserva(
-            reservaId: Int,
-            salaNumero: Int,
-            salaUbicacion: String,
-            nuevaEntrada: Date,
-            nuevaSalida: Date,
-            capacidad: Int?
-        ) async throws {
+        reservaId: Int,
+        salaNumero: Int,
+        salaUbicacion: String,
+        nuevaEntrada: Date,
+        nuevaSalida: Date,
+        capacidad: Int?
+    ) async throws {
         
         let url = APIConfig.baseURL.appendingPathComponent("api/reservas/\(reservaId)/reschedule")
         
@@ -208,8 +208,8 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
         
         var request = URLRequest(url: url)
         request.httpMethod = "PATCH"
-//        request.httpBody = try JSONEncoder().encode(body)
-
+        //        request.httpBody = try JSONEncoder().encode(body)
+        
         
         let (data, response) = try await performAuthenticatedRequest(request)
         
@@ -227,12 +227,12 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
             let backendMessage = (try? JSONDecoder().decode(BackendErrorResponse.self, from: data))?.message
             
             print("ERROR \(String(describing: backendMessage))")
-
+            
             throw NSError(domain: "CancelarReserva", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: backendMessage ?? "Error al cancelar"])
             
         }
     }
-
+    
     // MARK: - Extender Reserva (Reutiliza Reprogramar)
     func extenderReserva(reserva: Reserva, nuevaFin: Date) async throws {
         try await reprogramarReserva(
@@ -247,64 +247,64 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
     
     
     func crearReserva(salaNumero: Int, salaUbicacion: String, inicio: Date, fin: Date, capacidad: Int?) async throws -> Int {
-            let url = APIConfig.baseURL.appendingPathComponent("api/reservas/create")
-            
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            dateFormatter.locale = Locale(identifier: "es_MX_POSIX")
-            
-            let timeFormatter = DateFormatter()
-            timeFormatter.dateFormat = "HH:mm"
-            timeFormatter.locale = Locale(identifier: "es_MX_POSIX")
-            
-            struct CrearBody: Encodable {
-                let salaNumero: Int
-                let salaUbicacion: String
-                let fechaInicio: String
-                let horaInicio: String
-                let fechaFin: String
-                let horaFin: String
-                let numPersonas: Int?
-            }
-            
-            let body = CrearBody(
-                salaNumero: salaNumero,
-                salaUbicacion: salaUbicacion,
-                fechaInicio: dateFormatter.string(from: inicio),
-                horaInicio: timeFormatter.string(from: inicio),
-                fechaFin: dateFormatter.string(from: fin),
-                horaFin: timeFormatter.string(from: fin),
-                numPersonas: capacidad
-            )
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = "PUT"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = try JSONEncoder().encode(body)
-            
-            let (data, response) = try await performAuthenticatedRequest(request)
+        let url = APIConfig.baseURL.appendingPathComponent("api/reservas/create")
         
-            print("NUEVA RESERVA: \(String(data: data, encoding: .utf8) ?? "<no data>") \(response)")
-            
-            guard let httpResponse = response as? HTTPURLResponse else {
-                throw URLError(.badServerResponse)
-            }
-            
-            if httpResponse.statusCode == 201 {
-                struct BackendSuccessResponse: Decodable {
-                    struct DataObj: Decodable { let reservaId: Int }
-                    let data: DataObj
-                }
-                let successData = try JSONDecoder().decode(BackendSuccessResponse.self, from: data)
-                return successData.data.reservaId
-                
-            } else {
-                struct BackendErrorResponse: Decodable { let message: String? }
-                let backendMessage = (try? JSONDecoder().decode(BackendErrorResponse.self, from: data))?.message
-                throw NSError(domain: "CrearReserva", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: backendMessage ?? "Error desconocido"])
-            }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.locale = Locale(identifier: "es_MX_POSIX")
+        
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HH:mm"
+        timeFormatter.locale = Locale(identifier: "es_MX_POSIX")
+        
+        struct CrearBody: Encodable {
+            let salaNumero: Int
+            let salaUbicacion: String
+            let fechaInicio: String
+            let horaInicio: String
+            let fechaFin: String
+            let horaFin: String
+            let numPersonas: Int?
         }
         
+        let body = CrearBody(
+            salaNumero: salaNumero,
+            salaUbicacion: salaUbicacion,
+            fechaInicio: dateFormatter.string(from: inicio),
+            horaInicio: timeFormatter.string(from: inicio),
+            fechaFin: dateFormatter.string(from: fin),
+            horaFin: timeFormatter.string(from: fin),
+            numPersonas: capacidad
+        )
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONEncoder().encode(body)
+        
+        let (data, response) = try await performAuthenticatedRequest(request)
+        
+        print("NUEVA RESERVA: \(String(data: data, encoding: .utf8) ?? "<no data>") \(response)")
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw URLError(.badServerResponse)
+        }
+        
+        if httpResponse.statusCode == 201 {
+            struct BackendSuccessResponse: Decodable {
+                struct DataObj: Decodable { let reservaId: Int }
+                let data: DataObj
+            }
+            let successData = try JSONDecoder().decode(BackendSuccessResponse.self, from: data)
+            return successData.data.reservaId
+            
+        } else {
+            struct BackendErrorResponse: Decodable { let message: String? }
+            let backendMessage = (try? JSONDecoder().decode(BackendErrorResponse.self, from: data))?.message
+            throw NSError(domain: "CrearReserva", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: backendMessage ?? "Error desconocido"])
+        }
+    }
+    
     func obtenerQrAcceso(reservaId: Int) async throws -> String {
         let url = APIConfig.baseURL.appendingPathComponent("api/reservas/\(reservaId)/qrCode/acceso")
         
@@ -332,7 +332,7 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
             throw NSError(domain: "ObtenerQR", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: backendMessage ?? "Error al obtener QR"])
         }
     }
-
+    
     func aceptarInvitacionConQr(reservaId: Int) async throws {
         let url = APIConfig.baseURL.appendingPathComponent("api/invitations/\(reservaId)/aceptarConQr")
         
@@ -353,10 +353,10 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
             throw NSError(domain: "AceptarInvitacion", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: backendMessage ?? "Error al aceptar invitación"])
         }
     }
-
+    
     
     func activarReserva(reservaId: Int) async throws {
-        let url = APIConfig.baseURL.appendingPathComponent("api/qrInvitaciones/\(reservaId)/activarReserva")
+        let url = APIConfig.baseURL.appendingPathComponent("api/reservas/\(reservaId)/activarReserva")
         
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
@@ -367,13 +367,15 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
             throw URLError(.badServerResponse)
         }
         
-        if httpResponse.statusCode != 200 {
+        print("ACTIVAR RESERVA\n\(data)\n\(response)")
+        
+        if httpResponse.statusCode != 201 {
             struct BackendErrorResponse: Decodable { let message: String? }
             let backendMessage = (try? JSONDecoder().decode(BackendErrorResponse.self, from: data))?.message
             throw NSError(domain: "ActivarReserva", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: backendMessage ?? "Error al activar reserva"])
         }
     }
-
+    
     func finalizarReserva(reservaId: Int) async throws {
         let url = APIConfig.baseURL.appendingPathComponent("api/reservas/\(reservaId)/terminar")
         
@@ -386,7 +388,9 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
             throw URLError(.badServerResponse)
         }
         
-        if httpResponse.statusCode != 200 {
+        print("FINALIZAR RESERVA\n\(data)\n\(response)")
+        
+        if httpResponse.statusCode != 201 {
             struct BackendErrorResponse: Decodable { let message: String? }
             let backendMessage = (try? JSONDecoder().decode(BackendErrorResponse.self, from: data))?.message
             throw NSError(domain: "FinalizarReserva", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: backendMessage ?? "Error al finalizar reserva"])
