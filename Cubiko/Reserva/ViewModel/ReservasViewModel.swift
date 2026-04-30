@@ -106,4 +106,15 @@ class ReservasViewModel {
         self.error = "Error de conexión: \(error.localizedDescription)"
         self.isLoading = false
     }
+    
+    
+    @MainActor
+    func refreshReserva(id: Int) async -> Reserva? {
+        fetchReservasActuales()
+
+        // Espera breve para completar el request
+        try? await Task.sleep(for: .milliseconds(700))
+
+        return reservasFiltradas.first(where: { $0.id == id })
+    }
 }

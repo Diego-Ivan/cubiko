@@ -37,6 +37,11 @@ final class ReservaViewModel {
         iniciarTimer()
     }
 
+    func actualizarReservaActiva(_ nuevaReserva: Reserva) {
+        self.reservaActiva = nuevaReserva
+        evaluarEstadoLocal()
+    }
+
     // MARK: - Actualizar hora (tras reprogramación exitosa)
 
     func actualizarHora(inicio: Date, fin: Date) {
@@ -125,6 +130,7 @@ final class ReservaViewModel {
 
     private func iniciarTimer() {
         timer?.invalidate()
+        evaluarEstadoLocal() // Llamada inicial inmediata
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             guard let self, let reserva = self.reservaActiva else { return }
             let minutosRestantes = reserva.fechaHoraFin.timeIntervalSinceNow / 60
@@ -135,6 +141,20 @@ final class ReservaViewModel {
                 self.comenzarTemporizador = minutosParaInicio <= 0 && reserva.status == .activa
                 self.puedeActivar = minutosParaInicio <= 5 && minutosParaInicio >= -5
             }
+            self.evaluarEstadoLocal()
+        }
+    }
+    
+    private func evaluarEstadoLocal() {
+        guard let reserva = self.reservaActiva else { return }
+        let minutosRestantes = reserva.fechaHoraFin.timeIntervalSinceNow / 60
+        let minutosParaInicio = reserva.fechaHoraInicio.timeIntervalSinceNow / 60
+        Task { @MainActor in
+            self.puedeExtender = minutosRestantes <= 20 && minutosRestantes > 0
+            self.puedeAjustarHora = minutosParaInicio > 2
+            self.comenzarTemporizador = minutosParaInicio <= 0 && reserva.status == .activa
+            
+            self.puedeActivar = minutosParaInicio <= 5 && minutosParaInicio >= -5 && reserva.status == .reservada
         }
     }
 }

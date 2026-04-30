@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ReservaListView: View {
     @Binding var vm: ReservasViewModel
-    let reserva: Reserva
+    @Binding var reserva: Reserva // Ahora es un Binding
     let esPrimera: Bool
     
     var textColor: Color {
@@ -36,15 +36,16 @@ struct ReservaListView: View {
     }
     
     var body: some View {
-        
         NavigationLink {
-            ReservaDetalleView(reserva: reserva, vmReservas: $vm){
-                vm.fetchReservasActuales()  // ← esto se ejecuta al cancelar
-            }
+//<<<<<<< HEAD
+//            ReservaDetalleView(reserva: reserva, vmReservas: $vm){
+//                vm.fetchReservasActuales()  // ← esto se ejecuta al cancelar
+//            }
+//=======
+            ReservaDetalleView(reserva: $reserva, vmReservas: $vm)
         } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 8) {
-                    
                     Text("Sala #\(reserva.salaNumero)")
                         .font(.title2)
                         .foregroundColor(textColor)
@@ -59,13 +60,11 @@ struct ReservaListView: View {
                         Text(reserva.fechaInicio.formatted(date: .abbreviated, time: .omitted))
                             .font(.headline)
                             .foregroundColor(textColor)
-                        
                     } else {
                         Text("\(reserva.fechaInicio.formatted(date: .abbreviated, time: .omitted)) - \(reserva.fechaFin.formatted(date: .abbreviated, time: .omitted))")
                             .font(.headline)
                             .foregroundColor(textColor)
                     }
-                    
                     
                     Text("\(reserva.fechaHoraInicio.formatted(date: .omitted, time: .shortened)) - \(reserva.fechaHoraFin.formatted(date: .omitted, time: .shortened))")
                         .font(.headline)
@@ -77,9 +76,9 @@ struct ReservaListView: View {
                 Image(systemName: symbol)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 80, height: 80) // Adjust size as needed
+                    .frame(width: 80, height: 80)
                     .foregroundColor(textColor)
-                    .padding(.trailing, 10) // Indent icon from right edge of card
+                    .padding(.trailing, 10)
                 
                 if esPrimera {
                     Image(systemName: "chevron.right")
@@ -88,7 +87,6 @@ struct ReservaListView: View {
                 }
             }
         }
-        .foregroundStyle(.white, .red)
         .listRowBackground(bgColor)
         .tint(.white)
         .navigationLinkIndicatorVisibility(esPrimera ? .hidden : .visible)
