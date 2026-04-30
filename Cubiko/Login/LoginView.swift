@@ -121,12 +121,25 @@ struct LoginView: View {
                 }
                 
                 guard let data = data,
-                      let httpResponse = response as? HTTPURLResponse,
-                      (200...201).contains(httpResponse.statusCode) else {
-                    self.errorMessage = "Credenciales incorrectas o error de servidor."
+                      let httpResponse = response as? HTTPURLResponse else {
+                    self.errorMessage = "Error de conexión con el servidor."
                     self.showAlert = true
                     return
                 }
+                
+                if !(200...201).contains(httpResponse.statusCode) {
+                    struct BackendError: Decodable {
+                        let success: Bool?
+                        let message: String?
+                        let error: String? // Algunos endpoints usan 'error' en vez de 'message'
+                    }
+                    
+                    let decodedError = try? JSONDecoder().decode(BackendError.self, from: data)
+                    self.errorMessage = decodedError?.message ?? decodedError?.error ?? "Error \(httpResponse.statusCode): Credenciales incorrectas o error de servidor."
+                    self.showAlert = true
+                    return
+                }
+
                 
                 // 4. Decodificar y Guardar en la Sesión
                 do {

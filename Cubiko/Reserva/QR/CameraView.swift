@@ -12,10 +12,11 @@ internal import AVFoundation
 
 
 struct CameraView: View {
-    var reservas: [Reserva] = []
+    @Bindable var viewModel: ReservasViewModel
     
     @State private var isPresentingInvitation = false
     @State private var isPresentingActivation = false
+    @State private var isPresentingFinalization = false
     @State private var scannedCode: String?
     @State private var selectedReserva: Reserva?
     @State private var alertMessage = ""
@@ -24,9 +25,13 @@ struct CameraView: View {
     
     private let aceptarUseCase = AceptarInvitacionConQrUseCase(repository: RealRoomRepository())
     private let activarUseCase = ActivarReservaUseCase(repository: RealRoomRepository())
+    private let finalizarUseCase = FinalizarReservaUseCase(repository: RealRoomRepository())
+
 
     var body: some View {
         
+        Text("Escanea el código QR")
+             
         CodeScannerView(codeTypes: [.qr]) { response in
             if case let .success(result) = response {
                 let code = result.string.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -42,7 +47,8 @@ struct CameraView: View {
                 let parts = code.components(separatedBy: ";")
                 if parts.count == 2, let roomNum = Int(parts[0]) {
                     let roomUbicacion = parts[1]
-                    validarActivacion(sala: roomNum, ubicacion: roomUbicacion)
+                    
+                    validarEscaneoDeSala(sala: roomNum, ubicacion: roomUbicacion)
                 }
             }
         }
@@ -65,7 +71,19 @@ struct CameraView: View {
             Button("Cancelar", role: .cancel) {}
         } message: {
             if let r = selectedReserva {
-                Text("¿Deseas activar tu reserva en \(r.salaUbicacion) (\(r.salaNumero))?")
+                Text("¿Deseas activar tu reserva en \(r.salaUbicacion), Sala #\(r.salaNumero)?")
+            }
+        }
+        .alert("Finalizar Reserva", isPresented: $isPresentingFinalization) {
+            Button("Terminar ahora", role: .confirm) {
+                if let reserva = selectedReserva {
+                    finalizarReserva(id: reserva.id)
+                }
+            }
+            Button("Seguir en la sala", role: .cancel) {}
+        } message: {
+            if let r = selectedReserva {
+                Text("¿Deseas finalizar tu estancia en \(r.salaUbicacion), Sala #\(r.salaNumero)?")
             }
         }
         .alert("Resultado", isPresented: $showAlert) {
@@ -94,25 +112,37 @@ struct CameraView: View {
         }
     }
     
-    private func validarActivacion(sala: Int, ubicacion: String) {
+    private func validarEscaneoDeSala(sala: Int, ubicacion: String) {
+        // Prioridad 1: Buscar si el usuario ya tiene una reserva ACTIVA en esta sala (para finalizarla)
+        let reservaActiva = viewModel.reservasFiltradas.first { r in
+            r.salaNumero == sala && r.salaUbicacion == ubicacion && r.status == .activa
+        }
+        
+        if let activa = reservaActiva {
+            selectedReserva = activa
+            isPresentingFinalization = true
+            return
+        }
+        
+        // Prioridad 2: Buscar si tiene una reserva por activar (ventana +/- 5 min)
         let ahora = Date()
         let cincoMinutos: TimeInterval = 5 * 60
         
-        // Buscar una reserva que coincida con la sala y la hora (+/- 5 min)
-        let coincidencia = reservas.first { r in
+        let coincidencia = viewModel.reservasFiltradas.first { r in
             let coincideSala = r.salaNumero == sala && r.salaUbicacion == ubicacion
             let inicioMenos5 = r.fechaHoraInicio.addingTimeInterval(-cincoMinutos)
             let inicioMas5 = r.fechaHoraInicio.addingTimeInterval(cincoMinutos)
             let coincideHora = ahora >= inicioMenos5 && ahora <= inicioMas5
+            let esReservada = r.status == .reservada
             
-            return coincideSala && coincideHora
+            return coincideSala && coincideHora && esReservada
         }
         
         if let reserva = coincidencia {
             selectedReserva = reserva
             isPresentingActivation = true
         } else {
-            alertMessage = "No se encontró una reserva válida para esta sala en este horario (ventana de +/- 5 min)."
+            alertMessage = "No se encontró una reserva activa o por iniciar en esta sala en este momento."
             showAlert = true
         }
     }
@@ -123,9 +153,32 @@ struct CameraView: View {
             await MainActor.run {
                 switch result {
                 case .exito:
+                    // Actualizar localmente el estado de la reserva
+                    if let index = viewModel.reservasFiltradas.firstIndex(where: { $0.id == id }) {
+                        viewModel.reservasFiltradas[index].status = .activa
+                    }
                     alertMessage = "¡Reserva activada con éxito! Disfruta tu estancia."
                 case .error(let message):
                     alertMessage = "Error al activar: \(message)"
+                }
+                showAlert = true
+            }
+        }
+    }
+    
+    private func finalizarReserva(id: Int) {
+        Task {
+            let result = await finalizarUseCase.execute(reservaId: id)
+            await MainActor.run {
+                switch result {
+                case .exito:
+                    // Actualizar localmente el estado de la reserva
+                    if let index = viewModel.reservasFiltradas.firstIndex(where: { $0.id == id }) {
+                        viewModel.reservasFiltradas[index].status = .completada
+                    }
+                    alertMessage = "¡Reserva finalizada con éxito! Gracias por usar Cubiko."
+                case .error(let message):
+                    alertMessage = "Error al finalizar: \(message)"
                 }
                 showAlert = true
             }
@@ -136,5 +189,5 @@ struct CameraView: View {
 
 
 #Preview {
-    CameraView()
+    CameraView(viewModel: ReservasViewModel())
 }

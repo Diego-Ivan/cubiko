@@ -18,6 +18,12 @@ struct ReservaCard: View {
                              .font(.largeTitle)
                              .fontWeight(.bold)
                              .foregroundColor(.white)
+                             .padding(.bottom, -4)
+                         
+                         Text("\(reserva.salaUbicacion)")
+                             .font(.title)
+                             .fontWeight(.semibold)
+                             .foregroundColor(.white)
                          
                          if Calendar.current.isDate(reserva.fechaInicio, inSameDayAs: reserva.fechaFin)  {
                              Text(reserva.fechaInicio.formatted(date: .abbreviated, time: .omitted))
@@ -38,28 +44,31 @@ struct ReservaCard: View {
                      
                      Spacer()
                      
-                     if reserva.numPersonas == 1 {
-                         Image(systemName: "person.fill")
-                             .resizable()
-                             .aspectRatio(contentMode: .fit)
-                             .frame(width: 100, height: 100) // Adjust size as needed
-                             .foregroundColor(.white)
-                             .padding(.trailing, 20) // Indent icon from right edge of card
+                     VStack(alignment: .center) {
+                         if reserva.numPersonas == 1 {
+                             Image(systemName: "person.fill")
+                                 .resizable()
+                                 .aspectRatio(contentMode: .fit)
+                                 .frame(width: 120, height: 120)
+                                 .foregroundColor(.white)
+                                 .padding(.trailing, 20) // Indent icon from right edge of card
+                             
+                         } else if reserva.numPersonas == 2 {
+                             Image(systemName: "person.2.fill")
+                                 .resizable()
+                                 .aspectRatio(contentMode: .fit)
+                                 .frame(width: 100, height: 100) // Adjust size as needed
+                                 .foregroundColor(.white)
+                                 .padding(.trailing, 20) // Indent icon from right edge of card
+                         } else {
+                             Image(systemName: "person.3.fill")
+                                 .resizable()
+                                 .aspectRatio(contentMode: .fit)
+                                 .frame(width: 100, height: 100) // Adjust size as needed
+                                 .foregroundColor(.white)
+                                 .padding(.trailing, 20) // Indent icon from right edge of card
+                         }
                          
-                     } else if reserva.numPersonas == 2 {
-                         Image(systemName: "person.2.fill")
-                             .resizable()
-                             .aspectRatio(contentMode: .fit)
-                             .frame(width: 100, height: 100) // Adjust size as needed
-                             .foregroundColor(.white)
-                             .padding(.trailing, 20) // Indent icon from right edge of card
-                     } else {
-                         Image(systemName: "person.3.fill")
-                             .resizable()
-                             .aspectRatio(contentMode: .fit)
-                             .frame(width: 100, height: 100) // Adjust size as needed
-                             .foregroundColor(.white)
-                             .padding(.trailing, 20) // Indent icon from right edge of card
                      }
                  }
                  .padding(.top, 20) // Padding from top of card

@@ -2,17 +2,20 @@ import SwiftUI
 
 struct ReservaDetalleView: View {
     let reserva: Reserva // La recibe de la lista
+    @Binding var vmReservas: ReservasViewModel
     @State private var viewModel: ReservaViewModel
     @State private var mostrarCambiarHora = false
     @State private var mostrarAlertaCancelacion = false
+    @State private var mostrarCamara = false
     @State private var mensajeError: String? = nil
     
     @State private var cancelando = false
     
     @Environment(\.dismiss) private var dismiss
 
-    init(reserva: Reserva) {
-            self.reserva = reserva
+    init(reserva: Reserva, vmReservas: Binding<ReservasViewModel>) {
+        self.reserva = reserva
+        _vmReservas = vmReservas
         
         // 1. Instanciamos el repositorio real que hace las peticiones
         // (Usa el nombre de tu clase real, probablemente sea CubiculoRepositoryImpl)
@@ -82,7 +85,7 @@ struct ReservaDetalleView: View {
                     TiempoRestanteView(fechaFin: reserva.fechaHoraFin)
                 }
 
-                if reserva.numPersonas >= 1 {
+                if reserva.numPersonas > 1 {
                     NavigationLink(destination: CompartirReservaView(reserva: reserva)) {
                         Text("Añadir personas")
                             .foregroundColor(.primary)
@@ -107,6 +110,21 @@ struct ReservaDetalleView: View {
                 
                 // Botones
                 VStack(spacing: 10) {
+                    
+                    if viewModel.puedeActivar {
+                        Button {
+                            mostrarCamara.toggle()
+                        } label: {
+                            HStack {
+                                Image(systemName: "qrcode")
+                                Text("Activar reserva")
+                            }
+                        }
+                        .padding(.horizontal)
+                        .buttonStyle(PrimaryButtonStyle())
+
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                    }
 
                     // Botón extender — aparece cuando faltan <= 20 min
                     if viewModel.puedeExtender {
@@ -116,7 +134,6 @@ struct ReservaDetalleView: View {
                             HStack {
                                 Image(systemName: "clock.badge.plus")
                                 Text("Extender 30 minutos")
-                                    .font(.headline)
                             }
                         }
                         .padding(.horizontal)
@@ -135,20 +152,35 @@ struct ReservaDetalleView: View {
                         .buttonStyle(TertiaryButtonStyle())
                     }
                     
-                    Button {
-                        mostrarAlertaCancelacion = true
-                    } label: {
-                        Text("Cancelar reserva")
+                    if reserva.status == .reservada {
+                        Button {
+                            mostrarAlertaCancelacion = true
+                        } label: {
+                            Text("Cancelar reserva")
+                        }
+                        .padding(.horizontal)
+                        .buttonStyle(CancelButtonStyle())
+                        
+                    } else if reserva.status == .activa {
+                        Button {
+                            mostrarCamara.toggle()
+                        } label: {
+                            HStack {
+                                Image(systemName: "qrcode")
+                                Text("Terminar reserva")
+                            }
+                        }
+                        .padding(.horizontal)
+                        .buttonStyle(PrimaryButtonStyle())
+
+                        .transition(.move(edge: .top).combined(with: .opacity))
                     }
-                    .padding(.horizontal)
-                    .buttonStyle(CancelButtonStyle())
                 }
                 .animation(.easeInOut(duration: 0.4), value: viewModel.puedeExtender)
                 .animation(.easeInOut(duration: 0.4), value: viewModel.puedeAjustarHora)
 
             }
             .padding()
-//            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
         .sheet(isPresented: $mostrarCambiarHora) {
             CambiarHoraView(
@@ -162,6 +194,7 @@ struct ReservaDetalleView: View {
             )
 //            .presentationDetents([.fraction(0.5)])
         }
+        .sheet(isPresented: $mostrarCamara) { CameraView(viewModel: vmReservas) }
         .alert("¿Cancelar reserva?", isPresented: $mostrarAlertaCancelacion) {
             Button("Sí, cancelar", role: .destructive) {
                 viewModel.cancelarReserva()
@@ -181,23 +214,23 @@ struct ReservaDetalleView: View {
     }
 }
 
-#Preview {
-    let fechaInicio = Date().addingTimeInterval(60 * 60)
-    let fechaFin = Date().addingTimeInterval(120 * 60)
-    let calendar = Calendar.current
-    let horaInicio = calendar.dateComponents([.hour, .minute], from: fechaInicio)
-    let horaFin = calendar.dateComponents([.hour, .minute], from: fechaFin)
-
-    return ReservaDetalleView(reserva: Reserva(
-        id: 1,
-        estudianteId: 2,
-        salaUbicacion: "Piso 1",
-        salaNumero: 21,
-        fechaInicio: fechaInicio,
-        fechaFin: fechaFin,
-        horaInicio: horaInicio,
-        horaFin: horaFin,
-        numPersonas: 2
-    ))
-
-}
+//#Preview {
+//    let fechaInicio = Date().addingTimeInterval(60 * 60)
+//    let fechaFin = Date().addingTimeInterval(120 * 60)
+//    let calendar = Calendar.current
+//    let horaInicio = calendar.dateComponents([.hour, .minute], from: fechaInicio)
+//    let horaFin = calendar.dateComponents([.hour, .minute], from: fechaFin)
+//
+//    return ReservaDetalleView(reserva: Reserva(
+//        id: 1,
+//        estudianteId: 2,
+//        salaUbicacion: "Piso 1",
+//        salaNumero: 21,
+//        fechaInicio: fechaInicio,
+//        fechaFin: fechaFin,
+//        horaInicio: horaInicio,
+//        horaFin: horaFin,
+//        numPersonas: 2
+//    ))
+//
+//}

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ReservaListView: View {
+    @Binding var vm: ReservasViewModel
     let reserva: Reserva
     let esPrimera: Bool
     
@@ -37,7 +38,7 @@ struct ReservaListView: View {
     var body: some View {
         
         NavigationLink {
-            ReservaDetalleView(reserva: reserva)
+            ReservaDetalleView(reserva: reserva, vmReservas: $vm)
         } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 8) {
@@ -46,6 +47,11 @@ struct ReservaListView: View {
                         .font(.title2)
                         .foregroundColor(textColor)
                         .bold()
+                    
+                    Text("\(reserva.salaUbicacion)")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                        .foregroundColor(textColor)
                     
                     if Calendar.current.isDate(reserva.fechaInicio, inSameDayAs: reserva.fechaFin)  {
                         Text(reserva.fechaInicio.formatted(date: .abbreviated, time: .omitted))

@@ -10,7 +10,7 @@ import SwiftUI
 struct BuscadorView: View {
 
     // onReservar se pasa al crear el vm, no en onAppear
-    private let onReservar: ((SalaDisponible, Date, Date) -> Void)?
+    private let onReservar: ((SalaDisponible, Date, Date, BuscadorViewModel) -> Void)?
     var capacidadMinimal: Int?
 
     @StateObject private var vm: BuscadorViewModel
@@ -23,7 +23,7 @@ struct BuscadorView: View {
     @State private var mostrarAlerta = false
     @State private var mensajeAlerta = ""
     
-    init(capacidadMinima: Int, onReservar: ((SalaDisponible, Date, Date) -> Void)? = nil) {
+    init(capacidadMinima: Int, onReservar: ((SalaDisponible, Date, Date, BuscadorViewModel) -> Void)? = nil) {
             self.onReservar = onReservar
             
             // Creamos el ViewModel temporalmente
@@ -33,6 +33,7 @@ struct BuscadorView: View {
             // Lo asignamos al StateObject
             _vm = StateObject(wrappedValue: nuevoVM)
         }
+
 
     var body: some View {
         ScrollView {
@@ -133,10 +134,16 @@ struct BuscadorView: View {
         .padding(.horizontal)
         .buttonStyle(SecondaryButtonStyle())
         .alert("Horario inválido", isPresented: $mostrarAlerta) {
-                Button("Entendido", role: .cancel) { }
-            } message: {
-                Text(mensajeAlerta)
-            }
+            Button("Entendido", role: .cancel) { }
+        } message: {
+            Text(mensajeAlerta)
+        }
+        .alert("Error al reservar", isPresented: $vm.showErrorAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(vm.errorMessage ?? "Ocurrió un problema inesperado.")
+        }
+
     }
 
     // MARK: - Resultados

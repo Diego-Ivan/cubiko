@@ -24,23 +24,21 @@ final class BuscadorViewModel: ObservableObject {
     @Published var horaSalida: Date = Date().addingTimeInterval(1860)
     @Published var capacidadMinima: Int = 1
     @Published var salaSeleccionada: SalaDisponible?
+    @Published var errorMessage: String? = nil
+    @Published var showErrorAlert = false
 
     @Published private(set) var estado: BuscadorEstado = .inicial
 
-    var onReservar: ((SalaDisponible, Date, Date) -> Void)?
+    var onReservar: ((SalaDisponible, Date, Date, BuscadorViewModel) -> Void)?
 
     // Use Cases
     private let buscarDisponibles: BuscarCubiculosDisponiblesUseCase
-//    private let obtenerAlternativos: ObtenerBloquesAlternativosUseCase
 
-    
     init(
         buscarDisponibles: BuscarCubiculosDisponiblesUseCase,
-//        obtenerAlternativos: ObtenerBloquesAlternativosUseCase,
-        onReservar: ((SalaDisponible, Date, Date) -> Void)? = nil
+        onReservar: ((SalaDisponible, Date, Date, BuscadorViewModel) -> Void)? = nil
     ) {
-        self.buscarDisponibles   = buscarDisponibles
-//        self.obtenerAlternativos = obtenerAlternativos
+        self.buscarDisponibles = buscarDisponibles
         self.onReservar = onReservar
     }
 
@@ -50,7 +48,6 @@ final class BuscadorViewModel: ObservableObject {
             let fin    = combinando(fecha: fechaSeleccionada, con: horaSalida)
             
             do {
-                // The ViewModel delegates the heavy lifting to the Use Case
                 let disponibles = try await buscarDisponibles.execute(inicio: inicio, fin: fin, capacidad: capacidadMinima)
                 
                 if !disponibles.isEmpty {
@@ -71,19 +68,16 @@ final class BuscadorViewModel: ObservableObject {
         buscar()
     }
     
-    // Guardar selección
     func seleccionarSala(_ sala: SalaDisponible) {
         self.salaSeleccionada = sala
     }
     
-    // Confirmar reserva enviando a la API
     func confirmarReserva() {
         guard let sala = salaSeleccionada else { return }
         let inicio = combinando(fecha: fechaSeleccionada, con: horaEntrada)
         let fin    = combinando(fecha: fechaFin, con: horaSalida)
-        onReservar?(sala, inicio, fin)
+        onReservar?(sala, inicio, fin, self)
     }
-    
     
     // MARK: - Helpers
     private func combinando(fecha: Date, con hora: Date) -> Date {
@@ -95,37 +89,14 @@ final class BuscadorViewModel: ObservableObject {
                         of: fecha) ?? fecha
     }
 
-    private func generarAlternativas(baseInicio: Date, baseFin: Date) -> [BloqueHorario] {
-        // Estrategia simple: proponer +/- 30 y 60 minutos
-        let cal = Calendar.current
-        let offsets: [TimeInterval] = [-3600, -1800, 1800, 3600]
-        return offsets.compactMap { offset in
-            let nuevoInicio = baseInicio.addingTimeInterval(offset)
-            let dur = baseFin.timeIntervalSince(baseInicio)
-            let nuevoFin = nuevoInicio.addingTimeInterval(dur)
-            return BloqueHorario(horaInicio: nuevoInicio, horaFin: nuevoFin)
-        }
-    }
-    
-//    static func make(onReservar: ((SalaDisponible, Date, Date) -> Void)? = nil) -> BuscadorViewModel {
-//        let repo         = RealRoomRepository()
-//        let buscar       = BuscarCubiculosDisponiblesUseCase(repository: repo)
-//        let alternativos = ObtenerBloquesAlternativosUseCase(buscarDisponibles: buscar)
-//        return BuscadorViewModel(buscarDisponibles: buscar, onReservar: onReservar)
-//    }
-    
-    // Modify the `make` function to accept a repository, defaulting to the Real one
     static func make(
         repo: CubiculoRepositoryProtocol = RealRoomRepository(),
-        onReservar: ((SalaDisponible, Date, Date) -> Void)? = nil
+        onReservar: ((SalaDisponible, Date, Date, BuscadorViewModel) -> Void)? = nil
     ) -> BuscadorViewModel {
         let buscar = BuscarCubiculosDisponiblesUseCase(repository: repo)
-        let alternativos = ObtenerBloquesAlternativosUseCase(buscarDisponibles: buscar)
         return BuscadorViewModel(buscarDisponibles: buscar, onReservar: onReservar)
     }
 
-    
-    
     func combinar(fecha: Date, hora: Date) -> Date {
         let calendar = Calendar.current
         let componentesFecha = calendar.dateComponents([.year, .month, .day], from: fecha)

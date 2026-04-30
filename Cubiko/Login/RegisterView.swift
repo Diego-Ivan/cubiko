@@ -66,13 +66,15 @@ struct RegisterView: View {
             .padding(.horizontal, 36)
             Spacer()
             
-            if isLoading {
-                ProgressView()
-            }
-            
             Button(action: register) {
-                Text("Crear cuenta")
+                if isLoading {
+                    ProgressView().tint(.white)
+                } else {
+                    Text("Crear cuenta")
+                }
             }
+            .disabled(isLoading)
+            .opacity(isLoading ? 0.5 : 1.0)
             .padding(.horizontal, 36)
             .padding(.bottom, 12)
             .buttonStyle(PrimaryButtonStyle())
@@ -88,9 +90,6 @@ struct RegisterView: View {
             .padding(.horizontal, 36)
             .padding(.bottom, 36)
             .buttonStyle(TertiaryButtonStyle())
-                
-                
-            
         }
         .background(Color.white)
         .alert(isPresented: $showAlert) {
@@ -109,98 +108,109 @@ struct RegisterView: View {
         guard !name.isEmpty, !email.isEmpty, !password.isEmpty, !confirmPassword.isEmpty else {
             errorMessage = "Por favor complete todos los campos."
             showAlert = true
-            successMessage = nil
             return
         }
         guard password == confirmPassword else {
             errorMessage = "Las contraseñas no coinciden."
             showAlert = true
-            successMessage = nil
             return
         }
-        errorMessage = nil
-        successMessage = nil
+        
         isLoading = true
         let url = APIConfig.baseURL.appendingPathComponent("api/auth/register")
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
         let body: [String: Any] = [
             "nombre": name,
             "email": email,
-            "password": password,
-//            "status": "Activo"
+            "password": password
         ]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        
         URLSession.shared.dataTask(with: request) { data, response, error in
-            DispatchQueue.main.async {
-                isLoading = false
-                if let error = error {
-                    errorMessage = "Error de red: \(error.localizedDescription)"
-                    showAlert = true
-                    return
+            if let error = error {
+                DispatchQueue.main.async {
+                    self.errorMessage = "Error de red: \(error.localizedDescription)"
+                    self.isLoading = false
+                    self.showAlert = true
                 }
-                guard let httpResponse = response as? HTTPURLResponse, let data = data else {
-                    errorMessage = "Respuesta inválida del servidor."
-                    showAlert = true
-                    return
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse, let data = data else {
+                DispatchQueue.main.async {
+                    self.errorMessage = "Respuesta inválida del servidor."
+                    self.isLoading = false
+                    self.showAlert = true
                 }
-                if httpResponse.statusCode == 201 {
-                    if let decoded = try? JSONDecoder().decode(RegisterResponse.self, from: data){
-                        
-                        if let loginData = decoded.data {
-                            // Creamos el perfil con el estudiante y sus tokens
-                            
-                            let nuevoPerfil = UserProfile(
-                                accessToken: loginData.access_token,
-                                refreshToken: loginData.refresh_token,
-                                expiresAt: Date().addingTimeInterval(3 * 30 * 24 * 60) // Ajustar según backend
-                            )
-                            
-                            AuthManager.shared.login(accessToken: loginData.access_token, refreshToken: loginData.refresh_token ?? "")
-                            
-                            print("ACCESS TOKEN for debug: \(loginData.access_token)")
-                            
-                            sessionManager.updateProfile(nuevoPerfil)
-                            
-                            // Cambiamos el estado de la app
-                            withAnimation {
-                                currentState = .main
-                            }
-                        }
-
-                    } else {
-                        errorMessage = "No se pudo procesar la respuesta del servidor."
-                        showAlert = true
-                    }
-                } else if httpResponse.statusCode == 409 {
-                    if let decoded = try? JSONDecoder().decode(RegisterResponse.self, from: data) {
-                        errorMessage = decoded.message ?? "El correo ya está en uso."
-                        showAlert = true
-                    } else {
-                        errorMessage = "El correo ya está en uso."
-                        showAlert = true
-                    }
-                } else {
-                    if let decoded = try? JSONDecoder().decode(RegisterResponse.self, from: data) {
-                        errorMessage = decoded.message ?? "Error al registrarse."
-                        showAlert = true
-                        
-                        print("Status code:", httpResponse.statusCode)
-                        print("Raw response:", String(data: data, encoding: .utf8) ?? "N/A")
-                        
-                    } else {
-                        errorMessage = "Error al registrarse 2."
-                        showAlert = true
-                    }
+                return
+            }
+            
+            if httpResponse.statusCode == 201 {
+                print("✅ Registro exitoso. Iniciando login automático...")
+                performSilentLogin()
+            } else {
+                DispatchQueue.main.async {
+                    struct BackendError: Decodable { let message: String?; let error: String? }
+                    let decodedError = try? JSONDecoder().decode(BackendError.self, from: data)
+                    self.errorMessage = decodedError?.message ?? decodedError?.error ?? "Error al registrarse (\(httpResponse.statusCode))"
+                    self.isLoading = false
+                    self.showAlert = true
                 }
             }
         }.resume()
     }
-}
-
-#Preview {
-    @Previewable @State var currentState: UserState = .login
-
-    RegisterView(currentState: $currentState)
+    
+    private func performSilentLogin() {
+        let url = APIConfig.baseURL.appendingPathComponent("api/auth/login")
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body = ["email": email, "password": password]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            DispatchQueue.main.async {
+                self.isLoading = false
+                
+                if let error = error {
+                    self.errorMessage = "Registro exitoso, pero hubo un error al iniciar sesión: \(error.localizedDescription)"
+                    self.showAlert = true
+                    return
+                }
+                
+                guard let data = data, let httpResponse = response as? HTTPURLResponse, (200...201).contains(httpResponse.statusCode) else {
+                    self.errorMessage = "Registro exitoso, pero el login automático falló. Por favor inicie sesión manualmente."
+                    self.showAlert = true
+                    return
+                }
+                
+                do {
+                    let decoded = try JSONDecoder().decode(LoginResponse.self, from: data)
+                    if let loginData = decoded.data {
+                        // Guardar tokens y actualizar sesión
+                        AuthManager.shared.login(accessToken: loginData.access_token, refreshToken: loginData.refresh_token ?? "")
+                        
+                        let nuevoPerfil = UserProfile(
+                            accessToken: loginData.access_token,
+                            refreshToken: loginData.refresh_token,
+                            expiresAt: Date().addingTimeInterval(3 * 30 * 24 * 60 * 60)
+                        )
+                        sessionManager.updateProfile(nuevoPerfil)
+                        
+                        print("✅ Login silencioso exitoso. Navegando al Home...")
+                        withAnimation {
+                            currentState = .main
+                        }
+                    }
+                } catch {
+                    self.errorMessage = "Error al procesar el login tras el registro."
+                    self.showAlert = true
+                }
+            }
+        }.resume()
+    }
 }
