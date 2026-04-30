@@ -1,6 +1,10 @@
 import Foundation
 
 final class MockRoomRepository: CubiculoRepositoryProtocol {
+    func finalizarReserva(reservaId: Int) async throws {
+        return
+    }
+    
     func activarReserva(reservaId: Int) async throws {
         return
     }

@@ -375,7 +375,7 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
     }
 
     func finalizarReserva(reservaId: Int) async throws {
-        let url = APIConfig.baseURL.appendingPathComponent("api/qrInvitaciones/\(reservaId)/finalizarReserva")
+        let url = APIConfig.baseURL.appendingPathComponent("api/reservas/\(reservaId)/terminar")
         
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
