@@ -109,8 +109,7 @@ private let fechaHoraFormatter: DateFormatter = {
 #Preview {
     let mockSessionManager: SessionManager = {
         let manager = SessionManager()
-        let perfilPrueba = UserProfile(accessToken: "fake_token", refreshToken: nil, expiresAt: Date().addingTimeInterval(3600))
-        manager.updateProfile(perfilPrueba)
+        manager.login(accessToken: "fake_token", refreshToken: nil, expiresAt: Date().addingTimeInterval(3600))
         return manager
     }()
     

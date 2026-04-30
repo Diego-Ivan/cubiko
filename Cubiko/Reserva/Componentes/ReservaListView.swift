@@ -38,7 +38,9 @@ struct ReservaListView: View {
     var body: some View {
         
         NavigationLink {
-            ReservaDetalleView(reserva: reserva, vmReservas: $vm)
+            ReservaDetalleView(reserva: reserva, vmReservas: $vm){
+                vm.fetchReservasActuales()  // ← esto se ejecuta al cancelar
+            }
         } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 8) {

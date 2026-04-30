@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-internal import System
 
 
 enum BuscadorEstado {
@@ -75,7 +74,10 @@ final class BuscadorViewModel: ObservableObject {
     func confirmarReserva() {
         guard let sala = salaSeleccionada else { return }
         let inicio = combinando(fecha: fechaSeleccionada, con: horaEntrada)
-        let fin    = combinando(fecha: fechaFin, con: horaSalida)
+        // fechaFin ya fue seteado por validarYBuscar si es día siguiente,
+        // si no, debe ser igual a fechaSeleccionada
+        let finFecha = fechaFin > fechaSeleccionada ? fechaFin : fechaSeleccionada
+        let fin = combinando(fecha: finFecha, con: horaSalida)
         onReservar?(sala, inicio, fin, self)
     }
     

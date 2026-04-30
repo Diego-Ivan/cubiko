@@ -79,7 +79,7 @@ class ReservasViewModel {
                     let filtradas = decoded.data.filter { r in
                         let esActiva = r.status == .activa || r.status == .reservada
                         let noHaTerminado = r.fechaFin >= ahora
-                        return esActiva || noHaTerminado
+                        return esActiva && noHaTerminado
                     }
                     self.reservasFiltradas = filtradas.sorted { $0.fechaInicio < $1.fechaInicio }
                 } else {

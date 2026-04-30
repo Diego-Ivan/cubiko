@@ -1,28 +1,28 @@
+//
+//  AuthManager.swift
+//  Cubiko
+//
+
 import Foundation
 import Combine
 
+/// Helper ligero para que RealRoomRepository pueda forzar un logout
+/// cuando el refresh token falla, sin acceder al entorno SwiftUI.
+/// SessionManager es la fuente de verdad para la sesión de UI.
 class AuthManager: ObservableObject {
     static let shared = AuthManager()
-    
+
     @Published var isAuthenticated: Bool = false
-    
+
     private init() {
         checkAuthStatus()
     }
-    
+
     func checkAuthStatus() {
-        let token = KeychainManager.shared.getAccessToken()
-        isAuthenticated = (token != nil)
+        isAuthenticated = KeychainManager.shared.getAccessToken() != nil
     }
-    
-    func login(accessToken: String, refreshToken: String) {
-        _ = KeychainManager.shared.saveAccessToken(accessToken)
-        _ = KeychainManager.shared.saveRefreshToken(refreshToken)
-        DispatchQueue.main.async {
-            self.isAuthenticated = true
-        }
-    }
-    
+
+    /// Limpia los tokens del Keychain. La sesión de UI debe limpiarse desde SessionManager.
     func logout() {
         KeychainManager.shared.deleteAllTokens()
         DispatchQueue.main.async {

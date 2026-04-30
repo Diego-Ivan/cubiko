@@ -3,17 +3,17 @@ import SwiftUI
 struct ReservaDetalleView: View {
     let reserva: Reserva // La recibe de la lista
     @Binding var vmReservas: ReservasViewModel
+    var onCancelacion: (() -> Void)? = nil
     @State private var viewModel: ReservaViewModel
     @State private var mostrarCambiarHora = false
     @State private var mostrarAlertaCancelacion = false
     @State private var mostrarCamara = false
-    @State private var mensajeError: String? = nil
     
     @State private var cancelando = false
     
     @Environment(\.dismiss) private var dismiss
 
-    init(reserva: Reserva, vmReservas: Binding<ReservasViewModel>) {
+    init(reserva: Reserva, vmReservas: Binding<ReservasViewModel>, onCancelacion: (() -> Void)? = nil) {
         self.reserva = reserva
         _vmReservas = vmReservas
         
@@ -67,6 +67,7 @@ struct ReservaDetalleView: View {
             // Si la reserva se vuelve nil (ej. se canceló con éxito), regresamos a la pantalla anterior
             if newValue == nil {
                 cancelando = false
+                onCancelacion?()
                 dismiss()
             }
         }
@@ -75,7 +76,8 @@ struct ReservaDetalleView: View {
     // MARK: - Reserva activa
 
     private func reservaActivaView(_ reserva:   Reserva) -> some View {
-        ZStack {
+        let _ = print("STATUS: \(reserva.status)")
+        return ZStack {
             VStack(alignment: .center, spacing: 20) {
 
                 ReservaCard(reserva: reserva)
@@ -152,7 +154,7 @@ struct ReservaDetalleView: View {
                         .buttonStyle(TertiaryButtonStyle())
                     }
                     
-                    if reserva.status == .reservada {
+                    if reserva.status == .reservada || reserva.status == .activa {
                         Button {
                             mostrarAlertaCancelacion = true
                         } label: {
@@ -160,8 +162,9 @@ struct ReservaDetalleView: View {
                         }
                         .padding(.horizontal)
                         .buttonStyle(CancelButtonStyle())
-                        
-                    } else if reserva.status == .activa {
+                    }
+
+                    if reserva.status == .activa {
                         Button {
                             mostrarCamara.toggle()
                         } label: {
@@ -172,7 +175,6 @@ struct ReservaDetalleView: View {
                         }
                         .padding(.horizontal)
                         .buttonStyle(PrimaryButtonStyle())
-
                         .transition(.move(edge: .top).combined(with: .opacity))
                     }
                 }
@@ -206,12 +208,6 @@ struct ReservaDetalleView: View {
         }
     }
 
-    // MARK: - Crear reserva
-
-    private func reservar(sala: SalaDisponible, inicio: Date, fin: Date) {
-        mensajeError = nil
-        mensajeError = viewModel.crearReserva(sala: sala, inicio: inicio, fin: fin)
-    }
 }
 
 //#Preview {

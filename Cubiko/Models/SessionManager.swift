@@ -8,55 +8,59 @@
 import SwiftUI
 import Combine
 
+/// Fuente de verdad para la sesión del usuario.
+/// - Los tokens se guardan/leen siempre desde el Keychain (KeychainManager).
+/// - Solo datos no sensibles (expiresAt) se persisten en UserDefaults.
 @MainActor
 final class SessionManager: ObservableObject {
     @Published private(set) var profile: UserProfile?
-    
-    // Al inicializar, intentamos cargar la sesión guardada
+
     init() {
         loadSessionFromPersistence()
     }
 
-    func login(with profile: UserProfile) {
-        self.profile = profile
-        persistSession(profile)
+    // MARK: - API pública
+
+    /// Inicia sesión guardando los tokens en el Keychain y el perfil en UserDefaults.
+    func login(accessToken: String, refreshToken: String?, expiresAt: Date? = nil) {
+        _ = KeychainManager.shared.saveAccessToken(accessToken)
+        if let refreshToken {
+            _ = KeychainManager.shared.saveRefreshToken(refreshToken)
+        }
+        let perfil = UserProfile(expiresAt: expiresAt)
+        self.profile = perfil
+        persistProfile(perfil)
     }
 
     func logout() {
-        self.profile = nil
+        profile = nil
         UserDefaults.standard.removeObject(forKey: "current_user_profile")
         KeychainManager.shared.deleteAllTokens()
-        AuthManager.shared.logout()
-    }
-    
-    func updateProfile(_ profile: UserProfile) {
-        self.profile = profile
-        self.persistSession(profile)
     }
 
-   private func persistSession(_ profile: UserProfile) {
-        // 1. Guardar info no sensible en UserDefaults
+    func updateExpiresAt(_ date: Date?) {
+        let updatedProfile = UserProfile(expiresAt: date)
+        self.profile = updatedProfile
+        persistProfile(updatedProfile)
+    }
+
+    // MARK: - Persistencia privada
+
+    private func persistProfile(_ profile: UserProfile) {
         if let encoded = try? JSONEncoder().encode(profile) {
             UserDefaults.standard.set(encoded, forKey: "current_user_profile")
         }
-        
-        // 2. IMPORTANTE: Los tokens van al Keychain
-        _ = KeychainManager.shared.saveAccessToken(profile.accessToken)
-        if let refreshToken = profile.refreshToken {
-            _ = KeychainManager.shared.saveRefreshToken(refreshToken)
-        }
     }
-    
+
     private func loadSessionFromPersistence() {
-        if let savedData = UserDefaults.standard.data(forKey: "current_user_profile"),
-           let savedProfile = try? JSONDecoder().decode(UserProfile.self, from: savedData) {
-            
-            // Verificamos que el token exista en el Keychain por seguridad
-            if KeychainManager.shared.getAccessToken() != nil {
-                self.profile = savedProfile
-            } else {
-                logout()
-            }
+        guard
+            let savedData = UserDefaults.standard.data(forKey: "current_user_profile"),
+            let savedProfile = try? JSONDecoder().decode(UserProfile.self, from: savedData),
+            KeychainManager.shared.getAccessToken() != nil
+        else {
+            UserDefaults.standard.removeObject(forKey: "current_user_profile")
+            return
         }
+        self.profile = savedProfile
     }
 }
