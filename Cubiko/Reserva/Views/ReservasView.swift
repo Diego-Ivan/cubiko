@@ -44,7 +44,7 @@ struct ReservasView: View {
                     List {
                         Section("Próxima Reserva") {
                             
-                            ReservaListView(reserva: viewModel.reservasFiltradas.first!, esPrimera: true)
+                            ReservaListView(vm: $viewModel, reserva: viewModel.reservasFiltradas.first!, esPrimera: true)
                         }
                         
                         if !viewModel.reservasFiltradas[1...].isEmpty {
@@ -53,7 +53,7 @@ struct ReservasView: View {
                                 
                                 ForEach(viewModel.reservasFiltradas[1...], id: \.id) { reserva in
                                     
-                                    ReservaListView(reserva: reserva, esPrimera: false)
+                                    ReservaListView(vm: $viewModel, reserva: reserva, esPrimera: false)
                                     
                                 }
                             }
@@ -83,9 +83,16 @@ struct ReservasView: View {
                 }
             }
             .onAppear {
-                viewModel.fetchReservasActuales(token: sessionManager.profile?.accessToken)
+                viewModel.fetchReservasActuales()
             }
-            .sheet(isPresented: $showCamera) { CameraView(reservas: viewModel.reservasFiltradas) }
+            .onChange(of: sessionManager.profile) {
+                if sessionManager.profile != nil {
+                    viewModel.fetchReservasActuales()
+                }
+            }
+
+            .sheet(isPresented: $showCamera) { CameraView(viewModel: viewModel) }
+
 
         }
     }

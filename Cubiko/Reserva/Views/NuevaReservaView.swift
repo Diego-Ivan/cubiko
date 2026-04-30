@@ -39,9 +39,10 @@ struct NuevaReservaView: View {
                     // Le pasamos el tipo al Buscador para que filtre por capacidad
                     BuscadorView(
                         capacidadMinima: tipo.capacidad,
-                        onReservar: { sala, inicio, fin in
-                            viewModel.crearReserva(sala: sala, inicio: inicio, fin: fin)
+                        onReservar: { sala, inicio, fin, buscadorVM in
+                            viewModel.crearReserva(sala: sala, inicio: inicio, fin: fin, buscadorVM: buscadorVM)
                         }
+
                     )
                 }
             }

@@ -373,5 +373,25 @@ final class RealRoomRepository: CubiculoRepositoryProtocol {
             throw NSError(domain: "ActivarReserva", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: backendMessage ?? "Error al activar reserva"])
         }
     }
+
+    func finalizarReserva(reservaId: Int) async throws {
+        let url = APIConfig.baseURL.appendingPathComponent("api/qrInvitaciones/\(reservaId)/finalizarReserva")
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        
+        let (data, response) = try await performAuthenticatedRequest(request)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw URLError(.badServerResponse)
+        }
+        
+        if httpResponse.statusCode != 200 {
+            struct BackendErrorResponse: Decodable { let message: String? }
+            let backendMessage = (try? JSONDecoder().decode(BackendErrorResponse.self, from: data))?.message
+            throw NSError(domain: "FinalizarReserva", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: backendMessage ?? "Error al finalizar reserva"])
+        }
+    }
 }
+
 

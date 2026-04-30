@@ -64,9 +64,7 @@ class NuevaReservaViewModel {
     }
     
 
-    func crearReserva(sala: SalaDisponible, inicio: Date, fin: Date) {
-        // Podrías poner una variable isLoading = true aquí
-        
+    func crearReserva(sala: SalaDisponible, inicio: Date, fin: Date, buscadorVM: BuscadorViewModel? = nil) {
         Task {
             let resultado = await crearReservaUseCase.execute(
                 sala: sala,
@@ -78,17 +76,19 @@ class NuevaReservaViewModel {
             switch resultado {
             case .exito(let id):
                 print("¡Reserva \(id) creada con éxito!")
-                // Aquí cerramos el Wizard y mandamos al usuario a la primera pestaña
                 await MainActor.run {
                     self.navegarASiguiente = false
                     self.tipoSeleccionado = nil
-                    // Si usas un TabView, aquí cambiarías la pestaña seleccionada a 0
                 }
                 
             case .error(let mensaje):
                 print("Error creando: \(mensaje)")
-                // Aquí puedes mostrar un Alert con el mensaje de error en la UI
+                await MainActor.run {
+                    buscadorVM?.errorMessage = mensaje
+                    buscadorVM?.showErrorAlert = true
+                }
             }
         }
     }
+
 }
