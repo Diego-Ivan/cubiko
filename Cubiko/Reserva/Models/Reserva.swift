@@ -22,6 +22,7 @@ struct Reserva: Identifiable, Codable, Equatable {
     var status: Status = .activa
 
     enum Status: String, Codable, CaseIterable {
+        case reservada = "Reservada"
         case activa = "Activa"
         case completada = "Completada"
         case cancelada = "Cancelada"
