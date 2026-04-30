@@ -172,8 +172,7 @@ struct CameraView: View {
                 switch result {
                 case .exito:
                     alertMessage = "¡Reserva finalizada con éxito! Gracias por usar Cubiko."
-                    // Forzar actualización total desde el servidor
-                    viewModel.fetchReservasActuales()
+                    // La lista se refresca en ReservaDetalleView.onDismiss, después del dismiss()
                 case .error(let message):
                     alertMessage = "Error al finalizar: \(message)"
                 }

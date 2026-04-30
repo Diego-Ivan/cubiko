@@ -9,9 +9,10 @@ import SwiftUI
 
 struct BookingConfirmationView: View {
 
-    let cubiculo: Cubiculo
+    let sala: SalaDisponible
     let inicio: Date
     let fin: Date
+    var onVerReservas: (() -> Void)? = nil
 
     @Environment(\.dismiss) private var dismiss
 
@@ -47,16 +48,16 @@ struct BookingConfirmationView: View {
 
                     FilaDetalle(
                         icono: "door.left.hand.open",
-                        label: "Cubículo",
-                        valor: cubiculo.nombre
+                        label: "Sala",
+                        valor: "#\(sala.numero)"
                     )
 
                     Divider().padding(.leading, 48)
 
                     FilaDetalle(
-                        icono: "tag",
-                        label: "Tipo",
-                        valor: cubiculo.tipo
+                        icono: "mappin",
+                        label: "Ubicación",
+                        valor: sala.ubicacion
                     )
 
                     Divider().padding(.leading, 48)
@@ -90,20 +91,9 @@ struct BookingConfirmationView: View {
 
                 // ── Botones ─────────────────────────────────
                 VStack(spacing: 12) {
-                    Button {
-                        // Aquí irá la acción real cuando conectes el VM
-                        dismiss()
-                    } label: {
-                        Text("Ir al inicio")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(Color.primaryCubiko)
-                            .clipShape(RoundedRectangle(cornerRadius: 14))
-                    }
 
                     Button {
+                        onVerReservas?()
                         dismiss()
                     } label: {
                         Text("Ver mis reservas")
@@ -159,7 +149,7 @@ private struct FilaDetalle: View {
 #Preview {
     NavigationStack {
         BookingConfirmationView(
-            cubiculo: Cubiculo(id: 1, nombre: "Sala #1", tipo: "Individual"),
+            sala: SalaDisponible(numero: 1, ubicacion: "Piso 2", maxPersonas: 4, minPersonas: 1),
             inicio: Date(),
             fin: Date().addingTimeInterval(3600)
         )

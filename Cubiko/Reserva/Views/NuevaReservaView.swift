@@ -9,6 +9,11 @@ import SwiftUI
 
 struct NuevaReservaView: View {
     @State private var viewModel = NuevaReservaViewModel()
+    var selectedTab: Binding<Int>
+
+    init(selectedTab: Binding<Int> = .constant(0)) {
+        self.selectedTab = selectedTab
+    }
 
     var body: some View {
             ZStack(alignment: .bottom) {
@@ -43,6 +48,21 @@ struct NuevaReservaView: View {
                             viewModel.crearReserva(sala: sala, inicio: inicio, fin: fin, buscadorVM: buscadorVM)
                         }
 
+                    )
+                }
+            }
+            .navigationDestination(isPresented: Binding(
+                get: { viewModel.reservaConfirmada != nil },
+                set: { if !$0 { viewModel.reservaConfirmada = nil } }
+            )) {
+                if let confirmada = viewModel.reservaConfirmada {
+                    BookingConfirmationView(
+                        sala: confirmada.sala,
+                        inicio: confirmada.inicio,
+                        fin: confirmada.fin,
+                        onVerReservas: {
+                            selectedTab.wrappedValue = 0
+                        }
                     )
                 }
             }

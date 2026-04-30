@@ -138,8 +138,8 @@ final class ReservaViewModel {
             Task { @MainActor in
                 self.puedeExtender = minutosRestantes <= 20 && minutosRestantes > 0
                 self.puedeAjustarHora = minutosParaInicio > 2
-                self.comenzarTemporizador = minutosParaInicio <= 0 && reserva.status == .activa
-                self.puedeActivar = minutosParaInicio <= 5 && minutosParaInicio >= -5
+                self.comenzarTemporizador = reserva.status == .activa
+                self.puedeActivar = minutosParaInicio <= 5 && minutosParaInicio >= -5 && reserva.status == .reservada
             }
             self.evaluarEstadoLocal()
         }
@@ -152,7 +152,7 @@ final class ReservaViewModel {
         Task { @MainActor in
             self.puedeExtender = minutosRestantes <= 20 && minutosRestantes > 0
             self.puedeAjustarHora = minutosParaInicio > 2
-            self.comenzarTemporizador = minutosParaInicio <= 0 && reserva.status == .activa
+            self.comenzarTemporizador = reserva.status == .activa
             
             self.puedeActivar = minutosParaInicio <= 5 && minutosParaInicio >= -5 && reserva.status == .reservada
         }

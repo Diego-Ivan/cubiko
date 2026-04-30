@@ -78,10 +78,10 @@ class ReservasViewModel {
                     let ahora = Date()
                     let filtradas = decoded.data.filter { r in
                         let esActiva = r.status == .activa || r.status == .reservada
-                        let noHaTerminado = r.fechaFin >= ahora
+                        let noHaTerminado = r.fechaHoraFin >= ahora
                         return esActiva && noHaTerminado
                     }
-                    self.reservasFiltradas = filtradas.sorted { $0.fechaInicio < $1.fechaInicio }
+                    self.reservasFiltradas = filtradas.sorted { $0.fechaHoraInicio < $1.fechaHoraInicio }
                 } else {
                     self.reservas = decoded.data
                 }
@@ -110,11 +110,29 @@ class ReservasViewModel {
     
     @MainActor
     func refreshReserva(id: Int) async -> Reserva? {
-        fetchReservasActuales()
+        guard let token = KeychainManager.shared.getAccessToken(), !token.isEmpty else {
+            return nil
+        }
+        let url = APIConfig.baseURL.appendingPathComponent("api/reservas/mis-reservas")
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
-        // Espera breve para completar el request
-        try? await Task.sleep(for: .milliseconds(700))
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
+                return nil
+            }
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            let decoded = try decoder.decode(ReservasResponse.self, from: data)
 
-        return reservasFiltradas.first(where: { $0.id == id })
+            // Solo devolver la reserva — NO mutar reservasFiltradas aquí.
+            // La lista se refresca desde onDismiss, después del dismiss(),
+            // para evitar crash de Index out of range en ReservasView.
+            return decoded.data.first(where: { $0.id == id })
+        } catch {
+            return nil
+        }
     }
 }

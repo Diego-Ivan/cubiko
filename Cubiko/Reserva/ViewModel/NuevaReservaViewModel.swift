@@ -12,6 +12,7 @@ import Observation
 class NuevaReservaViewModel {
     var tipoSeleccionado: TipoCubiculo? = nil
     var navegarASiguiente = false
+    var reservaConfirmada: (sala: SalaDisponible, inicio: Date, fin: Date)? = nil
     
     private let crearReservaUseCase: CrearReservaUseCase
     private let buscarDisponiblesUseCase: BuscarCubiculosDisponiblesUseCase
@@ -77,8 +78,7 @@ class NuevaReservaViewModel {
             case .exito(let id):
                 print("¡Reserva \(id) creada con éxito!")
                 await MainActor.run {
-                    self.navegarASiguiente = false
-                    self.tipoSeleccionado = nil
+                    self.reservaConfirmada = (sala: sala, inicio: inicio, fin: fin)
                 }
                 
             case .error(let mensaje):

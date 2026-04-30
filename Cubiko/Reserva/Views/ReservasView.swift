@@ -11,10 +11,12 @@ struct ReservasView: View {
     @EnvironmentObject var sessionManager: SessionManager
     @State private var viewModel: ReservasViewModel
     @State private var showingQRScanner = false
+    var selectedTab: Binding<Int>
     
-    init(viewModel: ReservasViewModel = ReservasViewModel()) {
-          self.viewModel = viewModel
-      }
+    init(viewModel: ReservasViewModel = ReservasViewModel(), selectedTab: Binding<Int> = .constant(0)) {
+        self.viewModel = viewModel
+        self.selectedTab = selectedTab
+    }
       
 
     var body: some View {
@@ -33,6 +35,14 @@ struct ReservasView: View {
                             viewModel.fetchReservasActuales()
                         }
                         .buttonStyle(.borderedProminent)
+                        
+                        NavigationLink(destination: NuevaReservaView(selectedTab: selectedTab)) {
+                            HStack {
+                                Image(systemName: "plus")
+                                Text("Nueva reserva")
+                            }
+                        }
+                        .buttonStyle(PrimaryButtonStyle())
                     }
                     .padding(.horizontal)
                     
@@ -90,7 +100,7 @@ struct ReservasView: View {
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink(destination: NuevaReservaView()) {
+                    NavigationLink(destination: NuevaReservaView(selectedTab: selectedTab)) {
                         Image(systemName: "plus")
                     }
                 }

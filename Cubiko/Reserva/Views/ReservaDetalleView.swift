@@ -61,8 +61,27 @@ struct ReservaDetalleView: View {
                 dismiss()
             }
         }
-        .sheet(isPresented: $mostrarCamara) { 
-            CameraView(viewModel: vmReservas) 
+        .sheet(isPresented: $mostrarCamara, onDismiss: {
+            Task {
+                guard let actualizada = await vmReservas.refreshReserva(id: reserva.id) else {
+                    return // error de red, no hacer nada
+                }
+                if actualizada.status == .completada || actualizada.status == .cancelada {
+                    // Reserva finalizada → cerrar primero, refrescar lista después
+                    onCancelacion?()
+                    dismiss()
+                    // Refrescar la lista DESPUÉS del dismiss para evitar crash
+                    // de Index out of range en ReservasView
+                    vmReservas.fetchReservasActuales()
+                } else {
+                    // Status cambió (ej. .reservada → .activa) → actualizar UI
+                    reserva = actualizada
+                    viewModel.actualizarReservaActiva(actualizada)
+                    vmReservas.fetchReservasActuales()
+                }
+            }
+        }) {
+            CameraView(viewModel: vmReservas)
         }
     }
 
@@ -73,7 +92,6 @@ struct ReservaDetalleView: View {
             VStack(alignment: .center, spacing: 20) {
 
                 ReservaCard(reserva: reserva)
-                    .padding(.horizontal)
                 
                 if viewModel.comenzarTemporizador {
                     TiempoRestanteView(fechaFin: reserva.fechaHoraFin)
@@ -141,7 +159,7 @@ struct ReservaDetalleView: View {
                         .buttonStyle(TertiaryButtonStyle())
                     }
                     
-                    if reserva.status == .reservada {
+                    if viewModel.reservaActiva?.status == .reservada {
                         Button {
                             mostrarAlertaCancelacion = true
                         } label: {
@@ -151,7 +169,7 @@ struct ReservaDetalleView: View {
                         .buttonStyle(CancelButtonStyle())
                     }
 
-                    if reserva.status == .activa {
+                    if viewModel.reservaActiva?.status == .activa {
                         Button {
                             mostrarCamara.toggle()
                         } label: {
